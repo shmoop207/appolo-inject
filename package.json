@@ -1,0 +1,30 @@
+{
+    "name": "appolo-inject",
+    "description": "dependency injection for node js",
+
+    "keywords": [
+    ],
+    "author": {
+        "name": "Roman Svichar",
+        "email": "shmoop207@gmail.com"
+    },
+    "main": "./index.js",
+
+    "version": "0.1.0",
+    "license": "Mit",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shmoop207/appolo-inject"
+    },
+    "readme": "",
+    "readmeFilename": "README.md",
+    "dependencies": {
+        "lodash": "2.4.1",
+        "appolo-class": "0.1.1"
+    },
+    "devDependencies": {
+        "chai":"1.8.1",
+        "grunt":"*",
+        "grunt-mocha-test":"0.8.1"
+    }
+}
