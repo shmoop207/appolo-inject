@@ -3,9 +3,9 @@ var should = require('chai').should(),
     inject = require('../lib/inject');
 
 
-describe('Property', function () {
+describe('Property Ref', function () {
 
-    describe('inject property', function () {
+    describe('inject object by ref', function () {
         var injector;
 
         beforeEach(function () {

@@ -2,7 +2,7 @@ var should = require('chai').should(),
     Class = require('appolo-class'),
     inject = require('../lib/inject');
 
-describe('Inject Value',function(){
+describe('Property Value',function(){
 
 
     describe('inject value to object', function () {
