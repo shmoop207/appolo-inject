@@ -76,7 +76,7 @@ describe('Ioc', function () {
         });
     });
 
-    describe('get simple object', function () {
+    describe('get simple object error', function () {
         var injector;
 
         beforeEach(function () {
