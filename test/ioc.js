@@ -24,7 +24,7 @@ describe('Ioc', function () {
             should.exist(injector.getDefinition('test'));
         });
 
-        it('should add duplicate definitions', function () {
+        xit('should add duplicate definitions', function () {
             var injector = inject.createContainer();
 
 

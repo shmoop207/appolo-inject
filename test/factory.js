@@ -5,7 +5,7 @@ var should = require('chai').should(),
 describe('Property Factory', function () {
 
     describe('inject factory Object', function () {
-        var injector,FooManager;
+        var injector, FooManager;
 
         beforeEach(function () {
             injector = inject.createContainer();
@@ -34,11 +34,10 @@ describe('Property Factory', function () {
                 constructor: function () {
 
                 },
-                get:function(){
+                get: function () {
                     return this.fooManager2;
                 }
             });
-
 
 
             injector.addDefinitions({
@@ -60,7 +59,7 @@ describe('Property Factory', function () {
                 fooManagerFactory: {
                     type: FooManagerFactory,
                     singleton: true,
-                    inject:['fooManager2']
+                    inject: ['fooManager2']
 
                 }
             });
@@ -79,7 +78,7 @@ describe('Property Factory', function () {
     });
 
     describe('inject factory Object to not singleton ', function () {
-        var injector,FooManager;
+        var injector, FooManager;
 
         beforeEach(function () {
             injector = inject.createContainer();
@@ -108,12 +107,10 @@ describe('Property Factory', function () {
                 constructor: function () {
 
                 },
-                get:function(){
+                get: function () {
                     return this.fooManager2;
                 }
             });
-
-
 
 
             injector.addDefinitions({
@@ -135,7 +132,7 @@ describe('Property Factory', function () {
                 fooManagerFactory: {
                     type: FooManagerFactory,
                     singleton: true,
-                    inject:['fooManager2']
+                    inject: ['fooManager2']
 
                 }
             });
@@ -155,7 +152,7 @@ describe('Property Factory', function () {
 
 
     describe('inject factory Object', function () {
-        var injector,LocalFooManager;
+        var injector, LocalFooManager;
 
         beforeEach(function () {
             injector = inject.createContainer();
@@ -173,7 +170,7 @@ describe('Property Factory', function () {
 
                 },
 
-                get:function(){
+                get: function () {
                     return this.localFooManager;
                 }
             });
@@ -188,7 +185,7 @@ describe('Property Factory', function () {
                 fooManagerFactory: {
                     type: FooManagerFactory,
                     singleton: true,
-                    inject:['localFooManager']
+                    inject: ['localFooManager']
 
                 }
             });
@@ -209,7 +206,7 @@ describe('Property Factory', function () {
     });
 
     describe('inject 2 factories', function () {
-        var injector,LocalFooManager,RemoteBarManager;
+        var injector, LocalFooManager, RemoteBarManager;
 
         beforeEach(function () {
             injector = inject.createContainer();
@@ -234,7 +231,7 @@ describe('Property Factory', function () {
 
                 },
 
-                get:function(){
+                get: function () {
                     return this.localFooManager;
                 }
             });
@@ -245,7 +242,7 @@ describe('Property Factory', function () {
 
                 },
 
-                get:function(){
+                get: function () {
                     return this.remoteBarManager;
                 }
             });
@@ -281,18 +278,18 @@ describe('Property Factory', function () {
                 fooManagerFactory: {
                     type: FooManagerFactory,
                     singleton: true,
-                    inject:['localFooManager']
+                    inject: ['localFooManager']
 
                 },
                 barManagerFactory: {
                     type: BarManagerFactory,
                     singleton: true,
-                    inject:['remoteBarManager']
+                    inject: ['remoteBarManager']
                 },
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    inject:['barManager','fooManager']
+                    inject: ['barManager', 'fooManager']
                 }
             });
 
@@ -313,6 +310,79 @@ describe('Property Factory', function () {
 
             rectangle.getName().should.be.equal("foo");
             rectangle.getName2().should.be.equal("bar");
+        });
+    });
+
+
+    describe('inject factory with same object name', function () {
+        var injector, FooManager;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = Class.define({
+
+                constructor: function () {
+
+                },
+                getName: function () {
+
+                    return this.fooManager.name;
+                }
+
+            });
+
+            FooManager = Class.define({
+
+                constructor: function () {
+                    this.name = 'foo';
+                }
+            });
+
+            var FooManagerFactory = Class.define({
+
+                constructor: function () {
+
+                },
+                get: function () {
+                    return this.fooManager;
+                }
+            });
+
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: true,
+                    inject: ['fooManager']
+
+
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: true
+
+                },
+                fooManagerFactory: {
+                    type: FooManagerFactory,
+                    singleton: true,
+                    inject: ['fooManager']
+                }
+            });
+
+            injector.initialize();
+        });
+
+        it('should inject object after factory', function () {
+
+            //var rectangle = injector.getObject('rectangle');
+            var fooManagerFactory = injector.getObject('fooManagerFactory');
+
+            should.exist(fooManagerFactory.fooManager);
+
+            //should.exist(rectangle.fooManager);
+
+            //rectangle.fooManager.should.be.instanceof(FooManager);
         });
     });
 
