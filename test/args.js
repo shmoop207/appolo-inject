@@ -77,6 +77,18 @@ describe('Constructor Args',function(){
             injector.initialize();
         });
 
+        it('should have the injected value null', function () {
+
+            var rectangle = injector.getObject('rectangle',[null]);
+
+            should.exist(rectangle.size);
+            should.not.exist(rectangle.name);
+
+            rectangle.area().should.equal(25);
+
+
+        });
+
         it('should have the injected value and runtime value', function () {
 
             var rectangle = injector.getObject('rectangle',['foo']);
@@ -88,6 +100,7 @@ describe('Constructor Args',function(){
             rectangle.name.should.equal('foo');
 
         });
+
     });
 
 
