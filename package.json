@@ -1,7 +1,19 @@
 {
   "name": "appolo-inject",
   "description": "dependency injection for node js",
-  "keywords": [],
+  "keywords": [
+    "ioc",
+    "service",
+    "locator",
+    "dependency",
+    "injection",
+    "di",
+    "dependency injection",
+    "dependency injector",
+    "injection",
+    "injector",
+    "container"
+  ],
   "author": {
     "name": "Roman Svichar",
     "email": "shmoop207@gmail.com"
