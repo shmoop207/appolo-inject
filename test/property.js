@@ -326,4 +326,76 @@ describe('Property Ref', function () {
         });
     });
 
+    describe('inject property with inject array (object notation)', function () {
+        var injector;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = Class.define({
+
+                constructor: function () {
+
+                },
+
+                name: function () {
+                    return this.fooManager.name() + this.myBarManager.name()
+                }
+            });
+
+            var FooManager = Class.define({
+
+                constructor: function () {
+
+                },
+
+                name: function () {
+                    return 'foo'
+                }
+            });
+
+            var BarManager = Class.define({
+
+                constructor: function () {
+
+                },
+
+                name: function () {
+                    return 'bar'
+                }
+            });
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: false,
+                    inject: ['fooManager', { name: 'myBarManager', ref: 'barManager' }]
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: true
+                },
+                barManager: {
+                    type: BarManager,
+                    singleton: true
+                }
+            });
+
+            injector.initialize();
+        });
+
+        it('should inject property with inject array', function () {
+
+            var rectangle = injector.getObject('rectangle');
+            should.exist(rectangle);
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.myBarManager);
+
+            rectangle.name().should.equal('foobar');
+        });
+    });
+
+
+
+
 });
