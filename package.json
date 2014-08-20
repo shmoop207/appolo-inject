@@ -20,7 +20,7 @@
     "email": "shmoop207@gmail.com"
   },
   "main": "./index.js",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "license": "Mit",
   "repository": {
     "type": "git",
