@@ -83,7 +83,7 @@ get object from the injector if the object is not singleton you will get new ins
 Class.define({
     $config:{
         id:'fooController',
-        singleton: true
+        singleton: false
     },
     constructor: function () {
 
