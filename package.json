@@ -20,7 +20,7 @@
     "email": "shmoop207@gmail.com"
   },
   "main": "./index.js",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "license": "Mit",
   "repository": {
     "type": "git",
@@ -33,10 +33,10 @@
     "appolo-class": "*"
   },
   "devDependencies": {
-    "chai": "1.8.1",
+    "chai": "1.10.0",
     "grunt": "*",
-    "grunt-mocha-test": "0.8.1",
-    "sinon": "^1.8.2",
-    "sinon-chai": "^2.5.0"
+    "grunt-mocha-test": "0.12.7",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.6.0"
   }
 }
