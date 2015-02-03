@@ -20,7 +20,7 @@
     "email": "shmoop207@gmail.com"
   },
   "main": "./index.js",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "license": "Mit",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "lodash": "2.4.1",
-    "appolo-class": "*"
+    "appolo-class": "^0.2.15"
   },
   "devDependencies": {
     "chai": "1.10.0",
