@@ -4,22 +4,22 @@ var should = require('chai').should(),
     sinonChai = require("sinon-chai"),
     inject = require('../lib/inject');
 
-describe('initialize',function(){
+describe('initialize', function () {
 
 
     describe('should call initialize method', function () {
-        var injector,Rectangle;
+        var injector, Rectangle;
 
         beforeEach(function () {
             injector = inject.createContainer();
 
-            Rectangle = class{
+            Rectangle = class {
 
-                constructor () {
+                constructor() {
 
                 }
 
-                initialize () {
+                initialize() {
                     this.working = true
                 }
             }
@@ -28,7 +28,7 @@ describe('initialize',function(){
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    initMethod:'initialize'
+                    initMethod: 'initialize'
                 }
             });
 
@@ -44,7 +44,36 @@ describe('initialize',function(){
         });
     });
 
+    describe('should call initialize method linq', function () {
+        var injector, Rectangle;
 
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            Rectangle = class {
+
+                constructor() {
+
+                }
+
+                initialize() {
+                    this.working = true
+                }
+            }
+
+            injector.define('rectangle', Rectangle).singleton().initMethod('initialize')
+                .initialize()
+
+        });
+
+        it('should call initialize method', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            rectangle.working.should.be.true;
+
+        });
+    });
 
 
 });
