@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Injector Aware',function(){
@@ -10,12 +10,12 @@ describe('Injector Aware',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {

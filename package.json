@@ -19,8 +19,14 @@
     "name": "Roman Svichar",
     "email": "shmoop207@gmail.com"
   },
+
+  "engines": {
+    "node": ">= 4.0.0",
+    "npm": "2.14.x"
+  },
+
   "main": "./index.js",
-  "version": "0.3.13",
+  "version": "1.0.0",
   "license": "Mit",
   "repository": {
     "type": "git",
@@ -29,8 +35,7 @@
   "readme": "",
   "readmeFilename": "README.md",
   "dependencies": {
-    "lodash": "2.4.1",
-    "appolo-class": "^0.2.15"
+    "lodash": "3.10.1"
   },
   "devDependencies": {
     "chai": "1.10.0",

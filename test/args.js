@@ -1,8 +1,9 @@
+"use strict";
+
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
-describe('Constructor Args',function(){
+describe('Constructor Args', function () {
 
 
     describe('inject value  to constructor', function () {
@@ -11,23 +12,23 @@ describe('Constructor Args',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class {
 
-                constructor: function (size) {
+                constructor(size) {
                     this.size = size;
-                },
+                }
 
-                area: function () {
+                area() {
                     return this.size;
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    args:[{
-                        value:25
+                    args: [{
+                        value: 25
                     }]
                 }
             });
@@ -46,30 +47,274 @@ describe('Constructor Args',function(){
         });
     });
 
+    describe('inject to constructor args', function () {
+        var injector, FooManager, BarManager;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+
+        })
+
+        it('should have the injected constructor args ', function () {
+
+
+            class Rectangle {
+
+                constructor(fooManager) {
+                    this.fooManager = fooManager;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+
+            FooManager = class FooManager {
+
+                constructor() {
+
+                }
+            }
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: true
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: true
+                }
+            });
+
+            injector.initialize();
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.fooManager);
+
+            rectangle.fooManager.should.be.instanceof(FooManager);
+
+
+        });
+
+        it('should have the injected constructor args link ', function () {
+
+
+            class Rectangle {
+
+                constructor(fooManager) {
+                    this.fooManager = fooManager;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+
+            FooManager = class FooManager {
+
+                constructor() {
+
+                }
+            }
+
+            injector.define('rectangle', Rectangle).singleton(true)
+                .define('fooManager', FooManager).singleton(true)
+
+
+            injector.initialize();
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.fooManager);
+
+            rectangle.fooManager.should.be.instanceof(FooManager);
+
+
+        });
+
+
+        it('should have the injected constructor singleton false ', function () {
+
+
+            class Rectangle {
+
+                constructor(fooManager) {
+                    this.fooManager = fooManager;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+
+            FooManager = class FooManager {
+
+                constructor(barManager) {
+                    this.barManager = barManager;
+                }
+            }
+
+            BarManager = class BarManager {
+
+                constructor() {
+
+                }
+            }
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: false
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: false
+                },
+                barManager: {
+                    type: BarManager,
+                    singleton: true
+                }
+            });
+
+            injector.initialize();
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.fooManager);
+
+            rectangle.fooManager.should.be.instanceof(FooManager);
+
+            rectangle.fooManager.barManager.should.be.instanceof(BarManager);
+
+
+        });
+
+        it('should have the injected constructor Circular reference ', function () {
+
+
+            class Rectangle {
+
+                constructor(fooManager) {
+                    this.fooManager = fooManager;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+
+            FooManager = class FooManager {
+
+                constructor(barManager) {
+                    this.barManager = barManager;
+                }
+            }
+
+            BarManager = class BarManager {
+
+                constructor(rectangle) {
+
+                }
+            }
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: true
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: true
+                },
+                barManager: {
+                    type: BarManager,
+                    singleton: true
+                }
+            });
+
+            (function () {
+                injector.initialize()
+            }).should.throw(/^Circular reference/);
+        });
+
+        it('should have the injected constructor args with runtime args ', function () {
+
+
+            class Rectangle {
+
+                constructor(fooManager, test) {
+                    this.fooManager = fooManager;
+                    this.test = test;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+
+            FooManager = class FooManager {
+
+                constructor() {
+
+                }
+            }
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: false
+                },
+                fooManager: {
+                    type: FooManager,
+                    singleton: true
+                }
+            });
+
+            injector.initialize();
+
+            var rectangle = injector.getObject('rectangle', ['working']);
+
+            should.exist(rectangle.fooManager);
+
+            rectangle.fooManager.should.be.instanceof(FooManager);
+            rectangle.test.should.be.eq("working");
+
+
+        });
+    });
+
     describe('inject value  to constructor', function () {
         var injector;
 
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class {
 
-                constructor: function (size,name) {
+                constructor(size, name) {
                     this.size = size;
                     this.name = name;
-                },
+                }
 
-                area: function () {
+                area() {
                     return this.size;
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    args:[{
-                        value:25
+                    args: [{
+                        value: 25
                     }]
                 }
             });
@@ -79,7 +324,7 @@ describe('Constructor Args',function(){
 
         it('should have the injected value null', function () {
 
-            var rectangle = injector.getObject('rectangle',[null]);
+            var rectangle = injector.getObject('rectangle', [null]);
 
             should.exist(rectangle.size);
             should.not.exist(rectangle.name);
@@ -91,7 +336,7 @@ describe('Constructor Args',function(){
 
         it('should have the injected value and runtime value', function () {
 
-            var rectangle = injector.getObject('rectangle',['foo']);
+            var rectangle = injector.getObject('rectangle', ['foo']);
 
             should.exist(rectangle.size);
             should.exist(rectangle.name);
@@ -110,56 +355,56 @@ describe('Constructor Args',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class {
 
-                constructor: function (fooManager,name) {
+                constructor(fooManager, name) {
                     this.fooManager = fooManager;
-                    this.name = name+ this.fooManager.name;
+                    this.name = name + this.fooManager.name;
                 }
-            });
+            }
 
-            var FooManager = Class.define({
+            var FooManager = class {
 
-                constructor: function (name,barManager) {
+                constructor(name, barManager) {
 
                     this.barManager = barManager;
 
-                    this.name = name+ this.barManager.name;
+                    this.name = name + this.barManager.name;
                 }
 
 
-            });
+            }
 
-            var BarManager = Class.define({
+            var BarManager = class {
 
-                constructor: function (name) {
+                constructor(name) {
                     this.name = name;
                 }
 
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    args:[{
-                        ref:'fooManager'
+                    args: [{
+                        ref: 'fooManager'
                     }]
                 },
                 fooManager: {
                     type: FooManager,
                     singleton: true,
-                    args:[{
-                        value:'foo'
-                    },{
-                        ref:'barManager'
+                    args: [{
+                        value: 'foo'
+                    }, {
+                        ref: 'barManager'
                     }]
                 },
                 barManager: {
                     type: BarManager,
                     singleton: true,
-                    args:[{
-                        value:'bar'
+                    args: [{
+                        value: 'bar'
                     }]
                 }
             });
@@ -169,7 +414,7 @@ describe('Constructor Args',function(){
 
         it('should inject to object runtime and ref objects', function () {
 
-            var rectangle = injector.getObject('rectangle',['rectangle']);
+            var rectangle = injector.getObject('rectangle', ['rectangle']);
 
             should.exist(rectangle.fooManager);
             should.exist(rectangle.fooManager.barManager);

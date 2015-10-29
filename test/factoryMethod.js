@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Property Factory Method', function () {
@@ -10,24 +10,24 @@ describe('Property Factory Method', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.createFooManager();
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
 
 
@@ -72,28 +72,28 @@ describe('Property Factory Method', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function (name) {
+                }
+                getName (name) {
 
                     return this.createFooManager(name).getName();
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function (name) {
+                constructor (name) {
                     this.name = name;
-                },
+                }
 
-                getName:function(){
+                getName(){
                     return this.name;
                 }
-            });
+            }
 
 
 
@@ -135,6 +135,61 @@ describe('Property Factory Method', function () {
         });
     });
 
+    describe('inject factory method with args with link', function () {
+        var injector,FooManager;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+                getName (name) {
+
+                    return this.createFooManager(name).getName();
+                }
+
+            }
+
+            FooManager = class{
+
+                constructor (name) {
+                    this.name = name;
+                }
+
+                getName(){
+                    return this.name;
+                }
+            }
+
+            injector.define('rectangle',Rectangle).injectFactoryMethod('createFooManager','fooManager')
+                .define('fooManager',FooManager)
+
+
+
+            injector.initialize();
+        });
+
+        it('should inject factory method that creates objects and call object with args', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.createFooManager);
+
+            rectangle.createFooManager.should.be.a('Function')
+
+            rectangle.createFooManager().should.be.instanceof(FooManager);
+
+            should.exist(rectangle.createFooManager('test').name);
+
+            rectangle.createFooManager('test').name.should.be.equal("test");
+
+            rectangle.getName("test2").should.be.equal("test2")
+        });
+    });
+
 
 
 
@@ -144,32 +199,32 @@ describe('Property Factory Method', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function (name) {
+                }
+                getName (name) {
 
                     return this.createFooManager(name).getName();
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                initialize:function(){
+                initialize(){
                     this.name = Math.random();
-                },
+                }
 
-                getName:function(){
+                getName(){
                     return this.name;
                 }
-            });
+            }
 
 
 

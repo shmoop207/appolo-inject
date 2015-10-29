@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Property Object Property.js', function () {
@@ -10,24 +10,24 @@ describe('Property Object Property.js', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.otherObjectProperty;
                 }
 
-            });
+            }
 
-            var FooManager = Class.define({
+            var FooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
 
 

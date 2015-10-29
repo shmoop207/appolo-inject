@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Property Value',function(){
@@ -11,16 +11,16 @@ describe('Property Value',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
                     this.number = Math.random();
-                },
+                }
 
-                area: function () {
+                area () {
                     return this.size;
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -32,6 +32,39 @@ describe('Property Value',function(){
                     }]
                 }
             });
+
+            injector.initialize();
+        });
+
+        it('should have the injected value', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.size);
+
+            rectangle.area().should.equal(25);
+
+        });
+    });
+
+    describe('inject value to object linq', function () {
+        var injector;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = class{
+
+                constructor () {
+                    this.number = Math.random();
+                }
+
+                area () {
+                    return this.size;
+                }
+            }
+
+            injector.define('rectangle',Rectangle).singleton().injectorValue('size',25)
 
             injector.initialize();
         });

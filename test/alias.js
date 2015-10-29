@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 
@@ -11,23 +11,23 @@ describe('Alias', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class {
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            };
 
-            CalcManager = Class.define({
+            CalcManager = class {
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                calc: function () {
+                calc () {
                     return 25
                 }
-            });
+            };
 
             injector.addDefinitions({
                 rectangle: {
@@ -96,38 +96,38 @@ describe('Alias', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class {
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
-            CalcManager = Class.define({
+            CalcManager = class {
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                calc: function () {
+                calc () {
                     return 25
                 }
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class {
 
-                constructor: function () {
-
-                },
-
-                calc: function () {
-                    return 25
-                },
-
-                cleanable:function(){
+                constructor () {
 
                 }
-            });
+
+                calc () {
+                    return 25
+                }
+
+                cleanable(){
+
+                }
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -193,46 +193,46 @@ describe('Alias', function () {
             injector = inject.createContainer();
 
 
-            var Cleanable = Class.define({
+            var Cleanable = class {
 
-                constructor: function () {
-
-                }
-            });
-
-
-            var Rectangle = Class.define({
-
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
-            CalcManager = Class.define({
 
-                constructor: function () {
+            var Rectangle = class {
 
-                },
+                constructor () {
 
-                calc: function () {
+                }
+            }
+
+            CalcManager = class {
+
+                constructor () {
+
+                }
+
+                calc () {
                     return 25
                 }
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class {
 
-                constructor: function () {
-
-                },
-
-                calc: function () {
-                    return 25
-                },
-
-                cleanable:function(){
+                constructor () {
 
                 }
-            });
+
+                calc () {
+                    return 25
+                }
+
+                cleanable(){
+
+                }
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -267,6 +267,80 @@ describe('Alias', function () {
                     singleton: true
                 }
             });
+
+            injector.initialize();
+        });
+
+        it('should inject property ', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.calcable);
+            should.exist(rectangle.cleanable);
+
+            rectangle.calcable.should.be.an.instanceOf(Array);
+            rectangle.cleanable.should.be.an.instanceOf(Array);
+
+            rectangle.calcable.length.should.be.equal(3);
+            rectangle.cleanable.length.should.be.equal(1);
+
+        });
+    });
+
+
+
+    describe('should inject multi alias by class type linq', function () {
+        var injector,CalcManager,FooManager;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+
+            var Cleanable = class {
+
+                constructor () {
+
+                }
+            }
+
+
+            var Rectangle = class {
+
+                constructor () {
+
+                }
+            }
+
+            CalcManager = class {
+
+                constructor () {
+
+                }
+
+                calc () {
+                    return 25
+                }
+            }
+
+            FooManager = class {
+
+                constructor () {
+
+                }
+
+                calc () {
+                    return 25
+                }
+
+                cleanable(){
+
+                }
+            }
+
+            injector.define('rectangle',Rectangle).singleton().injectAlias('calcable','calcable').injectAlias('cleanable',Cleanable)
+                .define('calcManager',CalcManager).alias('calcable').singleton()
+                .define('fooManager',FooManager).alias(['calcable',Cleanable]).singleton()
+                .define('barManager',CalcManager).alias(['calcable']).singleton()
 
             injector.initialize();
         });

@@ -1,7 +1,7 @@
+"use strict";
 var should = require('chai').should(),
-    sinon = require("sinon");
+    sinon = require("sinon"),
     sinonChai = require("sinon-chai"),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('initialize',function(){
@@ -13,16 +13,16 @@ describe('initialize',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            Rectangle = Class.define({
+            Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                initialize: function () {
+                initialize () {
                     this.working = true
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {

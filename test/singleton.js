@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Singleton',function(){
@@ -11,16 +11,16 @@ describe('Singleton',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
                     this.number = Math.random();
-                },
+                }
 
-                area: function () {
+                area () {
                     return 25;
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -61,16 +61,16 @@ describe('Singleton',function(){
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
                     this.number = Math.random();
-                },
+                }
 
-                area: function () {
+                area () {
                     return 25;
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {

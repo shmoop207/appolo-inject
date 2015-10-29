@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 
@@ -51,12 +51,12 @@ describe('Ioc', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -82,12 +82,12 @@ describe('Ioc', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -116,12 +116,12 @@ describe('Ioc', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
 
             injector.addDefinitions({
                 rectangle: {
@@ -181,19 +181,19 @@ describe('Ioc', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            Rectangle = Class.define({
+            Rectangle = class{
 
-                constructor: function () {
-
-                }
-            });
-
-            Circle = Class.define({
-
-                constructor: function () {
+                constructor () {
 
                 }
-            });
+            }
+
+            Circle = class{
+
+                constructor () {
+
+                }
+            }
 
             injector.addDefinitions({
                 rectangle: {

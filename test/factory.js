@@ -1,5 +1,5 @@
+"use strict";
 var should = require('chai').should(),
-    Class = require('appolo-class'),
     inject = require('../lib/inject');
 
 describe('Property Factory', function () {
@@ -10,34 +10,34 @@ describe('Property Factory', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.manager.name;
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
-            var FooManagerFactory = Class.define({
+            var FooManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                get: function () {
+                }
+                get () {
                     return this.fooManager2;
                 }
-            });
+            }
 
 
             injector.addDefinitions({
@@ -83,34 +83,34 @@ describe('Property Factory', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.manager.name;
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
-            var FooManagerFactory = Class.define({
+            var FooManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                get: function () {
+                }
+                get () {
                     return this.fooManager2;
                 }
-            });
+            }
 
 
             injector.addDefinitions({
@@ -157,23 +157,23 @@ describe('Property Factory', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            LocalFooManager = Class.define({
+            LocalFooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
-            var FooManagerFactory = Class.define({
+            var FooManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                get: function () {
+                get () {
                     return this.localFooManager;
                 }
-            });
+            }
 
             injector.addDefinitions({
 
@@ -211,56 +211,56 @@ describe('Property Factory', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            LocalFooManager = Class.define({
+            LocalFooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
-            RemoteBarManager = Class.define({
+            RemoteBarManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'bar';
                 }
-            });
+            }
 
-            var FooManagerFactory = Class.define({
+            var FooManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                get: function () {
+                get () {
                     return this.localFooManager;
                 }
-            });
+            }
 
-            var BarManagerFactory = Class.define({
+            var BarManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
+                }
 
-                get: function () {
+                get () {
                     return this.remoteBarManager;
                 }
-            });
+            }
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.fooManager.name;
-                },
-                getName2: function () {
+                }
+                getName2 () {
 
                     return this.barManager.name;
                 }
-            });
+            }
 
 
             injector.addDefinitions({
@@ -320,34 +320,34 @@ describe('Property Factory', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            var Rectangle = Class.define({
+            var Rectangle = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                getName: function () {
+                }
+                getName () {
 
                     return this.fooManager.name;
                 }
 
-            });
+            }
 
-            FooManager = Class.define({
+            FooManager = class{
 
-                constructor: function () {
+                constructor () {
                     this.name = 'foo';
                 }
-            });
+            }
 
-            var FooManagerFactory = Class.define({
+            var FooManagerFactory = class{
 
-                constructor: function () {
+                constructor () {
 
-                },
-                get: function () {
+                }
+                get () {
                     return this.fooManager;
                 }
-            });
+            }
 
 
             injector.addDefinitions({
