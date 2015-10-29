@@ -223,4 +223,52 @@ describe('Ioc', function () {
     });
 
 
+    describe('get object with existing obj', function () {
+        var injector, Rectangle, Circle;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            Rectangle = class{
+
+                constructor () {
+
+                }
+            }
+
+            Circle = class{
+
+                constructor () {
+
+                }
+            }
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton:true
+                }
+            });
+
+            injector.addDefinitions({
+                circle: {
+                    type: Circle,
+                    singleton:true
+                }
+            });
+
+            injector.addObject("test",{})
+
+
+        });
+
+        it('should not throw error', function () {
+
+            (function () {
+                injector.initialize()
+            }).should.not.throw();
+        });
+    });
+
+
 });
