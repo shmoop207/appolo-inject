@@ -33,7 +33,7 @@ describe('Singleton',function(){
         });
 
         it('should save object in instances', function () {
-            should.exist(injector.getInstances()['rectangle']);
+            should.exist(injector.getInstances().get('rectangle'));
         });
 
         it('should get object', function () {

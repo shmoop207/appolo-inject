@@ -24,24 +24,31 @@ describe('Ioc', function () {
             should.exist(injector.getDefinition('test'));
         });
 
-        xit('should add duplicate definitions', function () {
+
+
+        it('should add duplicate definitions', function () {
             var injector = inject.createContainer();
 
 
-            (function () {
+            var Test1 = class Test1{}
+            var Test2 = class Test1{}
 
-                injector.addDefinitions({
+            injector.addDefinitions({
                     test: {
-                        type: 'test'
+                        type: Test1
                     }
                 });
 
                 injector.addDefinitions({
                     test: {
-                        type: 'test'
+                        type: Test2
                     }
                 })
-            }).should.throw("Injector:definition id already exists:test")
+
+            injector.initialize();
+
+            injector.get('test').should.be.an.instanceOf(Test2)
+
         });
     });
 
@@ -65,6 +72,31 @@ describe('Ioc', function () {
             });
 
             injector.initialize();
+        });
+
+
+        it('should get object', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle);
+        });
+    });
+
+    describe('get simple object with linq', function () {
+        var injector;
+
+        beforeEach(function () {
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+            }
+
+            injector = inject.createContainer()
+                .define('rectangle',Rectangle)
+                .initialize();
         });
 
 
@@ -181,14 +213,14 @@ describe('Ioc', function () {
         beforeEach(function () {
             injector = inject.createContainer();
 
-            Rectangle = class{
+            Rectangle = class Rectangle{
 
                 constructor () {
 
                 }
             }
 
-            Circle = class{
+            Circle = class Circle{
 
                 constructor () {
 

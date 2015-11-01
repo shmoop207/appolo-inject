@@ -85,5 +85,65 @@ describe('Property Array', function () {
         });
     });
 
+    describe('inject array of objects linq', function () {
+        var injector;
+
+        beforeEach(function () {
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+                getNames () {
+
+                    var name = ""
+                    this.objects.forEach(function(object){
+                        name+=object.name
+                    });
+
+                    return name;
+                }
+
+            }
+
+            var FooManager = class{
+
+                constructor () {
+
+                    this.name = 'foo';
+                }
+
+
+            }
+
+            var BarManager = class{
+
+                constructor () {
+                    this.name = 'bar';
+                }
+
+            }
+
+
+           injector = inject.createContainer()
+                .define('rectangle',Rectangle)
+                .injectArray('objects',[{ref:'fooManager'},{ref:'barManager'}])
+                .define('fooManager',FooManager).singleton()
+                .define('barManager',BarManager).singleton()
+                .initialize();
+        });
+
+        it('should inject to object runtime and ref objects', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.objects);
+            rectangle.objects.should.be.an.instanceOf(Array);
+            rectangle.objects.should.have.length(2);
+            rectangle.getNames().should.equal('foobar');
+        });
+    });
+
 });
 

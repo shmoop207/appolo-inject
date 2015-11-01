@@ -47,6 +47,39 @@ describe('Constructor Args', function () {
         });
     });
 
+    describe('inject value  to constructor linq', function () {
+        var injector;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = class {
+
+                constructor(size) {
+                    this.size = size;
+                }
+
+                area() {
+                    return this.size;
+                }
+            }
+
+            injector.define('rectangle',Rectangle).singleton().args({value: 25})
+
+            injector.initialize();
+        });
+
+        it('should have the injected value', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.size);
+
+            rectangle.area().should.equal(25);
+
+        });
+    });
+
     describe('inject to constructor args', function () {
         var injector, FooManager, BarManager;
 

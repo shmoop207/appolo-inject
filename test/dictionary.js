@@ -81,5 +81,60 @@ describe('Property Dictionary', function () {
         });
     });
 
+    describe('inject dictionary of objects linq', function () {
+        var injector;
+
+        beforeEach(function () {
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+                getNames () {
+
+
+                    return this.objects.foo.name + this.objects.bar.name + this.objects.baz;
+                }
+
+            }
+
+            var FooManager = class{
+
+                constructor () {
+                    this.name = 'foo';
+                }
+            }
+
+            var BarManager = class{
+
+                constructor () {
+                    this.name = 'bar';
+                }
+
+            }
+
+
+            injector = inject.createContainer()
+                .define('rectangle',Rectangle)
+                .injectDictionary('objects',[{key:'foo',ref: 'fooManager'},{key:'bar',ref: 'barManager'},{key:'baz',value: 'baz'}])
+                .define('fooManager',FooManager).singleton()
+                .define('barManager',BarManager).singleton()
+                .initialize();
+        });
+
+        it('should inject to object runtime and ref objects', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.objects);
+            rectangle.objects.should.be.an.instanceOf(Object);
+
+            rectangle.objects.should.have.keys(['foo', 'baz','bar']);
+
+            rectangle.getNames().should.equal('foobarbaz');
+        });
+    });
+
 });
 

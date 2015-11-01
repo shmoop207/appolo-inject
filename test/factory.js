@@ -77,6 +77,61 @@ describe('Property Factory', function () {
         });
     });
 
+
+    describe('inject factory Object linq', function () {
+        var injector, FooManager;
+
+        beforeEach(function () {
+
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+                getName () {
+
+                    return this.manager.name;
+                }
+
+            }
+
+            FooManager = class{
+
+                constructor () {
+                    this.name = 'foo';
+                }
+            }
+
+            var FooManagerFactory = class{
+
+                constructor () {
+
+                }
+                get () {
+                    return this.fooManager2;
+                }
+            }
+
+            injector = inject.createContainer()
+                .define('rectangle',Rectangle).singleton().injectFactory('manager','fooManagerFactory')
+                .define('fooManager2',FooManager).singleton()
+                .define('fooManagerFactory',FooManagerFactory).singleton().inject('fooManager2')
+                .initialize();
+        });
+
+        it('should inject object after factory', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.manager);
+
+            rectangle.manager.should.be.instanceof(FooManager);
+        });
+    });
+
+
+
     describe('inject factory Object to not singleton ', function () {
         var injector, FooManager;
 

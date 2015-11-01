@@ -135,7 +135,7 @@ describe('Property Factory Method', function () {
         });
     });
 
-    describe('inject factory method with args with link', function () {
+    describe('inject factory method with args with linq', function () {
         var injector,FooManager;
 
         beforeEach(function () {

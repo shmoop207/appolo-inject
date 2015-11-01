@@ -65,5 +65,48 @@ describe('Property Object Property.js', function () {
         });
     });
 
+    describe('inject property from object property linq', function () {
+        var injector;
+
+        beforeEach(function () {
+
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+                getName () {
+
+                    return this.otherObjectProperty;
+                }
+
+            }
+
+            var FooManager = class{
+
+                constructor () {
+                    this.name = 'foo';
+                }
+            }
+
+
+            injector = inject.createContainer()
+                .define('rectangle',Rectangle)
+                .injectObjectProperty('otherObjectProperty','fooManager','name')
+                .define('fooManager',FooManager).singleton()
+                .initialize();
+        });
+
+        it('should inject to object runtime and ref objects', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.otherObjectProperty);
+
+            rectangle.getName().should.equal('foo');
+        });
+    });
+
 });
 
