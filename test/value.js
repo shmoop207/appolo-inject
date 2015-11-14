@@ -64,7 +64,7 @@ describe('Property Value',function(){
                 }
             }
 
-            injector.define('rectangle',Rectangle).singleton().injectorValue('size',25)
+            injector.define('rectangle',Rectangle).singleton().injectValue('size',25)
 
             injector.initialize();
         });
