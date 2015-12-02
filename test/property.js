@@ -513,6 +513,64 @@ describe('Property Ref', function () {
         });
     });
 
+    describe('inject property with inject space (object notation) link', function () {
+        var injector;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = class{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return this.fooManager.name() + this.barManager.name()
+                }
+            }
+
+            var FooManager = class{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'foo'
+                }
+            }
+
+            var BarManager = class{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
+
+            injector.define('rectangle',Rectangle).inject('fooManager barManager')
+                .define('fooManager',FooManager)
+                .define('barManager',BarManager)
+
+            injector.initialize();
+        });
+
+        it('should inject property with inject array', function () {
+
+            var rectangle = injector.getObject('rectangle');
+            should.exist(rectangle);
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.barManager);
+
+            rectangle.name().should.equal('foobar');
+        });
+    });
+
 
 
 });
