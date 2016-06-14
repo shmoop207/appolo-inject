@@ -64,7 +64,7 @@ describe('Constructor Args', function () {
                 }
             }
 
-            injector.define('rectangle',Rectangle).singleton().args({value: 25})
+            injector.define('rectangle', Rectangle).singleton().args({value: 25})
 
             injector.initialize();
         });
@@ -168,6 +168,37 @@ describe('Constructor Args', function () {
             rectangle.fooManager.should.be.instanceof(FooManager);
 
 
+        });
+
+
+        it('should not inject without constructor args ', function () {
+
+
+            class Rectangle {
+
+                area(fooManager) {
+                    return this.size;
+                }
+            }
+
+
+            class FooManager {
+
+                constructor() {
+                    throw new Error("aaa")
+                }
+            }
+
+            injector.define('rectangle', Rectangle).singleton(true)
+                .define('fooManager', FooManager)
+
+            should.not.throw(()=> {
+                injector.initialize();
+
+                var rectangle = injector.getObject('rectangle');
+
+
+            })
         });
 
 
@@ -455,5 +486,6 @@ describe('Constructor Args', function () {
         });
     });
 
-});
+})
+;
 
