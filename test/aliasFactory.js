@@ -156,6 +156,65 @@ describe('Alias Factory', function () {
     });
 
 
+    describe('should inject alias factory link indexBy', function () {
+        var injector,CalcManager;
+
+        beforeEach(function () {
+            injector = inject.createContainer();
+
+            var Rectangle = class {
+
+                constructor () {
+
+                }
+            }
+
+            CalcManager = class {
+
+                static get NAME(){
+
+                    return "test";
+                }
+
+                constructor (num) {
+                    this.num = num || 25
+
+
+                }
+
+                calc () {
+                    return this.num
+                }
+            }
+
+            injector.define('rectangle',Rectangle).singleton().injectAliasFactory('calcable','calcable',"NAME")
+            injector.define('calcManager',CalcManager).aliasFactory(['calcable'])
+
+
+            injector.initialize();
+        });
+
+        it('should inject property ', function () {
+
+            var rectangle = injector.getObject('rectangle');
+
+            should.exist(rectangle.calcable);
+
+            rectangle.calcable.should.be.an.instanceOf(Object);
+
+
+            var calcable = rectangle.calcable.test()
+
+            calcable.calc.should.be.a.Function;
+
+            calcable.calc().should.be.eq(25);
+        });
+
+
+
+
+    });
+
 
 
 
