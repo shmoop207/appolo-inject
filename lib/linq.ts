@@ -79,7 +79,7 @@ export class Linq {
         })
     }
 
-    public injectArray(name:string, arr:any[]):Linq {
+    public injectArray(name:string, arr:IParamInject[]):Linq {
         return this.inject({
             name: name,
             array: arr
@@ -87,7 +87,7 @@ export class Linq {
     }
 
 
-    public injectDictionary(name:string, dic:{[index:string]:any}):Linq {
+    public injectDictionary(name:string, dic:IParamInject[]):Linq {
         return this.inject({
             name: name,
             dictionary: dic

@@ -256,14 +256,14 @@ export class Injector {
     private _wireObjects() {
 
         //add aliasFactory
-        this._definitions.forEach((definition, objectId) => {
+        this._definitions.forEach((definition:IDefinition, objectId:string) => {
             if (definition.aliasFactory) {
                 this._populateAliasFactory(definition, objectId)
             }
         });
 
 
-        this._definitions.forEach((definition, objectId) => {
+        this._definitions.forEach((definition:IDefinition, objectId:string) => {
             (definition.singleton && !definition.lazy) && (this._createObjectInstance(objectId, definition));
         });
 
@@ -273,7 +273,7 @@ export class Injector {
             (this._definitions.has(objectId)) && (this._injectPropertiesAndLookUpMethods(instance, this._definitions.get(objectId), objectId));
         });
 
-        this._instances.forEach((instance, objectId) => {
+        this._instances.forEach((instance:any, objectId:string) => {
             if (this._definitions.has(objectId)) {
                 this._injectFactoryObject(instance, objectId);
                 this._injectAlias(this._definitions.get(objectId), instance);
@@ -365,7 +365,7 @@ export class Injector {
             else if (prop.dictionary) {
                 injectObject = {};
 
-                _.forEach(prop.dictionary, propObj => injectObject[propObj.key] = propObj.value || this.getObject(propObj.ref));
+                _.forEach(prop.dictionary, (propObj:IParamInject) => injectObject[propObj.key] = propObj.value || this.getObject(propObj.ref));
 
             }
             else if (prop.value) {
@@ -428,7 +428,7 @@ export class Injector {
         let factoryData = this._factories.get(objectId);
 
         if (factoryData) {
-            _.forEach(factoryData, (factory, propName) => object[propName] = this.getObject<IFactory<T>>(factory).get());
+            _.forEach(factoryData, (factory:string, propName:string) => object[propName] = this.getObject<IFactory<T>>(factory).get());
         }
     }
 

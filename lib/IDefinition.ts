@@ -7,7 +7,7 @@ export interface IParamInject{
     aliasFactory?:string,
     alias?:string,
     array?:IParamInject[],
-    dictionary?:{[index:string]:IParamInject},
+    dictionary?:IParamInject[],
     factory?:string,
     factoryMethod?:string,
     objectProperty?:{
