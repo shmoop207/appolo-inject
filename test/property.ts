@@ -1,26 +1,40 @@
 "use strict";
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+import {Injector} from "../lib/inject";
+let should = require('chai').should(),
+    inject = require('../lib/inject');
+
+
 describe('Property Ref', function () {
+
     describe('inject object by ref', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                calcManager:any
+                constructor () {
+
                 }
-                area() {
+
+                area () {
                     return this.calcManager.calc();
                 }
             }
-            class CalcManager {
-                constructor() {
+
+            class CalcManager{
+
+                constructor () {
+
                 }
-                calc() {
-                    return 25;
+
+                calc () {
+                    return 25
                 }
             }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -37,32 +51,47 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             rectangle.area().should.equal(25);
+
         });
     });
+
     describe('inject property with different name', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                calc:any
+                constructor () {
+
                 }
-                area() {
+
+                area () {
                     return this.calc.calc();
                 }
             }
-            class CalcManager {
-                constructor() {
+
+            class CalcManager{
+
+                constructor () {
+
                 }
-                calc() {
-                    return 25;
+
+                calc () {
+                    return 25
                 }
             }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -79,33 +108,51 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             rectangle.area().should.equal(25);
+
             should.not.exist(rectangle.CalcManager);
+
         });
     });
+
+
+
     describe('inject property with properties  def', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                calc:any
+                constructor () {
+
                 }
-                area() {
+
+                area () {
                     return this.calc.calc();
                 }
             }
-            class CalcManager {
-                constructor() {
+
+            class CalcManager{
+
+                constructor () {
+
                 }
-                calc() {
-                    return 25;
+
+                calc () {
+                    return 25
                 }
             }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -122,40 +169,65 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             rectangle.area().should.equal(25);
+
             should.not.exist(rectangle.CalcManager);
+
         });
     });
+
+
+
+
+
     describe('inject property with inject array', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                fooManager:any;
+                barManager:any;
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name() + this.barManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo';
+
+                name () {
+                    return this.fooManager.name() + this.barManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+           class FooManager{
+
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo'
                 }
             }
+
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -171,41 +243,60 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property with inject array', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.exist(rectangle.barManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
     describe('inject property with nested properties', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+             class Rectangle{
+                 fooManager:any
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo' + this.barManager.name();
+
+                name () {
+                    return this.fooManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+            class FooManager{
+                barManager:any
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo' + this.barManager.name()
                 }
             }
+
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -222,42 +313,62 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property with nested properties', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.not.exist(rectangle.barManager);
             should.exist(rectangle.fooManager.barManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
     describe('inject property with inject array (object notation)', function () {
         let injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                fooManager:any
+                myBarManager:any
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name() + this.myBarManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo';
+
+                name () {
+                    return this.fooManager.name() + this.myBarManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+            class FooManager{
+
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo'
                 }
             }
+
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -273,130 +384,199 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property with inject array', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.exist(rectangle.myBarManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
     describe('inject property with nested properties link', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                fooManager:any
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo' + this.barManager.name();
+
+                name () {
+                    return this.fooManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+            class FooManager{
+                barManager:any
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo' + this.barManager.name()
                 }
             }
-            injector.define('rectangle', Rectangle).inject(['fooManager'])
-                .define('fooManager', FooManager).inject('barManager')
-                .define('barManager', BarManager);
+
+             class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
+            injector.define('rectangle',Rectangle).inject(['fooManager'])
+                .define('fooManager',FooManager).inject('barManager')
+                .define('barManager',BarManager);
+
+
             injector.initialize();
         });
+
         it('should inject property with nested properties', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.not.exist(rectangle.barManager);
             should.exist(rectangle.fooManager.barManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
+
     describe('inject property with inject array (object notation) link', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                fooManager:any
+                myBarManager:any
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name() + this.myBarManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo';
+
+                name () {
+                    return this.fooManager.name() + this.myBarManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+            class FooManager{
+
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo'
                 }
             }
-            injector.define('rectangle', Rectangle).inject('fooManager').inject('myBarManager', 'barManager')
-                .define('fooManager', FooManager)
-                .define('barManager', BarManager);
+
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
+
+            injector.define('rectangle',Rectangle).inject('fooManager').inject('myBarManager','barManager')
+                .define('fooManager',FooManager)
+                .define('barManager',BarManager)
+
             injector.initialize();
         });
+
         it('should inject property with inject array', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.exist(rectangle.myBarManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
     describe('inject property with inject space (object notation) link', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                fooManager:any
+                barManager:any
+                constructor () {
+
                 }
-                name() {
-                    return this.fooManager.name() + this.barManager.name();
-                }
-            }
-            class FooManager {
-                constructor() {
-                }
-                name() {
-                    return 'foo';
+
+                name () {
+                    return this.fooManager.name() + this.barManager.name()
                 }
             }
-            class BarManager {
-                constructor() {
+
+            class FooManager{
+
+                constructor () {
+
                 }
-                name() {
-                    return 'bar';
+
+                name () {
+                    return 'foo'
                 }
             }
-            injector.define('rectangle', Rectangle).inject('fooManager barManager')
-                .define('fooManager', FooManager)
-                .define('barManager', BarManager);
+
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
+
+            injector.define('rectangle',Rectangle).inject('fooManager barManager')
+                .define('fooManager',FooManager)
+                .define('barManager',BarManager)
+
             injector.initialize();
         });
+
         it('should inject property with inject array', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
             should.exist(rectangle);
             should.exist(rectangle.fooManager);
             should.exist(rectangle.barManager);
+
             rectangle.name().should.equal('foobar');
         });
     });
+
+
+
 });
-//# sourceMappingURL=property.js.map

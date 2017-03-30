@@ -1,55 +1,89 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
-describe('Property Value', function () {
+import {Injector} from "../lib/inject";
+let should = require('chai').should(),
+    inject = require('../lib/inject');
+
+describe('Property Value',function(){
+
+
     describe('inject value to object', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                number:number
+                size:number
+                constructor () {
                     this.number = Math.random();
                 }
-                area() {
+
+                area () {
                     return this.size;
                 }
             }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    properties: [{
-                            name: 'size',
-                            value: 25
-                        }]
+                    properties:[{
+                        name:'size',
+                        value:25
+                    }]
                 }
             });
+
             injector.initialize();
         });
+
         it('should have the injected value', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.size);
+
             rectangle.area().should.equal(25);
+
         });
     });
+
     describe('inject value to object linq', function () {
-        let injector;
+        let injector:Injector;
+
         it('should have the injected value', function () {
+
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                number:number
+                size:number
+
+                constructor () {
                     this.number = Math.random();
                 }
-                area() {
+
+                area () {
                     return this.size;
                 }
             }
-            injector.define('rectangle', Rectangle).singleton().injectValue('size', 25);
+
+            injector.define('rectangle',Rectangle).singleton().injectValue('size',25)
+
             injector.initialize();
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.size);
+
             rectangle.area().should.equal(25);
+
         });
     });
+
+
+
+
 });
-//# sourceMappingURL=value.js.map
+

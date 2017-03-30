@@ -1,25 +1,37 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const chai = require("chai");
-const inject = require("../lib/inject");
+import chai = require('chai');
+import    inject = require('../lib/inject');
+import {Injector} from "../lib/inject";
+
 let should = chai.should();
+
+
 describe('Alias Factory', function () {
+
     describe('should inject alias factory', function () {
-        let injector, CalcManager;
+        let injector,CalcManager;
+
         beforeEach(function () {
             injector = inject.createContainer();
+
             let Rectangle = class {
-                constructor() {
+
+                constructor () {
+
                 }
-            };
+            }
+
             CalcManager = class {
-                constructor(num) {
-                    this.num = num || 25;
+                num:number
+                constructor (num) {
+                    this.num = num || 25
                 }
-                calc() {
-                    return this.num;
+
+                calc () {
+                    return this.num
                 }
-            };
+            }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -33,103 +45,183 @@ describe('Alias Factory', function () {
                 },
                 calcManager: {
                     type: CalcManager,
-                    aliasFactory: ['calcable'],
+                    aliasFactory:['calcable'],
                     singleton: false
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
+
             let rectangle = injector.getObject('rectangle');
+
             should.exist(rectangle.calcable);
+
             rectangle.calcable.should.be.an.instanceOf(Array);
+
             rectangle.calcable.length.should.be.equal(1);
-            let calcable = rectangle.calcable[0]();
+
+            let calcable = rectangle.calcable[0]()
+
             calcable.calc.should.be.a.Function;
+
             calcable.calc().should.be.eq(25);
         });
+
+
         it('should inject property with run time params', function () {
+
             let rectangle = injector.getObject('rectangle');
+
             should.exist(rectangle.calcable);
+
             rectangle.calcable.should.be.an.instanceOf(Array);
+
             rectangle.calcable.length.should.be.equal(1);
-            let calcable = rectangle.calcable[0](30);
+
+            let calcable = rectangle.calcable[0](30)
+
             calcable.calc.should.be.a.Function;
+
             calcable.calc().should.be.eq(30);
         });
+
     });
+
     describe('should inject alias factory link', function () {
-        let injector, CalcManager;
+        let injector:Injector,CalcManager;
+
         beforeEach(function () {
             injector = inject.createContainer();
+
             let Rectangle = class {
-                constructor() {
+
+                constructor () {
+
                 }
-            };
+            }
+
             CalcManager = class {
-                constructor(num) {
-                    this.num = num || 25;
+                num:number;
+                constructor (num) {
+                    this.num = num || 25
                 }
-                calc() {
-                    return this.num;
+
+                calc () {
+                    return this.num
                 }
-            };
-            injector.define('rectangle', Rectangle)
+            }
+
+            injector.define('rectangle',Rectangle)
                 .singleton()
-                .injectAliasFactory('calcable', 'calcable');
-            injector.define('calcManager', CalcManager).aliasFactory(['calcable']);
+                .injectAliasFactory('calcable','calcable')
+
+            injector.define('calcManager',CalcManager).aliasFactory(['calcable'])
+
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
-            var rectangle = injector.getObject('rectangle');
+
+            var rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.calcable);
+
             rectangle.calcable.should.be.an.instanceOf(Array);
+
             rectangle.calcable.length.should.be.equal(1);
-            let calcable = rectangle.calcable[0]();
+
+            let calcable = rectangle.calcable[0]()
+
             calcable.calc.should.be.a.Function;
+
             calcable.calc().should.be.eq(25);
         });
+
+
         it('should inject property with run time params', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.calcable);
+
             rectangle.calcable.should.be.an.instanceOf(Array);
+
             rectangle.calcable.length.should.be.equal(1);
-            let calcable = rectangle.calcable[0](30);
+
+            let calcable = rectangle.calcable[0](30)
+
             calcable.calc.should.be.a.Function;
+
             calcable.calc().should.be.eq(30);
         });
+
     });
+
+
     describe('should inject alias factory link indexBy', function () {
-        let injector, CalcManager;
+        let injector:Injector,CalcManager;
+
         beforeEach(function () {
             injector = inject.createContainer();
+
             let Rectangle = class {
-                constructor() {
+
+                constructor () {
+
                 }
-            };
+            }
+
             CalcManager = class {
-                static get NAME() {
+                num:number;
+                static get NAME(){
+
                     return "test";
                 }
-                constructor(num) {
-                    this.num = num || 25;
+
+                constructor (num) {
+                    this.num = num || 25
+
+
                 }
-                calc() {
-                    return this.num;
+
+                calc () {
+                    return this.num
                 }
-            };
-            injector.define('rectangle', Rectangle).singleton().injectAliasFactory('calcable', 'calcable', "NAME");
-            injector.define('calcManager', CalcManager).aliasFactory(['calcable']);
+            }
+
+            injector.define('rectangle',Rectangle).singleton().injectAliasFactory('calcable','calcable',"NAME")
+            injector.define('calcManager',CalcManager).aliasFactory(['calcable'])
+
+
             injector.initialize();
         });
+
         it('should inject property ', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.calcable);
+
             rectangle.calcable.should.be.an.instanceOf(Object);
-            let calcable = rectangle.calcable.test();
+
+
+            let calcable = rectangle.calcable.test()
+
             calcable.calc.should.be.a.Function;
+
             calcable.calc().should.be.eq(25);
         });
+
+
+
+
     });
+
+
+
+
 });
-//# sourceMappingURL=aliasFactory.js.map

@@ -1,23 +1,37 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+import {Injector} from "../lib/inject";
+let should = require('chai').should(),
+    inject = require('../lib/inject');
+
 describe('Property Object Property.js', function () {
+
     describe('inject property from object property', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+            class Rectangle{
+                otherObjectProperty:string
+                constructor () {
+
                 }
-                getName() {
+                getName () {
+
                     return this.otherObjectProperty;
                 }
+
             }
-            class FooManager {
-                constructor() {
+
+            class FooManager{
+                name:string
+                constructor () {
                     this.name = 'foo';
                 }
             }
+
+
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
@@ -26,8 +40,8 @@ describe('Property Object Property.js', function () {
                         {
                             name: 'otherObjectProperty',
                             objectProperty: {
-                                object: 'fooManager',
-                                property: 'name'
+                                object:'fooManager',
+                                property:'name'
                             }
                         }
                     ]
@@ -35,42 +49,65 @@ describe('Property Object Property.js', function () {
                 fooManager: {
                     type: FooManager,
                     singleton: true
+
                 }
             });
+
             injector.initialize();
         });
+
         it('should inject to object runtime and ref objects', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.otherObjectProperty);
+
             rectangle.getName().should.equal('foo');
         });
     });
+
     describe('inject property from object property linq', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
-            class Rectangle {
-                constructor() {
+
+
+            class Rectangle{
+                otherObjectProperty:string
+                constructor () {
+
                 }
-                getName() {
+                getName () {
+
                     return this.otherObjectProperty;
                 }
+
             }
-            class FooManager {
-                constructor() {
+
+             class FooManager{
+                name:string
+                constructor () {
                     this.name = 'foo';
                 }
             }
+
+
             injector = inject.createContainer()
-                .define('rectangle', Rectangle)
-                .injectObjectProperty('otherObjectProperty', 'fooManager', 'name')
-                .define('fooManager', FooManager).singleton()
+                .define('rectangle',Rectangle)
+                .injectObjectProperty('otherObjectProperty','fooManager','name')
+                .define('fooManager',FooManager).singleton()
                 .initialize();
         });
+
         it('should inject to object runtime and ref objects', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.otherObjectProperty);
+
             rectangle.getName().should.equal('foo');
         });
     });
+
 });
-//# sourceMappingURL=objectProperty.js.map
+

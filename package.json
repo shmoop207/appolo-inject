@@ -19,14 +19,12 @@
     "name": "Roman Svichar",
     "email": "shmoop207@gmail.com"
   },
-
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">=2.14.x"
   },
-
   "main": "./index.js",
-  "version": "1.0.11",
+  "version": "2.0.0",
   "license": "Mit",
   "repository": {
     "type": "git",
@@ -38,10 +36,17 @@
     "lodash": "4.17.4"
   },
   "devDependencies": {
-    "chai": "1.10.0",
-    "grunt": "*",
-    "grunt-mocha-test": "0.12.7",
-    "sinon": "^1.12.2",
-    "sinon-chai": "^2.6.0"
+    "@types/chai": "^3.4.35",
+    "@types/lodash": "^4.14.59",
+    "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.12",
+    "@types/sinon": "^2.1.0",
+    "@types/sinon-chai": "^2.7.27",
+    "chai": "3.5.0",
+    "grunt": "1.0.1",
+    "grunt-mocha-test": "0.13.2",
+    "sinon": "^2.1.0",
+    "sinon-chai": "^2.9.0",
+    "typescript": "^2.2.2"
   }
 }

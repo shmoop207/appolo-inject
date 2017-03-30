@@ -1,31 +1,48 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const chai = require("chai");
-const inject = require("../lib/inject");
+import chai = require('chai');
+import    inject = require('../lib/inject');
+import {Injector} from "../lib/inject";
+
 let should = chai.should();
-describe('Injector Aware', function () {
+
+describe('Injector Aware',function(){
+
     describe('should inject injector to object', function () {
-        let injector;
+        let injector:Injector;
+
         beforeEach(function () {
             injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
+
+           class Rectangle{
+
+                constructor () {
+
                 }
             }
+
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    injectorAware: true
+                    injectorAware:true
                 }
             });
+
             injector.initialize();
         });
+
         it('should have the injected value', function () {
-            let rectangle = injector.getObject('rectangle');
+
+            let rectangle:any = injector.getObject('rectangle');
+
             should.exist(rectangle.$injector);
+
             rectangle.$injector.should.be.equal(injector);
         });
     });
+
+
+
+
 });
-//# sourceMappingURL=aware.js.map
+
