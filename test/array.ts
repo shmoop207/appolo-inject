@@ -137,11 +137,14 @@ describe('Property Array', function () {
 
 
             injector = inject.createContainer()
-                .define('rectangle', Rectangle)
+
+            injector.define('rectangle', Rectangle)
                 .injectArray('objects', [{ref: 'fooManager'}, {ref: 'barManager'}])
                 .define('fooManager', FooManager).singleton()
                 .define('barManager', BarManager).singleton()
-                .initialize();
+
+
+            injector.initialize()
         });
 
         it('should inject to object runtime and ref objects', function () {

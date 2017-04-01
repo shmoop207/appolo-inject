@@ -76,11 +76,11 @@ describe('Property Factory', function () {
                     return this.fooManager2;
                 }
             }
-            injector = inject.createContainer()
-                .define('rectangle', Rectangle).singleton().injectFactory('manager', 'fooManagerFactory')
+            injector = inject.createContainer();
+            injector.define('rectangle', Rectangle).singleton().injectFactory('manager', 'fooManagerFactory')
                 .define('fooManager2', FooManager).singleton()
-                .define('fooManagerFactory', FooManagerFactory).singleton().inject('fooManager2')
-                .initialize();
+                .define('fooManagerFactory', FooManagerFactory).singleton().inject('fooManager2');
+            injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle.manager);
             rectangle.manager.should.be.instanceof(FooManager);

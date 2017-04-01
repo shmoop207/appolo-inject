@@ -5,7 +5,7 @@ import    path = require('path');
 import {IOptions} from "./IOptions";
 import {IFactory} from "./IFactory";
 import {IDefinition, IParamInject} from "./IDefinition";
-import {Linq} from "./linq";
+import {Define} from "./define";
 
 
 export class Injector {
@@ -164,9 +164,9 @@ export class Injector {
         }
     }
 
-    public define(id:string, type:Function):Linq {
+    public define(id:string, type:Function):Define {
 
-        return new Linq(this, id, type)
+        return new Define(this, id, type)
     }
 
 

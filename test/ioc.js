@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+const inject = require("../lib/inject");
+let should = require('chai').should();
 describe('Ioc', function () {
     describe('create ioc', function () {
         it('should crate empty Ioc', function () {
@@ -55,15 +56,14 @@ describe('Ioc', function () {
         });
     });
     describe('get simple object with linq', function () {
-        let injector;
         it('should get object', function () {
             class Rectangle {
                 constructor() {
                 }
             }
-            injector = inject.createContainer()
-                .define('rectangle', Rectangle)
-                .initialize();
+            let injector = inject.createContainer();
+            injector.define('rectangle', Rectangle);
+            injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle);
         });

@@ -59,7 +59,7 @@ describe('initialize', function () {
         }
 
         injector.define('rectangle', Rectangle).singleton().initMethod('initialize')
-            .initialize()
+        injector  .initialize()
 
 
         it('should call initialize method', function () {

@@ -1,7 +1,8 @@
 "use strict";
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import inject = require('../lib/inject');
+let should = require('chai').should();
+
 
 describe('Property Object Property.js', function () {
 
@@ -67,7 +68,7 @@ describe('Property Object Property.js', function () {
     });
 
     describe('inject property from object property linq', function () {
-        let injector:Injector;
+        let injector:Injector
 
         beforeEach(function () {
 
@@ -93,10 +94,10 @@ describe('Property Object Property.js', function () {
 
 
             injector = inject.createContainer()
-                .define('rectangle',Rectangle)
+            injector    .define('rectangle',Rectangle)
                 .injectObjectProperty('otherObjectProperty','fooManager','name')
                 .define('fooManager',FooManager).singleton()
-                .initialize();
+            injector .initialize();
         });
 
         it('should inject to object runtime and ref objects', function () {

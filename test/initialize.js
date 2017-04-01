@@ -35,8 +35,8 @@ describe('initialize', function () {
                 this.working = true;
             }
         }
-        injector.define('rectangle', Rectangle).singleton().initMethod('initialize')
-            .initialize();
+        injector.define('rectangle', Rectangle).singleton().initMethod('initialize');
+        injector.initialize();
         it('should call initialize method', function () {
             let rectangle = injector.getObject('rectangle');
             rectangle.working.should.be.true;

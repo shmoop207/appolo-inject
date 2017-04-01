@@ -1,7 +1,8 @@
 "use strict";
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import    inject = require('../lib/inject');
+let should = require('chai').should();
+
 
 describe('Ioc', function () {
     describe('create ioc', function () {
@@ -81,7 +82,7 @@ describe('Ioc', function () {
     });
 
     describe('get simple object with linq', function () {
-        let injector:Injector;
+
 
 
         it('should get object', function () {
@@ -93,9 +94,10 @@ describe('Ioc', function () {
                 }
             }
 
-            injector = inject.createContainer()
-                .define('rectangle',Rectangle)
-                .initialize();
+            let injector = inject.createContainer();
+            injector.define('rectangle',Rectangle)
+
+            injector.initialize();
 
             let rectangle = injector.getObject<Rectangle>('rectangle');
 

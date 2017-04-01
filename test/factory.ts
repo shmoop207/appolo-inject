@@ -115,10 +115,10 @@ describe('Property Factory', function () {
             }
 
             injector = inject.createContainer()
-                .define('rectangle',Rectangle).singleton().injectFactory('manager','fooManagerFactory')
+            injector    .define('rectangle',Rectangle).singleton().injectFactory('manager','fooManagerFactory')
                 .define('fooManager2',FooManager).singleton()
                 .define('fooManagerFactory',FooManagerFactory).singleton().inject('fooManager2')
-                .initialize();
+            injector  .initialize();
 
             let rectangle:any = injector.getObject('rectangle');
 

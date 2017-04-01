@@ -86,12 +86,12 @@ describe('Property Array', function () {
                     this.name = 'bar';
                 }
             }
-            injector = inject.createContainer()
-                .define('rectangle', Rectangle)
+            injector = inject.createContainer();
+            injector.define('rectangle', Rectangle)
                 .injectArray('objects', [{ ref: 'fooManager' }, { ref: 'barManager' }])
                 .define('fooManager', FooManager).singleton()
-                .define('barManager', BarManager).singleton()
-                .initialize();
+                .define('barManager', BarManager).singleton();
+            injector.initialize();
         });
         it('should inject to object runtime and ref objects', function () {
             let rectangle = injector.getObject('rectangle');

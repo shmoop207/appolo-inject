@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+const inject = require("../lib/inject");
+let should = require('chai').should();
 describe('Property Object Property.js', function () {
     describe('inject property from object property', function () {
         let injector;
@@ -60,11 +61,11 @@ describe('Property Object Property.js', function () {
                     this.name = 'foo';
                 }
             }
-            injector = inject.createContainer()
-                .define('rectangle', Rectangle)
+            injector = inject.createContainer();
+            injector.define('rectangle', Rectangle)
                 .injectObjectProperty('otherObjectProperty', 'fooManager', 'name')
-                .define('fooManager', FooManager).singleton()
-                .initialize();
+                .define('fooManager', FooManager).singleton();
+            injector.initialize();
         });
         it('should inject to object runtime and ref objects', function () {
             let rectangle = injector.getObject('rectangle');

@@ -122,11 +122,11 @@ describe('Property Dictionary', function () {
 
 
             injector = inject.createContainer()
-                .define('rectangle',Rectangle)
+            injector.define('rectangle',Rectangle)
                 .injectDictionary('objects',[{key:'foo',ref: 'fooManager'},{key:'bar',ref: 'barManager'},{key:'baz',value: 'baz'}])
                 .define('fooManager',FooManager).singleton()
                 .define('barManager',BarManager).singleton()
-                .initialize();
+            injector.initialize();
         });
 
         it('should inject to object runtime and ref objects', function () {

@@ -81,12 +81,12 @@ describe('Property Dictionary', function () {
                     this.name = 'bar';
                 }
             }
-            injector = inject.createContainer()
-                .define('rectangle', Rectangle)
+            injector = inject.createContainer();
+            injector.define('rectangle', Rectangle)
                 .injectDictionary('objects', [{ key: 'foo', ref: 'fooManager' }, { key: 'bar', ref: 'barManager' }, { key: 'baz', value: 'baz' }])
                 .define('fooManager', FooManager).singleton()
-                .define('barManager', BarManager).singleton()
-                .initialize();
+                .define('barManager', BarManager).singleton();
+            injector.initialize();
         });
         it('should inject to object runtime and ref objects', function () {
             let rectangle = injector.getObject('rectangle');

@@ -3,13 +3,18 @@ import _ = require('lodash');
 import {Injector} from "./inject";
 import {IDefinition, IParamInject} from "./IDefinition";
 
-export class Linq {
+export class Define {
 
     private injector: Injector;
 
     private definition :IDefinition;
 
-    constructor(injector: Injector, id: string, type: Function) {
+    constructor(injector: Injector, id: string, type?: Function) {
+
+        if(!id){
+            return
+        }
+
         this.injector = injector;
 
         this.definition = {
@@ -23,19 +28,19 @@ export class Linq {
         injector.addDefinition(id, this.definition)
     }
 
-    public type(type:Function):Linq {
+    public type(type:Function):this {
         this.definition.type = type;
 
         return this;
     }
 
-    public singleton(singleton:boolean = true):Linq {
+    public singleton(singleton:boolean = true):this {
 
         this.definition.singleton = _.isUndefined(singleton) ? true : singleton;
         return this
     }
 
-    public inject(name:string|string[]|IParamInject|IParamInject[], inject?:string) {
+    public inject(name:string|string[]|IParamInject|IParamInject[], inject?:string):this {
 
         if (_.isString(name) && _.includes(name, " ")) {
             name = name.split(" ");
@@ -56,14 +61,14 @@ export class Linq {
         return this;
     }
 
-    public injectFactoryMethod(name:string, factoryMethod:string):Linq {
+    public injectFactoryMethod(name:string, factoryMethod:string):this {
         return this.inject({
             name: name,
             factoryMethod: factoryMethod
         })
     }
 
-    public injectAlias(name:string, alias:string, indexBy?:string):Linq {
+    public injectAlias(name:string, alias:string, indexBy?:string):this {
         return this.inject({
             name: name,
             alias: alias,
@@ -71,7 +76,7 @@ export class Linq {
         })
     }
 
-    public injectAliasFactory(name:string, alias:string, indexBy?:string):Linq {
+    public injectAliasFactory(name:string, alias:string, indexBy?:string):this {
         return this.inject({
             name: name,
             aliasFactory: alias,
@@ -79,7 +84,7 @@ export class Linq {
         })
     }
 
-    public injectArray(name:string, arr:IParamInject[]):Linq {
+    public injectArray(name:string, arr:IParamInject[]):this {
         return this.inject({
             name: name,
             array: arr
@@ -87,21 +92,21 @@ export class Linq {
     }
 
 
-    public injectDictionary(name:string, dic:IParamInject[]):Linq {
+    public injectDictionary(name:string, dic:IParamInject[]):this {
         return this.inject({
             name: name,
             dictionary: dic
         })
     }
 
-    public injectFactory(name:string, factory:string):Linq {
+    public injectFactory(name:string, factory:string):this {
         return this.inject({
             name: name,
             factory: factory
         })
     }
 
-    public injectObjectProperty(name:string, object:string, propertyName:string):Linq {
+    public injectObjectProperty(name:string, object:string, propertyName:string):this {
         return this.inject({
             name: name,
             objectProperty: {
@@ -111,14 +116,14 @@ export class Linq {
         })
     }
 
-    public injectValue(name:string, value:any):Linq {
+    public injectValue(name:string, value:any):this {
         return this.inject({
             name: name,
             value: value
         })
     }
 
-    public alias(alias:string[]|string):Linq {
+    public alias(alias:string[]|string):this {
         if (_.isArray(alias)) {
             this.definition.alias.push.apply(this.definition.alias, alias)
         } else {
@@ -128,18 +133,18 @@ export class Linq {
         return this;
     }
 
-    public initMethod(initMethod?:string):Linq {
+    public initMethod(initMethod?:string):this {
         this.definition.initMethod = initMethod || "initialize";
         return this;
     }
 
-    public injectorAware():Linq {
+    public injectorAware():this {
         this.definition.injectorAware = true;
         return this;
     }
 
 
-    public aliasFactory(aliasFactory:string|string[]):Linq {
+    public aliasFactory(aliasFactory:string|string[]):this {
         if (_.isArray(aliasFactory)) {
             this.definition.aliasFactory.push.apply(this.definition.aliasFactory, aliasFactory)
         } else {
@@ -149,7 +154,7 @@ export class Linq {
         return this;
     }
 
-    public args(args:IParamInject[]|IParamInject):Linq {
+    public args(args:IParamInject[]|IParamInject):this {
         if (_.isArray(args)) {
             this.definition.args.push.apply(this.definition.args, args)
         } else {
@@ -158,13 +163,13 @@ export class Linq {
         return this;
     }
 
-    public define(id:string, type:Function):Linq {
+    public define(id:string, type:Function):Define {
         return this.injector.define(id, type)
     }
 
-    public initialize() {
-        return this.injector.initialize()
-    }
+   // public initialize() {
+   //     return this.injector.initialize()
+    //}
 
 
 }
