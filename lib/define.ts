@@ -5,15 +5,19 @@ import {IDefinition, IParamInject} from "./IDefinition";
 
 export class Define {
 
-    private injector: Injector;
+    protected injector: Injector;
 
-    private definition :IDefinition;
+    protected definition :IDefinition;
+
+    protected id:string;
 
     constructor(injector: Injector, id: string, type?: Function) {
 
         if(!id){
             return
         }
+
+        this.id = id;
 
         this.injector = injector;
 
