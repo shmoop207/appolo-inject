@@ -85,7 +85,7 @@ describe('Constructor Args', function () {
         });
     });
 
-    describe('inject to constructor args', function () {
+    xdescribe('inject to constructor args', function () {
         let injector: Injector;
 
         beforeEach(function () {

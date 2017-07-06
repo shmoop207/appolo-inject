@@ -23,7 +23,7 @@ describe('Singleton', function () {
             injector.initialize();
         });
         it('should save object in instances', function () {
-            should.exist(injector.getInstances().get('rectangle'));
+            should.exist(injector.getInstances()['rectangle']);
         });
         it('should get object', function () {
             let rectangle = injector.getObject('rectangle');

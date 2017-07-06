@@ -53,7 +53,7 @@ export class Define {
         if (_.isArray(name)) {
             this.definition.inject.push.apply(this.definition.inject, name)
         } else if (_.isObject(name)) {
-            this.definition.inject.push(name)
+            this.definition.inject.push(name as IParamInject)
         }
 
         else if (_.toArray(arguments).length == 1 && _.isString(name)) {

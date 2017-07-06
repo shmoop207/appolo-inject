@@ -54,7 +54,7 @@ describe('Constructor Args', function () {
             rectangle.area().should.equal(25);
         });
     });
-    describe('inject to constructor args', function () {
+    xdescribe('inject to constructor args', function () {
         let injector;
         beforeEach(function () {
             injector = inject.createContainer();
