@@ -44,6 +44,12 @@ export class Define {
         return this
     }
 
+    public lazy(lazy:boolean = true):this {
+
+        this.definition.lazy = _.isUndefined(lazy) ? true : lazy;
+        return this
+    }
+
     public inject(name:string|string[]|IParamInject|IParamInject[], inject?:string):this {
 
         if (_.isString(name) && _.includes(name, " ")) {
