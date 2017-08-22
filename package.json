@@ -33,7 +33,7 @@
   "readme": "",
   "readmeFilename": "README.md",
   "dependencies": {
-    "lodash": "4.17.4"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
