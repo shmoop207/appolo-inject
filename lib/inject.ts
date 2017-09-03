@@ -51,18 +51,22 @@ export class Injector {
     /*
      * public get object by object Id
      */
-    public getObject<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean): T {
-        return this.get<T>(objectID, runtimeArgs, ignoreFactory)
+    public getObject<T>(objectID: string, runtimeArgs?: any[]): T {
+        return this._get<T>(objectID, runtimeArgs)
 
     }
 
-    public resolve<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean): T {
-        return this.get<T>(objectID, runtimeArgs, ignoreFactory)
+    public resolve<T>(objectID: string, runtimeArgs?: any[]): T {
+        return this._get<T>(objectID, runtimeArgs)
     }
 
 
-    public get<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean): T {
+    public get<T>(objectID: string, runtimeArgs?: any[]): T {
+        return this._get<T>(objectID, runtimeArgs)
 
+    }
+
+    private _get<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean, referenceChain: any[] = []): T {
         //check if we have factory and it's not ignored
         if (this._definitions[(objectID + this.FACTORY_POSTFIX)] && !ignoreFactory) {
             return this.getObject<IFactory<T>>(objectID + this.FACTORY_POSTFIX).get();
@@ -72,7 +76,7 @@ export class Injector {
 
         if (!instance) {
 
-            instance = this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs);
+            instance = this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs, referenceChain);
         }
 
         return instance;
@@ -243,7 +247,7 @@ export class Injector {
         //loop over args and get the arg value or create arg object instance
         for (let i = 0, length = (args ? args.length : 0); i < length; i++) {
             let arg = args[i];
-            argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._createObjectInstance(arg.ref, this._definitions[arg.ref], [], referenceChain));
+            argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], false, referenceChain));
         }
 
         try {
@@ -446,7 +450,7 @@ export class Injector {
 
                 if (factoryRef == objectId) {  //check if we trying  to inject to factory with the same name
 
-                    injectObject = this.getObject(prop.ref, [], true);
+                    injectObject = this._get(prop.ref, [], true);
 
                 }
                 else {

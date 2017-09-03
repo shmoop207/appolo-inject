@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 let should = require('chai').should(), inject = require('../lib/inject');
 describe('Lazy', function () {
-    describe.only('create lazy object', function () {
+    describe('create lazy object', function () {
         let injector;
         beforeEach(function () {
             injector = inject.createContainer();

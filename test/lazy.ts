@@ -7,7 +7,7 @@ let should = require('chai').should(),
 describe('Lazy', function () {
 
 
-    describe.only('create lazy object', function () {
+    describe('create lazy object', function () {
         let injector: Injector;
 
         beforeEach(function () {
