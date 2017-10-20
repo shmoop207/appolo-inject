@@ -51,8 +51,8 @@ export class Injector {
     /*
      * public get object by object Id
      */
-    public getObject<T>(objectID: string, runtimeArgs?: any[]): T {
-        return this._get<T>(objectID, runtimeArgs)
+    public getObject<T>(objectID: string, runtimeArgs?: any[],ignoreFactory?: boolean): T {
+        return this._get<T>(objectID, runtimeArgs,ignoreFactory)
 
     }
 
@@ -68,7 +68,7 @@ export class Injector {
 
     private _get<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean, referenceChain: any[] = []): T {
         //check if we have factory and it's not ignored
-        if (this._definitions[(objectID + this.FACTORY_POSTFIX)] && !ignoreFactory) {
+        if (!ignoreFactory && this._definitions[(objectID + this.FACTORY_POSTFIX)]) {
             return this.getObject<IFactory<T>>(objectID + this.FACTORY_POSTFIX).get();
         }
 

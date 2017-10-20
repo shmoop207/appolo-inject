@@ -24,7 +24,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -37,11 +37,13 @@
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
+    "@types/benchmark": "^1.0.30",
     "@types/lodash": "^4.14.59",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.12",
     "@types/sinon": "^2.1.0",
     "@types/sinon-chai": "^2.7.27",
+    "benchmark": "^2.1.4",
     "chai": "3.5.0",
     "grunt": "1.0.1",
     "grunt-cli": "^1.2.0",
