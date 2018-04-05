@@ -366,7 +366,9 @@ export class Injector {
             id = Util.getClassName(type);
         }
 
-        let define = Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type);
+        let define = type
+            ? (Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type))
+            : new Define(id as string);
 
         this.addDefinition(id as string, define.definition);
 
