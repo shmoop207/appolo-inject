@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const inject = require("../lib/inject");
+const ioc = require("../lib/inject");
 let should = chai.should();
 describe('Property Array', function () {
     describe('inject array of objects', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             let Rectangle = class {
                 constructor() {
                 }
@@ -86,11 +86,11 @@ describe('Property Array', function () {
                     this.name = 'bar';
                 }
             }
-            injector = inject.createContainer();
-            injector.define('rectangle', Rectangle)
-                .injectArray('objects', [{ ref: 'fooManager' }, { ref: 'barManager' }])
-                .define('fooManager', FooManager).singleton()
-                .define('barManager', BarManager).singleton();
+            injector = ioc.createContainer();
+            injector.register('rectangle', Rectangle)
+                .injectArray('objects', [{ ref: 'fooManager' }, { ref: 'barManager' }]);
+            injector.register('fooManager', FooManager).singleton();
+            injector.register('barManager', BarManager).singleton();
             injector.initialize();
         });
         it('should inject to object runtime and ref objects', function () {

@@ -6,6 +6,8 @@ import {IOptions} from "./IOptions";
 import {IFactory} from "./IFactory";
 import {IDefinition, IParamInject} from "./IDefinition";
 import {Define} from "./define";
+import {InjectDefineSymbol, InjectParamSymbol} from "./decorators";
+import {Util} from "./util";
 
 type keyObject = { [index: string]: Object }
 
@@ -15,9 +17,14 @@ export class Injector {
 
     private _definitions: { [index: string]: IDefinition };
     private _instances: keyObject;
-    private _factories: { [index: string]: { [index: string]: string } };
+    private _factoriesObjects: { [index: string]: { [index: string]: string } };
+    private _factoriesValues: { [index: string]: any };
     private _alias: { [index: string]: Object[] };
     private _aliasFactory: { [index: string]: Object[] };
+
+    private _factories: string[];
+
+    private _parent: Injector;
 
     private _options: IOptions;
 
@@ -25,61 +32,208 @@ export class Injector {
         this._instances = {};
         this._definitions = {};
         this._options = {};
-        this._factories = {};
+        this._factoriesObjects = {};
         this._alias = {};
         this._aliasFactory = {};
+        this._factoriesValues = {};
+        this._factories = [];
+    }
+
+    public get parent(): Injector {
+        return this._parent
+    }
+
+    public set parent(value: Injector) {
+        this._parent = value;
     }
 
     /*
      * public  loads the context by given definitions object
      */
-    public initialize(options?: IOptions) {
+    public async initialize(options?: IOptions) {
         this._options = options || {};
 
-        for (let key in this._options.definitions) {
-            if (this._options.definitions.hasOwnProperty(key)) {
-                this._definitions[key] = this._options.definitions[key]
+        let keys = Object.keys(this._options.definitions || {});
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let key = keys[i];
+            this._definitions[key] = this._options.definitions[key];
+        }
 
+
+        await  this._wireObjects();
+
+    }
+
+    private async _wireObjects() {
+
+        let keys = Object.keys(this._definitions);
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], definition = this._definitions[objectId];
+
+            this._initInjectParams(definition);
+
+            this._initProperties(definition);
+
+            if (definition.factory) {
+                this._factories.push(definition.id);
+            }
+
+            if (definition.aliasFactory) {
+                this._populateAliasFactory(definition, objectId)
             }
         }
 
-        this._wireObjects();
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], definition = this._definitions[objectId];
+            (definition.singleton && !definition.lazy) && (this._createObjectInstance(objectId, definition));
+        }
 
-        return this;
+        keys = Object.keys(this._instances);
+
+        //loop over instances and inject properties and look up methods only if exist in def
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], instance = this._instances[objectId];
+
+            (this._definitions[objectId]) && (this._injectPropertiesAndLookUpMethods(instance, this._definitions[objectId], objectId));
+        }
+
+        await this._loadFactories(this._factories);
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], instance = this._instances[objectId];
+
+            if (this._definitions[objectId]) {
+                this._injectFactoryObject(instance, objectId);
+                this._injectAlias(this._definitions[objectId], instance);
+                this._injectAliasFactory(this._definitions[objectId], instance);
+            }
+        }
+
+        //loop instances and invoke init methods
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], instance = this._instances[objectId];
+            (this._definitions[objectId]) && (this._invokeInitMethod(instance, this._definitions[objectId]));
+        }
     }
+
+    private _initInjectParams(def: IDefinition) {
+
+        let $self = this;
+
+        if (!def.type) {
+            return
+        }
+        let params = Reflect.getMetadata(InjectParamSymbol, def.type);
+
+        if (!params || !_.isFunction(def.type)) {
+            return
+        }
+
+        let paramGroups = _.groupBy(params, "method");
+
+        _.forEach(paramGroups, (items: any[], method: string) => {
+            let oldFn = def.type.prototype[method];
+            def.type.prototype[method] = function (...args: any[]) {
+                for (let i = 0, length = (items.length || 0); i < length; i++) {
+                    args[items[i].index] = $self.getObject(items[i].param)
+                }
+
+                return oldFn.apply(this, args)
+            }
+        });
+    }
+
 
     /*
      * public get object by object Id
      */
-    public getObject<T>(objectID: string, runtimeArgs?: any[],ignoreFactory?: boolean): T {
-        return this._get<T>(objectID, runtimeArgs,ignoreFactory)
+    public getObject<T>(objectID: string | Function, runtimeArgs?: any[]): T {
+
+        return this.get<T>(objectID, runtimeArgs)
+    }
+
+    public resolve<T>(objectID: string | Function, runtimeArgs?: any[]): T {
+
+        return this.get<T>(objectID, runtimeArgs)
+    }
+
+    public get<T>(objectID: string | Function, runtimeArgs?: any[]): T {
+
+        objectID = Util.getClassNameOrId(objectID)
+
+        return this._get<T>(objectID as string, runtimeArgs)
 
     }
 
-    public resolve<T>(objectID: string, runtimeArgs?: any[]): T {
-        return this._get<T>(objectID, runtimeArgs)
-    }
 
+    public getFactoryValue<T>(objectID: string): T {
+        let def = this._definitions[objectID as string]
 
-    public get<T>(objectID: string, runtimeArgs?: any[]): T {
-        return this._get<T>(objectID, runtimeArgs)
-
-    }
-
-    private _get<T>(objectID: string, runtimeArgs?: any[], ignoreFactory?: boolean, referenceChain: any[] = []): T {
-        //check if we have factory and it's not ignored
-        if (!ignoreFactory && this._definitions[(objectID + this.FACTORY_POSTFIX)]) {
-            return this.getObject<IFactory<T>>(objectID + this.FACTORY_POSTFIX).get();
+        if (!def) {
+            return this.parent ? this.parent.getFactoryValue<T>(objectID) : null;
         }
+
+        if (def.injector) {
+            return def.injector.getFactoryValue<T>(def.id);
+        }
+
+        return this._factoriesValues[def.id];
+    }
+
+    public async getFactory<T>(objectID: string | Function): Promise<T> {
+
+        objectID = Util.getClassNameOrId(objectID);
+
+        let def = this._definitions[objectID as string] || this._definitions[objectID + this.FACTORY_POSTFIX];
+
+        if (!def) {
+            return this.parent ? this.parent.getFactory<T>(objectID) : null;
+        }
+
+        if (def.injector) {
+            return def.injector.getFactory<T>(def.id);
+        }
+
+        let value = this._factoriesValues[def.id];
+
+        if (value) {
+            return value;
+        }
+
+        let factory = this._get<IFactory<T>>(def.id);
+
+        this._injectFactoryObject(this._instances[def.id], def.id);
+
+        value = await factory.get();
+
+        this._factoriesValues[def.id] = value;
+
+        return value;
+
+    }
+
+    private _get<T>(objectID: string, runtimeArgs?: any[], referenceChain: any[] = []): T {
 
         let instance = this._instances[objectID] as T;
 
-        if (!instance) {
-
-            instance = this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs, referenceChain);
+        if (instance) {
+            return instance;
         }
 
-        return instance;
+        let definition = this._definitions[objectID];
+
+        if (definition) {
+            return definition.injector
+                ? definition.injector.getObject(objectID, runtimeArgs)
+                : this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs, referenceChain);
+        }
+
+        if (this.parent) {
+            return this.parent.getObject(objectID);
+        }
+
+        throw new Error(`Injector:can't find object definition for objectID:${objectID} ${referenceChain.join(' -> ')}}`);
     }
 
     public getInstance<T>(objectId: string): T {
@@ -90,6 +244,7 @@ export class Injector {
         if (this._definitions[objectId]) {
             console.log(`Injector:definition id already exists overriding:  ${objectId}`);
         }
+        definition.id = objectId;
 
         this._definitions[objectId] = definition;
 
@@ -120,14 +275,14 @@ export class Injector {
 
     }
 
-    public addObject<T>(objectId: string, instance: T): Injector {
+    public addObject<T>(objectId: string, instance: T, silent?: boolean): Injector {
 
         return this.addInstance(objectId, instance);
     }
 
-    public addInstance<T>(objectId: string, instance: T): Injector {
+    public addInstance<T>(objectId: string, instance: T, silent?: boolean): Injector {
 
-        if (this._instances[objectId]) {
+        if (!silent && this._instances[objectId]) {
             console.log("Injector:object id already exists overriding: " + objectId);
         }
 
@@ -165,8 +320,17 @@ export class Injector {
     }
 
     public getDefinition(id: string): IDefinition {
-        return this._definitions[id];
+        let def = this._definitions[id];
+
+        if (def) {
+            return def.injector ? def.injector.getDefinition(id) : def;
+        }
+
+        if (this.parent) {
+            return this.parent.getDefinition(id);
+        }
     }
+
 
     public getAlias(aliasName: string): any[] {
         return this._alias[aliasName] || [];
@@ -181,31 +345,34 @@ export class Injector {
         let self = this;
 
         return function () {
-            let object = self.getObject<any>(objectId);
+            let object = self._get<any>(objectId);
 
             object.run.apply(object, arguments);
         }
     }
 
-    public define(id: string, type: Function): Define {
+    public registerMulti(fns: Function[]): this {
+        for (let i = 0, len = fns.length; i < len; i++) {
+            this.register(fns[i]);
+        }
 
-        return new Define(this, id, type)
+        return this;
     }
 
+    public register(id: string | Function, type?: Function): Define {
 
-    public reset() {
+        if (_.isFunction(id)) {
+            type = id;
+            id = Util.getClassName(type);
+        }
 
-        this._instances = {};
+        let define = Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type);
 
-        this._definitions = {};
+        this.addDefinition(id as string, define.definition);
 
-        this._options = {};
-
-        this._alias = {};
-        this._aliasFactory = {};
-
-        this._factories = {};
+        return define;
     }
+
 
     private _createObjectInstance<T>(objectID: string, objectDefinition: IDefinition, runtimeArgs?: any[], referenceChain: any[] = []): T {
         let argumentInstances = [],
@@ -213,16 +380,18 @@ export class Injector {
             newObjectInstance;
 
         //check Circular reference
-        if (referenceChain.indexOf(objectID) > -1) {
+        if (referenceChain.length && referenceChain.indexOf(objectID) > -1) {
             referenceChain.push(objectID);
+
             throw new Error(`Circular reference ${referenceChain.join(' -> ')}`)
         }
 
         referenceChain.push(objectID);
 
+
         //checks if we have a valid object definition
         if (!objectDefinition) {
-            throw new Error("Injector:can't find object definition for objectID:" + objectID);
+            throw new Error(`Injector:can't find object definition for objectID:${objectID} ${referenceChain.join(' -> ')}}`);
         }
 
         newObjectInstance = this._instances[objectID];
@@ -232,10 +401,10 @@ export class Injector {
             return newObjectInstance;
         }
 
-        //convert path to type
-        if (objectDefinition.path) {
-            objectDefinition.type = require(path.join(this._options.root, objectDefinition.path + '.js'))
-        }
+        // //convert path to type
+        // if (objectDefinition.path) {
+        //     objectDefinition.type = require(path.join(this._options.root, objectDefinition.path + '.js'))
+        // }
 
         args = (objectDefinition.args && objectDefinition.args.length > 0) ? objectDefinition.args : [];
 
@@ -247,7 +416,7 @@ export class Injector {
         //loop over args and get the arg value or create arg object instance
         for (let i = 0, length = (args ? args.length : 0); i < length; i++) {
             let arg = args[i];
-            argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], false, referenceChain));
+            argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
         }
 
         try {
@@ -279,61 +448,7 @@ export class Injector {
     /*
      * private creates new objects instances and inject properties
      */
-    private _wireObjects() {
 
-        //add aliasFactory
-
-        for (let objectId in this._definitions) {
-
-            if (this._definitions.hasOwnProperty(objectId)) {
-                let definition = this._definitions[objectId];
-                if (definition.aliasFactory) {
-                    this._populateAliasFactory(definition, objectId)
-                }
-            }
-
-
-        }
-
-        for (let objectId in this._definitions) {
-            if (this._definitions.hasOwnProperty(objectId)) {
-                let definition = this._definitions[objectId];
-                (definition.singleton && !definition.lazy) && (this._createObjectInstance(objectId, definition));
-            }
-        }
-
-        //loop over instances and inject properties and look up methods only if exist in def
-        for (let objectId in this._instances) {
-            if (this._instances.hasOwnProperty(objectId)) {
-                let instance = this._instances[objectId];
-
-                (this._definitions[objectId]) && (this._injectPropertiesAndLookUpMethods(instance, this._definitions[objectId], objectId));
-            }
-
-        }
-
-
-        for (let objectId in this._instances) {
-            if (this._instances.hasOwnProperty(objectId)) {
-                let instance = this._instances[objectId];
-
-                if (this._definitions[objectId]) {
-                    this._injectFactoryObject(instance, objectId);
-                    this._injectAlias(this._definitions[objectId], instance);
-                    this._injectAliasFactory(this._definitions[objectId], instance);
-                }
-            }
-        }
-
-        //loop instances and invoke init methods
-        for (let objectId in this._instances) {
-            if (this._instances.hasOwnProperty(objectId)) {
-                let instance = this._instances[objectId];
-                (this._definitions[objectId]) && (this._invokeInitMethod(instance, this._definitions[objectId]));
-            }
-
-        }
-    }
 
     private _populateAliasFactory(definition: IDefinition, objectId: string) {
 
@@ -341,12 +456,10 @@ export class Injector {
 
             let aliasName = definition.aliasFactory[i];
 
-            let delegateFn = this._createDelegate(this.getObject, this, [objectId]);
+            let delegateFn = Util.createDelegate(this._get, this, [objectId]);
             (delegateFn as any).type = definition.type;
-            this._mapPush(this._aliasFactory, aliasName, delegateFn)
+            Util.mapPush(this._aliasFactory, aliasName, delegateFn)
         }
-
-
     }
 
     /*
@@ -358,29 +471,49 @@ export class Injector {
         }
     }
 
-    private _getProperties(objectDefinition: IDefinition): IParamInject[] {
-        let properties = objectDefinition.props || objectDefinition.properties || [];
+    private _initProperties(definition: IDefinition): void {
 
-        if (!objectDefinition.$propertiesGenerated) {
+        // if (definition.factory) {
+        //     this._factories.push(definition.id);
+        // }
+
+        let properties = definition.props || definition.properties || [];
 
 
-            for (let i = 0, length = (objectDefinition.inject ? objectDefinition.inject.length : 0); i < length; i++) {
-                let injectable = objectDefinition.inject[i];
+        for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
+            let injectable = definition.inject[i];
 
-                properties.push(_.isString(injectable) ? ({
+            let dto = injectable;
+
+            if (_.isString(injectable)) {
+
+                dto = {
                     name: injectable,
                     ref: injectable
-                }) : injectable)
-
-
+                }
             }
 
-            objectDefinition.properties = properties;
+            if (dto.ref) {
+                let factoryRef = dto.ref + this.FACTORY_POSTFIX,
+                    factoryDef = this.getDefinition(factoryRef),
+                    refDef = this.getDefinition(dto.ref);
 
-            objectDefinition.$propertiesGenerated = true;
+                if (refDef && refDef.factory) {
+                    dto.factory = refDef.id;
+                    delete dto.ref
+                }
+
+                else if (factoryDef && factoryDef.factory && definition.id != factoryRef) {
+                    dto.factory = factoryRef;
+                    delete dto.ref
+                }
+            }
+
+
+            properties.push(dto)
         }
 
-        return properties;
+        definition.properties = properties;
     }
 
     /*
@@ -408,9 +541,7 @@ export class Injector {
      */
     private _injectPropertiesAndLookUpMethods<T>(object: T, objectDefinition: IDefinition, objectId: string) {
         let injectObject,
-            obj,
-            factoryRef,
-            properties = this._getProperties(objectDefinition);
+            obj, properties = objectDefinition.properties;
 
         //loop over the properties definition
 
@@ -418,16 +549,14 @@ export class Injector {
             let prop = properties[i];
             //get property obj
             injectObject = null;
-            factoryRef = prop.ref + this.FACTORY_POSTFIX;
-
             if (prop.array) {
 
-                injectObject = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this.getObject(propObj.ref));
+                injectObject = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._get(propObj.ref));
             }
             else if (prop.dictionary) {
                 injectObject = {};
 
-                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this.getObject(propObj.ref));
+                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._get(propObj.ref));
 
             }
             else if (prop.value) {
@@ -435,38 +564,29 @@ export class Injector {
                 injectObject = prop.value;
 
             }
-            else if (prop.ref && !this._definitions[factoryRef]) { //check if we have ref and we don't have factory with the same name
+            else if (prop.ref) { //check if we have ref and we don't have factory with the same name
 
-                injectObject = this.getObject(prop.ref);
+                injectObject = this._get(prop.ref);
 
             }
             else if (prop.objectProperty) {
-                obj = this.getObject(prop.objectProperty.object);
+                obj = this._get(prop.objectProperty.object);
 
                 injectObject = obj[prop.objectProperty.property];
 
             }
-            else if (prop.factory || this._definitions[factoryRef]) {
+            else if (prop.factory) {
 
-                if (factoryRef == objectId) {  //check if we trying  to inject to factory with the same name
-
-                    injectObject = this._get(prop.ref, [], true);
-
+                if (!this._factoriesObjects[objectId]) {
+                    this._factoriesObjects[objectId] = {};
                 }
-                else {
 
-                    let factoryName = prop.factory || factoryRef;
+                this._factoriesObjects[objectId][prop.name] = prop.factory;
 
-                    if (!this._factories[objectId]) {
-                        this._factories[objectId] = {};
-                    }
-
-                    this._factories[objectId][prop.name] = factoryName;
-                }
             }
             else if (prop.factoryMethod) {
 
-                injectObject = this._createDelegate(this.getObject, this, [prop.factoryMethod])
+                injectObject = Util.createDelegate(this._get, this, [prop.factoryMethod])
             }
 
             if (injectObject) {
@@ -480,29 +600,72 @@ export class Injector {
 
         //add alias
         if (objectDefinition.alias && objectDefinition.singleton) {
-            for (let key in objectDefinition.alias) {
-                if (objectDefinition.alias.hasOwnProperty(key)) {
-                    this._mapPush(this._alias, objectDefinition.alias[key], object)
-                }
+
+            let keys = Object.keys(objectDefinition.alias);
+
+            for (let i = 0, len = keys.length; i < len; i++) {
+                let key = keys[i];
+                Util.mapPush(this._alias, objectDefinition.alias[key], object)
             }
         }
+    }
+
+    private async _loadFactories(factories: string[]) {
+        for (let factory of factories) {
+            await this.loadFactory(factory);
+        }
+    }
+
+    private async loadFactory<T>(objectId: string) {
+        let factoryData = this._factoriesObjects[objectId];
+
+
+        let keys = Object.keys(factoryData || {});
+        for (let propName of keys) {
+            let factory = factoryData[propName];
+
+            await this.loadFactory(factory);
+        }
+
+
+        this._factoriesValues[objectId] = await this.getFactory(objectId);
+
     }
 
     private _injectFactoryObject<T>(object: T, objectId: string) {
 
-        let factoryData = this._factories[objectId];
+        let factoryData = this._factoriesObjects[objectId];
+        //let objectDef = this._definitions[objectId];
 
-        if (factoryData) {
-
-            for (let propName in factoryData) {
-                if (factoryData.hasOwnProperty(propName)) {
-                    let factory = factoryData[propName];
-                    object[propName] = this.getObject<IFactory<T>>(factory).get()
-                }
-
-            }
+        if (!factoryData) {
+            return;
         }
+
+        let keys = Object.keys(factoryData);
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let propName = keys[i], factory = factoryData[propName];
+
+            //let factoryDef = this._definitions[factory];
+
+            //this._injectFactoryObject(this._instances[factoryDef.id], factoryDef.id);
+
+            //let factoryValue = this._factoriesValues[factory];
+
+            // if(!factoryValue){
+            //    factoryValue = this._factoriesValues[factory] =  this._get<IFactory<T>>(factory).get();
+            //}
+
+            object[propName] = this.getFactoryValue(factory);
+        }
+
+        //objectDef.$isFactoryWired = true;
+
     }
+
+    // private _injectFactoryObjectSync() {
+    //
+    // }
 
     private _injectAlias<T>(definition: IDefinition, instance: T) {
         for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
@@ -521,29 +684,18 @@ export class Injector {
         }
     }
 
-    private _createDelegate(fn: Function, obj: any, args: any[]): Function {
-        return function () {
+    public reset() {
 
-            let callArgs = (args || []).concat(arguments);
+        this._instances = {};
 
-            return fn.apply(obj, callArgs);
-        };
-    }
+        this._definitions = {};
 
-    private _mapPush(map: { [index: string]: Object[] }, key: string, obj: Object): void {
-        (!map[key]) && (map[key] = []);
+        this._options = {};
 
-        map[key].push(obj)
-    }
+        this._alias = {};
+        this._aliasFactory = {};
 
-    private _getFunctionArgs(func: Function): string[] {
-
-        let STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
-            ARGUMENT_NAMES = /([^\s,]+)/g,
-            fnStr = func.toString().replace(STRIP_COMMENTS, '').replace(/(\r\n|\n|\r|\t| )/gm, ""),
-            args = fnStr.slice(fnStr.indexOf('constructor(') + 12, fnStr.indexOf(')')).match(ARGUMENT_NAMES) || [];
-
-        return _.compact(args);
+        this._factoriesObjects = {};
     }
 
 

@@ -1,25 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const inject = require("../lib/inject");
+const ioc = require("../lib/inject");
 const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 describe('delegate', function () {
     describe('delegate function', function () {
         let injector;
-        beforeEach(function () {
-            injector = inject.createContainer();
-            class Rectangle {
-                constructor() {
-                    this.number = Math.random();
-                }
-                run() {
-                }
-                area() {
-                    return this.size;
-                }
+        class Rectangle {
+            constructor() {
+                this.number = Math.random();
             }
+            run() {
+            }
+            area() {
+                return this.size;
+            }
+        }
+        beforeEach(function () {
+            injector = ioc.createContainer();
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const inject = require("../lib/inject");
+const ioc = require("../lib/inject");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 let should = chai.should();
@@ -9,7 +9,7 @@ describe('Property Dictionary', function () {
     describe('inject dictionary of objects', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -81,11 +81,11 @@ describe('Property Dictionary', function () {
                     this.name = 'bar';
                 }
             }
-            injector = inject.createContainer();
-            injector.define('rectangle', Rectangle)
-                .injectDictionary('objects', [{ key: 'foo', ref: 'fooManager' }, { key: 'bar', ref: 'barManager' }, { key: 'baz', value: 'baz' }])
-                .define('fooManager', FooManager).singleton()
-                .define('barManager', BarManager).singleton();
+            injector = ioc.createContainer();
+            injector.register('rectangle', Rectangle)
+                .injectDictionary('objects', [{ key: 'foo', ref: 'fooManager' }, { key: 'bar', ref: 'barManager' }, { key: 'baz', value: 'baz' }]);
+            injector.register('fooManager', FooManager).singleton();
+            injector.register('barManager', BarManager).singleton();
             injector.initialize();
         });
         it('should inject to object runtime and ref objects', function () {

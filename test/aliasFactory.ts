@@ -1,6 +1,6 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 
 let should = chai.should();
@@ -11,8 +11,8 @@ describe('Alias Factory', function () {
     describe('should inject alias factory', function () {
         let injector,CalcManager;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
             let Rectangle = class {
 
@@ -50,7 +50,7 @@ describe('Alias Factory', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {
@@ -65,7 +65,7 @@ describe('Alias Factory', function () {
 
             let calcable = rectangle.calcable[0]()
 
-            calcable.calc.should.be.a.Function;
+            calcable.calc.should.be.a('function');
 
             calcable.calc().should.be.eq(25);
         });
@@ -83,7 +83,7 @@ describe('Alias Factory', function () {
 
             let calcable = rectangle.calcable[0](30)
 
-            calcable.calc.should.be.a.Function;
+            calcable.calc.should.be.a('function');
 
             calcable.calc().should.be.eq(30);
         });
@@ -93,8 +93,8 @@ describe('Alias Factory', function () {
     describe('should inject alias factory link', function () {
         let injector:Injector,CalcManager;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
             let Rectangle = class {
 
@@ -114,14 +114,14 @@ describe('Alias Factory', function () {
                 }
             }
 
-            injector.define('rectangle',Rectangle)
+            injector.register('rectangle',Rectangle)
                 .singleton()
                 .injectAliasFactory('calcable','calcable')
 
-            injector.define('calcManager',CalcManager).aliasFactory(['calcable'])
+            injector.register('calcManager',CalcManager).aliasFactory(['calcable'])
 
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {
@@ -136,7 +136,7 @@ describe('Alias Factory', function () {
 
             let calcable = rectangle.calcable[0]()
 
-            calcable.calc.should.be.a.Function;
+            calcable.calc.should.be.a('function');
 
             calcable.calc().should.be.eq(25);
         });
@@ -154,7 +154,7 @@ describe('Alias Factory', function () {
 
             let calcable = rectangle.calcable[0](30)
 
-            calcable.calc.should.be.a.Function;
+            calcable.calc.should.be.a('function');
 
             calcable.calc().should.be.eq(30);
         });
@@ -165,8 +165,8 @@ describe('Alias Factory', function () {
     describe('should inject alias factory link indexBy', function () {
         let injector:Injector,CalcManager;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
             let Rectangle = class {
 
@@ -193,11 +193,11 @@ describe('Alias Factory', function () {
                 }
             }
 
-            injector.define('rectangle',Rectangle).singleton().injectAliasFactory('calcable','calcable',"NAME")
-            injector.define('calcManager',CalcManager).aliasFactory(['calcable'])
+            injector.register('rectangle',Rectangle).singleton().injectAliasFactory('calcable','calcable',"NAME")
+            injector.register('calcManager',CalcManager).aliasFactory(['calcable'])
 
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {
@@ -211,7 +211,7 @@ describe('Alias Factory', function () {
 
             let calcable = rectangle.calcable.test()
 
-            calcable.calc.should.be.a.Function;
+            calcable.calc.should.be.a('function');
 
             calcable.calc().should.be.eq(25);
         });

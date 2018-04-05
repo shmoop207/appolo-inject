@@ -1,6 +1,6 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 
 let should = chai.should();
@@ -11,7 +11,7 @@ describe('Injector Aware',function(){
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
            class Rectangle{
 

@@ -1,8 +1,10 @@
 "use strict";
-"use strict";
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import ioc = require('../lib/inject');
+import chai = require('chai');
+import {define, singleton, inject as inject} from "../lib/decorators";
+
+let should = chai.should();
 
 
 describe('Property Ref', function () {
@@ -11,7 +13,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 calcManager:any
@@ -68,7 +70,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 calc:any
@@ -129,7 +131,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 calc:any
@@ -192,7 +194,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 fooManager:any;
@@ -262,7 +264,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
              class Rectangle{
                  fooManager:any
@@ -333,7 +335,7 @@ describe('Property Ref', function () {
         let injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 fooManager:any
@@ -403,7 +405,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 fooManager:any
@@ -438,9 +440,9 @@ describe('Property Ref', function () {
                 }
             }
 
-            injector.define('rectangle',Rectangle).inject(['fooManager'])
-                .define('fooManager',FooManager).inject('barManager')
-                .define('barManager',BarManager);
+            injector.register('rectangle',Rectangle).inject(['fooManager'])
+            injector.register('fooManager',FooManager).inject('barManager')
+            injector.register('barManager',BarManager);
 
 
             injector.initialize();
@@ -463,7 +465,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 fooManager:any
@@ -500,9 +502,9 @@ describe('Property Ref', function () {
             }
 
 
-            injector.define('rectangle',Rectangle).inject('fooManager').inject('myBarManager','barManager')
-                .define('fooManager',FooManager)
-                .define('barManager',BarManager)
+            injector.register('rectangle',Rectangle).inject('fooManager').inject('myBarManager','barManager')
+            injector.register('fooManager',FooManager)
+            injector.register('barManager',BarManager)
 
             injector.initialize();
         });
@@ -522,7 +524,7 @@ describe('Property Ref', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 fooManager:any
@@ -559,9 +561,9 @@ describe('Property Ref', function () {
             }
 
 
-            injector.define('rectangle',Rectangle).inject('fooManager barManager')
-                .define('fooManager',FooManager)
-                .define('barManager',BarManager)
+            injector.register('rectangle',Rectangle).inject('fooManager barManager')
+            injector.register('fooManager',FooManager)
+            injector.register('barManager',BarManager)
 
             injector.initialize();
         });
@@ -577,6 +579,69 @@ describe('Property Ref', function () {
         });
     });
 
+
+    describe('inject property with inject space (object notation) with decorators', function () {
+        let injector:Injector;
+
+        beforeEach(function () {
+            injector = ioc.createContainer();
+
+            @define()
+            class Rectangle{
+
+                @inject() fooManager:any;
+                @inject() barManager:any;
+                constructor () {
+
+                }
+
+                name () {
+                    return this.fooManager.name() + this.barManager.name()
+                }
+            }
+
+            @define()
+            class FooManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'foo'
+                }
+            }
+
+            @define()
+            class BarManager{
+
+                constructor () {
+
+                }
+
+                name () {
+                    return 'bar'
+                }
+            }
+
+
+            injector.register(Rectangle)
+            injector.register(FooManager)
+            injector.register(BarManager)
+
+            injector.initialize();
+        });
+
+        it('should inject property with inject array', function () {
+
+            let rectangle:any = injector.getObject('rectangle');
+            should.exist(rectangle);
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.barManager);
+
+            rectangle.name().should.equal('foobar');
+        });
+    });
 
 
 });

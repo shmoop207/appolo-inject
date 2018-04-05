@@ -5,23 +5,21 @@ import {IDefinition, IParamInject} from "./IDefinition";
 
 export class Define {
 
-    protected injector: Injector;
+    protected _definition: IDefinition;
 
-    protected definition :IDefinition;
+    protected _id: string;
 
-    protected id:string;
+    constructor(id: string, type?: Function) {
 
-    constructor(injector: Injector, id: string, type?: Function) {
-
-        if(!id){
+        if (!id) {
             return
         }
 
-        this.id = id;
+        this._id = id;
 
-        this.injector = injector;
 
-        this.definition = {
+        this._definition = {
+            id: this._id,
             type: type,
             inject: [],
             alias: [],
@@ -29,56 +27,65 @@ export class Define {
             args: []
         };
 
-        injector.addDefinition(id, this.definition)
     }
 
-    public type(type:Function):this {
-        this.definition.type = type;
+    public get definition(): IDefinition {
+        return this._definition;
+    }
+
+    public type(type: Function): this {
+        this._definition.type = type;
 
         return this;
     }
 
-    public singleton(singleton:boolean = true):this {
+    public singleton(singleton: boolean = true): this {
 
-        this.definition.singleton = _.isUndefined(singleton) ? true : singleton;
+        this._definition.singleton = _.isUndefined(singleton) ? true : singleton;
         return this
     }
 
-    public lazy(lazy:boolean = true):this {
+    public factory(factory: boolean = true): this {
 
-        this.definition.lazy = _.isUndefined(lazy) ? true : lazy;
+        this._definition.factory = _.isUndefined(factory) ? true : factory;
         return this
     }
 
-    public inject(name:string|string[]|IParamInject|IParamInject[], inject?:string):this {
+    public lazy(lazy: boolean = true): this {
+
+        this._definition.lazy = _.isUndefined(lazy) ? true : lazy;
+        return this
+    }
+
+    public inject(name: string | string[] | IParamInject | IParamInject[], inject?: string): this {
 
         if (_.isString(name) && _.includes(name, " ")) {
             name = name.split(" ");
         }
 
         if (_.isArray(name)) {
-            this.definition.inject.push.apply(this.definition.inject, name)
+            this._definition.inject.push.apply(this._definition.inject, name)
         } else if (_.isObject(name)) {
-            this.definition.inject.push(name as IParamInject)
+            this._definition.inject.push(name as IParamInject)
         }
 
         else if (_.toArray(arguments).length == 1 && _.isString(name)) {
-            this.definition.inject.push({name: name, ref: name} )
+            this._definition.inject.push({name: name, ref: name})
         } else if (_.toArray(arguments).length == 2 && _.isString(name)) {
-            this.definition.inject.push({name: name, ref: inject || name})
+            this._definition.inject.push({name: name, ref: inject || name})
         }
 
         return this;
     }
 
-    public injectFactoryMethod(name:string, factoryMethod:string):this {
+    public injectFactoryMethod(name: string, factoryMethod: string): this {
         return this.inject({
             name: name,
             factoryMethod: factoryMethod
         })
     }
 
-    public injectAlias(name:string, alias:string, indexBy?:string):this {
+    public injectAlias(name: string, alias: string, indexBy?: string): this {
         return this.inject({
             name: name,
             alias: alias,
@@ -86,7 +93,7 @@ export class Define {
         })
     }
 
-    public injectAliasFactory(name:string, alias:string, indexBy?:string):this {
+    public injectAliasFactory(name: string, alias: string, indexBy?: string): this {
         return this.inject({
             name: name,
             aliasFactory: alias,
@@ -94,7 +101,7 @@ export class Define {
         })
     }
 
-    public injectArray(name:string, arr:IParamInject[]):this {
+    public injectArray(name: string, arr: IParamInject[]): this {
         return this.inject({
             name: name,
             array: arr
@@ -102,21 +109,21 @@ export class Define {
     }
 
 
-    public injectDictionary(name:string, dic:IParamInject[]):this {
+    public injectDictionary(name: string, dic: IParamInject[]): this {
         return this.inject({
             name: name,
             dictionary: dic
         })
     }
 
-    public injectFactory(name:string, factory:string):this {
+    public injectFactory(name: string, factory?: string): this {
         return this.inject({
             name: name,
-            factory: factory
+            factory: factory || name + "Factory"
         })
     }
 
-    public injectObjectProperty(name:string, object:string, propertyName:string):this {
+    public injectObjectProperty(name: string, object: string, propertyName: string): this {
         return this.inject({
             name: name,
             objectProperty: {
@@ -126,60 +133,52 @@ export class Define {
         })
     }
 
-    public injectValue(name:string, value:any):this {
+    public injectValue(name: string, value: any): this {
         return this.inject({
             name: name,
             value: value
         })
     }
 
-    public alias(alias:string[]|string):this {
+    public alias(alias: string[] | string): this {
         if (_.isArray(alias)) {
-            this.definition.alias.push.apply(this.definition.alias, alias)
+            this._definition.alias.push.apply(this._definition.alias, alias)
         } else {
-            this.definition.alias.push(alias)
+            this._definition.alias.push(alias)
         }
 
         return this;
     }
 
-    public initMethod(initMethod?:string):this {
-        this.definition.initMethod = initMethod || "initialize";
+    public initMethod(initMethod?: string): this {
+        this._definition.initMethod = initMethod || "initialize";
         return this;
     }
 
-    public injectorAware():this {
-        this.definition.injectorAware = true;
+    public injectorAware(): this {
+        this._definition.injectorAware = true;
         return this;
     }
 
 
-    public aliasFactory(aliasFactory:string|string[]):this {
+    public aliasFactory(aliasFactory: string | string[]): this {
         if (_.isArray(aliasFactory)) {
-            this.definition.aliasFactory.push.apply(this.definition.aliasFactory, aliasFactory)
+            this._definition.aliasFactory.push.apply(this._definition.aliasFactory, aliasFactory)
         } else {
-            this.definition.aliasFactory.push(aliasFactory)
+            this._definition.aliasFactory.push(aliasFactory)
         }
 
         return this;
     }
 
-    public args(args:IParamInject[]|IParamInject):this {
+    public args(args: IParamInject[] | IParamInject): this {
         if (_.isArray(args)) {
-            this.definition.args.push.apply(this.definition.args, args)
+            this._definition.args.push.apply(this._definition.args, args)
         } else {
-            this.definition.args.push(args)
+            this._definition.args.push(args)
         }
         return this;
     }
-
-    public define(id:string, type:Function):Define {
-        return this.injector.define(id, type)
-    }
-
-   // public initialize() {
-   //     return this.injector.initialize()
-    //}
 
 
 }

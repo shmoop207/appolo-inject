@@ -1,12 +1,15 @@
 "use strict";
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+const tslib_1 = require("tslib");
+const ioc = require("../lib/inject");
+const chai = require("chai");
+const decorators_1 = require("../lib/decorators");
+let should = chai.should();
 describe('Property Ref', function () {
     describe('inject object by ref', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -48,7 +51,7 @@ describe('Property Ref', function () {
     describe('inject property with different name', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -91,7 +94,7 @@ describe('Property Ref', function () {
     describe('inject property with properties  def', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -134,7 +137,7 @@ describe('Property Ref', function () {
     describe('inject property with inject array', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -184,7 +187,7 @@ describe('Property Ref', function () {
     describe('inject property with nested properties', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -236,7 +239,7 @@ describe('Property Ref', function () {
     describe('inject property with inject array (object notation)', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -286,7 +289,7 @@ describe('Property Ref', function () {
     describe('inject property with nested properties link', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -308,9 +311,9 @@ describe('Property Ref', function () {
                     return 'bar';
                 }
             }
-            injector.define('rectangle', Rectangle).inject(['fooManager'])
-                .define('fooManager', FooManager).inject('barManager')
-                .define('barManager', BarManager);
+            injector.register('rectangle', Rectangle).inject(['fooManager']);
+            injector.register('fooManager', FooManager).inject('barManager');
+            injector.register('barManager', BarManager);
             injector.initialize();
         });
         it('should inject property with nested properties', function () {
@@ -325,7 +328,7 @@ describe('Property Ref', function () {
     describe('inject property with inject array (object notation) link', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -347,9 +350,9 @@ describe('Property Ref', function () {
                     return 'bar';
                 }
             }
-            injector.define('rectangle', Rectangle).inject('fooManager').inject('myBarManager', 'barManager')
-                .define('fooManager', FooManager)
-                .define('barManager', BarManager);
+            injector.register('rectangle', Rectangle).inject('fooManager').inject('myBarManager', 'barManager');
+            injector.register('fooManager', FooManager);
+            injector.register('barManager', BarManager);
             injector.initialize();
         });
         it('should inject property with inject array', function () {
@@ -363,7 +366,7 @@ describe('Property Ref', function () {
     describe('inject property with inject space (object notation) link', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -385,9 +388,62 @@ describe('Property Ref', function () {
                     return 'bar';
                 }
             }
-            injector.define('rectangle', Rectangle).inject('fooManager barManager')
-                .define('fooManager', FooManager)
-                .define('barManager', BarManager);
+            injector.register('rectangle', Rectangle).inject('fooManager barManager');
+            injector.register('fooManager', FooManager);
+            injector.register('barManager', BarManager);
+            injector.initialize();
+        });
+        it('should inject property with inject array', function () {
+            let rectangle = injector.getObject('rectangle');
+            should.exist(rectangle);
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.barManager);
+            rectangle.name().should.equal('foobar');
+        });
+    });
+    describe('inject property with inject space (object notation) with decorators', function () {
+        let injector;
+        beforeEach(function () {
+            injector = ioc.createContainer();
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                name() {
+                    return this.fooManager.name() + this.barManager.name();
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "fooManager", void 0);
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "barManager", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define()
+            ], Rectangle);
+            let FooManager = class FooManager {
+                constructor() {
+                }
+                name() {
+                    return 'foo';
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define()
+            ], FooManager);
+            let BarManager = class BarManager {
+                constructor() {
+                }
+                name() {
+                    return 'bar';
+                }
+            };
+            BarManager = tslib_1.__decorate([
+                decorators_1.define()
+            ], BarManager);
+            injector.register(Rectangle);
+            injector.register(FooManager);
+            injector.register(BarManager);
             injector.initialize();
         });
         it('should inject property with inject array', function () {

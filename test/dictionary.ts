@@ -1,6 +1,6 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 import    sinon = require("sinon");
 import    sinonChai = require("sinon-chai");
@@ -14,7 +14,7 @@ describe('Property Dictionary', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 objects:any
@@ -121,11 +121,11 @@ describe('Property Dictionary', function () {
             }
 
 
-            injector = inject.createContainer()
-            injector.define('rectangle',Rectangle)
+            injector = ioc.createContainer()
+            injector.register('rectangle',Rectangle)
                 .injectDictionary('objects',[{key:'foo',ref: 'fooManager'},{key:'bar',ref: 'barManager'},{key:'baz',value: 'baz'}])
-                .define('fooManager',FooManager).singleton()
-                .define('barManager',BarManager).singleton()
+            injector.register('fooManager',FooManager).singleton()
+            injector.register('barManager',BarManager).singleton()
             injector.initialize();
         });
 

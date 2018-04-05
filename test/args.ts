@@ -1,6 +1,6 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 
 let should = chai.should();
@@ -13,7 +13,7 @@ describe('Constructor Args', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             let Rectangle = class {
                 size: number;
@@ -55,7 +55,7 @@ describe('Constructor Args', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             let Rectangle = class {
                 size: number;
@@ -69,7 +69,7 @@ describe('Constructor Args', function () {
                 }
             };
 
-            injector.define('rectangle', Rectangle).singleton().args({value: 25})
+            injector.register('rectangle', Rectangle).singleton().args({value: 25})
 
             injector.initialize();
         });
@@ -89,7 +89,7 @@ describe('Constructor Args', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
 
         });
@@ -164,8 +164,8 @@ describe('Constructor Args', function () {
                 }
             }
 
-            injector.define('rectangle', Rectangle).singleton(true)
-                .define('fooManager', FooManager).singleton(true)
+            injector.register('rectangle', Rectangle).singleton(true)
+            injector.register('fooManager', FooManager).singleton(true)
 
 
             injector.initialize();
@@ -199,8 +199,8 @@ describe('Constructor Args', function () {
                 }
             }
 
-            injector.define('rectangle', Rectangle).singleton(true)
-                .define('fooManager', FooManager)
+            injector.register('rectangle', Rectangle).singleton(true)
+            injector.register('fooManager', FooManager)
 
             should.not.throw(() => {
                 injector.initialize();
@@ -378,7 +378,7 @@ describe('Constructor Args', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle {
                 size: number
@@ -438,7 +438,7 @@ describe('Constructor Args', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle {
                 fooManager:FooManager

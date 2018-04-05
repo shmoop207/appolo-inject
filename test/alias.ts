@@ -1,17 +1,17 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 
 let should = chai.should();
 
 describe('Alias', function () {
 
-    describe('should inject alias', function () {
+    describe('should inject alias',  function () {
         let injector:Injector, CalcManager;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
             let Rectangle = class {
 
@@ -49,7 +49,7 @@ describe('Alias', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {
@@ -64,7 +64,7 @@ describe('Alias', function () {
 
             rectangle.calcable[0].should.be.an.instanceOf(CalcManager);
 
-            rectangle.calcable[0].calc.should.be.a.Function;
+            rectangle.calcable[0].calc.should.be.a('function');
         });
 
         it('should getAlias', function () {
@@ -78,13 +78,13 @@ describe('Alias', function () {
 
             calcable[0].should.be.an.instanceOf(CalcManager);
 
-            calcable[0].calc.should.be.a.Function;
+            calcable[0].calc.should.be.a('function');
         });
 
 
-        it('should getAlias dict', function () {
+        it('should getAlias dict', async function () {
 
-            let injector2:Injector = inject.createContainer();
+            let injector2:Injector = ioc.createContainer();
 
             class Rectangle {
 
@@ -126,7 +126,7 @@ describe('Alias', function () {
                 }
             });
 
-            injector2.initialize();
+            await injector2.initialize();
 
 
             let rectangle = injector2.getObject<Rectangle>('rectangle');
@@ -154,7 +154,7 @@ describe('Alias', function () {
         let injector:Injector, CalcManager, FooManager;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             let Rectangle = class {
 
@@ -247,7 +247,7 @@ describe('Alias', function () {
         let injector:Injector, CalcManager, FooManager;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
 
             let Cleanable = class {
@@ -348,8 +348,8 @@ describe('Alias', function () {
     describe('should inject multi alias by class type linq', function () {
         let injector:Injector, CalcManager, FooManager,Rectangle,Cleanable;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
 
              Cleanable = class {
@@ -393,15 +393,16 @@ describe('Alias', function () {
                 }
             }
 
-            injector.define('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable').injectAlias('cleanable', Cleanable)
-                .define('calcManager', CalcManager).alias('calcable').singleton()
-                .define('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
-                .define('barManager', CalcManager).alias(['calcable']).singleton()
+            injector.register('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable')
+                .injectAlias('cleanable', Cleanable)
+            injector.register('calcManager', CalcManager).alias('calcable').singleton()
+            injector.register('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
+            injector.register('barManager', CalcManager).alias(['calcable']).singleton()
 
-            injector.initialize();
+            await injector.initialize();
         });
 
-        it('should inject property ', function () {
+        it('should inject property ', async function () {
 
             let rectangle:any = injector.getObject('rectangle');
 
@@ -420,8 +421,8 @@ describe('Alias', function () {
     describe('should inject multi alias by class type linq indexBy', function () {
         let injector:Injector, CalcManager, FooManager, Cleanable, Rectangle;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
 
 
             Cleanable = class {
@@ -468,12 +469,12 @@ describe('Alias', function () {
                 }
             }
 
-            injector.define('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable', "NAME").injectAlias('cleanable', Cleanable, "NAME")
-                .define('calcManager', CalcManager).alias('calcable').singleton()
-                .define('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
-                .define('barManager', CalcManager).alias(['calcable']).singleton()
+            injector.register('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable', "NAME").injectAlias('cleanable', Cleanable, "NAME")
+            injector.register('calcManager', CalcManager).alias('calcable').singleton()
+            injector.register('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
+            injector.register('barManager', CalcManager).alias(['calcable']).singleton()
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {

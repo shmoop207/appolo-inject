@@ -1,4 +1,4 @@
 export interface IOptions{
-    root?:string
+    //root?:string
     definitions?:{[index:string]:any}
 }

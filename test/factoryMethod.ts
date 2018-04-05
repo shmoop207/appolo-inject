@@ -1,7 +1,12 @@
 "use strict";
+import chai = require('chai');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import {IFactory} from "../lib/IFactory";
+import {define, singleton, inject, injectAlias, alias, injectFactory, factory,initMethod,injectFactoryMethod} from "../lib/decorators";
+
+let should = chai.should();
+
 
 describe('Property Factory Method', function () {
 
@@ -12,7 +17,7 @@ describe('Property Factory Method', function () {
 
         it('should inject factory method that creates objects', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle {
                 createFooManager:Function
@@ -73,7 +78,7 @@ describe('Property Factory Method', function () {
 
         it('should inject factory method that creates objects and call object with args', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
              class Rectangle{
                  createFooManager:Function
@@ -142,7 +147,7 @@ describe('Property Factory Method', function () {
 
         it('should inject factory method that creates objects and call object with args', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 createFooManager:Function
@@ -168,8 +173,8 @@ describe('Property Factory Method', function () {
                 }
             }
 
-            injector.define('rectangle', Rectangle).injectFactoryMethod('createFooManager', 'fooManager')
-                .define('fooManager', FooManager)
+            injector.register('rectangle', Rectangle).injectFactoryMethod('createFooManager', 'fooManager')
+            injector.register('fooManager', FooManager)
 
 
             injector.initialize();
@@ -197,7 +202,7 @@ describe('Property Factory Method', function () {
 
 
         it('should inject factory method that creates objects and call object with initialize', function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 createFooManager:Function
@@ -270,6 +275,75 @@ describe('Property Factory Method', function () {
         });
     });
 
+
+    describe('inject factory method with initialize init method with decorators', function () {
+        let injector:Injector, FooManager;
+
+
+
+        it('should inject factory method that creates objects and call object with initialize', function () {
+            injector = ioc.createContainer();
+
+            @define()
+            class FooManager{
+                name:number
+                constructor() {
+
+                }
+
+                @initMethod()
+                initialize() {
+                    this.name = Math.random();
+                }
+
+                getName() {
+                    return this.name;
+                }
+            }
+
+            @define()
+            class Rectangle{
+                @injectFactoryMethod(FooManager) createFooManager:Function;
+                constructor() {
+
+                }
+
+                getName(name) {
+
+                    return this.createFooManager(name).getName();
+                }
+
+            }
+
+
+
+
+            injector.register(FooManager)
+            injector.register(Rectangle)
+
+            injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            should.exist(rectangle.createFooManager);
+
+            rectangle.createFooManager.should.be.a('Function')
+
+            rectangle.createFooManager().should.be.instanceof(FooManager);
+
+            should.exist(rectangle.createFooManager().name);
+
+            let name1 = rectangle.createFooManager().getName();
+
+            let name2 = rectangle.createFooManager().getName();
+
+            should.exist(name1);
+
+            should.exist(name2);
+
+            name1.should.not.be.equal(name2)
+        });
+    });
 
 });
 

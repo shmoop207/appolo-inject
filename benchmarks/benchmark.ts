@@ -40,11 +40,11 @@ suite.add("get object singleton",() => {
 
 });
 suite.add("get object singleton ignore factory",() => {
-    let req1  =  injector.getObject('rectangle',[],true);
+    let req1  =  injector.getObject('rectangle',[]);
 
 });
 suite.add("get object not singleton",() => {
-    let req1  =  injector.getObject('rectangle2',[],true);
+    let req1  =  injector.getObject('rectangle2',[]);
 });
 
 suite.on('cycle', (event) => {

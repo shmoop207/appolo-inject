@@ -1,20 +1,22 @@
 "use strict";
 import {Injector} from "../lib/inject";
-import    inject = require('../lib/inject');
-let should = require('chai').should();
+import    ioc = require('../lib/inject');
+import chai = require('chai');
+
+let should = chai.should();
 
 
 describe('Ioc', function () {
     describe('create ioc', function () {
 
         it('should crate empty Ioc', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
 
             should.exist(injector.getInstances());
         });
 
         it('should add add definitions', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
 
             injector.addDefinitions({
                 test: {
@@ -28,7 +30,7 @@ describe('Ioc', function () {
 
 
         it('should add duplicate definitions', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
 
 
             let Test1 = class Test1{}
@@ -58,7 +60,7 @@ describe('Ioc', function () {
 
         it('should get object', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
 
@@ -94,8 +96,8 @@ describe('Ioc', function () {
                 }
             }
 
-            let injector = inject.createContainer();
-            injector.define('rectangle',Rectangle)
+            let injector = ioc.createContainer();
+            injector.register('rectangle',Rectangle)
 
             injector.initialize();
 
@@ -110,7 +112,7 @@ describe('Ioc', function () {
 
         it('should throw error if object not found', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
 
@@ -133,6 +135,34 @@ describe('Ioc', function () {
 
 
         });
+
+        it('should throw error if object not found inner', function () {
+
+            injector = ioc.createContainer();
+            class Rectangle{
+
+                constructor () {
+
+                }
+            }
+
+
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    inject:["test"]
+                }
+            });
+
+            injector.initialize();
+
+            (function () {
+                var rectangle = injector.getObject('rectangle');
+            }).should.throw("Injector:can't find object definition for objectID:test")
+
+
+        });
+
     });
 
 
@@ -140,7 +170,7 @@ describe('Ioc', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
              class Rectangle{
 
@@ -178,7 +208,7 @@ describe('Ioc', function () {
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
 
             injector.initialize();
@@ -207,7 +237,7 @@ describe('Ioc', function () {
 
         it('should get by type', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
 
@@ -252,7 +282,7 @@ describe('Ioc', function () {
         let injector:Injector, Rectangle, Circle;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
              class Rectangle{
 

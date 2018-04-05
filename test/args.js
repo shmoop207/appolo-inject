@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const inject = require("../lib/inject");
+const ioc = require("../lib/inject");
 let should = chai.should();
 describe('Constructor Args', function () {
     describe('inject value  to constructor', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             let Rectangle = class {
                 constructor(size) {
                     this.size = size;
@@ -36,7 +36,7 @@ describe('Constructor Args', function () {
     describe('inject value  to constructor linq', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             let Rectangle = class {
                 constructor(size) {
                     this.size = size;
@@ -45,7 +45,7 @@ describe('Constructor Args', function () {
                     return this.size;
                 }
             };
-            injector.define('rectangle', Rectangle).singleton().args({ value: 25 });
+            injector.register('rectangle', Rectangle).singleton().args({ value: 25 });
             injector.initialize();
         });
         it('should have the injected value', function () {
@@ -57,7 +57,7 @@ describe('Constructor Args', function () {
     xdescribe('inject to constructor args', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
         });
         it('should have the injected constructor args ', function () {
             class Rectangle {
@@ -100,8 +100,8 @@ describe('Constructor Args', function () {
                 constructor() {
                 }
             }
-            injector.define('rectangle', Rectangle).singleton(true)
-                .define('fooManager', FooManager).singleton(true);
+            injector.register('rectangle', Rectangle).singleton(true);
+            injector.register('fooManager', FooManager).singleton(true);
             injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle.fooManager);
@@ -118,8 +118,8 @@ describe('Constructor Args', function () {
                     throw new Error("aaa");
                 }
             }
-            injector.define('rectangle', Rectangle).singleton(true)
-                .define('fooManager', FooManager);
+            injector.register('rectangle', Rectangle).singleton(true);
+            injector.register('fooManager', FooManager);
             should.not.throw(() => {
                 injector.initialize();
                 let rectangle = injector.getObject('rectangle');
@@ -233,7 +233,7 @@ describe('Constructor Args', function () {
     describe('inject value  to constructor', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor(size, name) {
                     this.size = size;
@@ -271,7 +271,7 @@ describe('Constructor Args', function () {
     describe('inject object  to constructor with runtime', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor(fooManager, name) {
                     this.fooManager = fooManager;

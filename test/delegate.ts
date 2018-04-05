@@ -1,6 +1,6 @@
 "use strict";
 import chai = require('chai');
-import    inject = require('../lib/inject');
+import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 import    sinon = require("sinon");
 import    sinonChai = require("sinon-chai");
@@ -12,24 +12,26 @@ describe('delegate', function () {
     describe('delegate function', function () {
         let injector:Injector;
 
-        beforeEach(function () {
-            injector = inject.createContainer();
-
-            class Rectangle{
-                number:number;
-                size:number;
-                constructor() {
-                    this.number = Math.random();
-                }
-
-                run() {
-
-                }
-
-                area() {
-                    return this.size;
-                }
+        class Rectangle{
+            number:number;
+            size:number;
+            constructor() {
+                this.number = Math.random();
             }
+
+            run() {
+
+            }
+
+            area() {
+                return this.size;
+            }
+        }
+
+        beforeEach(function () {
+            injector = ioc.createContainer();
+
+
 
             injector.addDefinitions({
                 rectangle: {
@@ -47,11 +49,11 @@ describe('delegate', function () {
 
         it('should delegate function', function () {
 
-            let rectangle = injector.getObject('rectangle');
+            let rectangle = injector.getObject<Rectangle>('rectangle');
 
             let func = injector.delegate('rectangle');
 
-            let spy = sinon.spy(rectangle, 'run');
+            let spy = sinon.spy<Rectangle>(rectangle, 'run');
 
             func();
 
@@ -61,11 +63,11 @@ describe('delegate', function () {
 
         it('should delegate function with params', function () {
 
-            var rectangle = injector.getObject('rectangle');
+            var rectangle = injector.getObject<Rectangle>('rectangle');
 
             var func = injector.delegate('rectangle');
 
-            var spy = sinon.spy(rectangle, 'run');
+            var spy = sinon.spy<Rectangle>(rectangle, 'run');
 
             func("test", "test2");
 

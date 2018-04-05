@@ -1,3 +1,5 @@
+import {Injector} from "./inject";
+
 export interface IParamInject{
     value?:any,
     ref?:string,
@@ -20,15 +22,21 @@ export interface IParamInject{
 
 export interface IDefinition{
     path?:string
+    id?:string
     type?:Function
     args?:IParamInject[]
     singleton?:boolean
+    factory?:boolean
     lazy?:boolean
     aliasFactory?:string[]
     alias?:string[]
     initMethod?:string
+    injector?:Injector;
     $isWired?:boolean
-    $propertiesGenerated?:boolean
+    $isFactoryWired?:boolean
+    //$hasFactory?:boolean
+    //$sameNameFactory?:boolean
+    //$propertiesGenerated?:boolean
     properties?:IParamInject[]
     props?:IParamInject[]
     inject?:IParamInject[]

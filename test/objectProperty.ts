@@ -1,7 +1,9 @@
 "use strict";
 import {Injector} from "../lib/inject";
 import inject = require('../lib/inject');
-let should = require('chai').should();
+import chai = require('chai');
+
+let should = chai.should();
 
 
 describe('Property Object Property.js', function () {
@@ -94,9 +96,9 @@ describe('Property Object Property.js', function () {
 
 
             injector = inject.createContainer()
-            injector    .define('rectangle',Rectangle)
+            injector.register('rectangle',Rectangle)
                 .injectObjectProperty('otherObjectProperty','fooManager','name')
-                .define('fooManager',FooManager).singleton()
+            injector.register('fooManager',FooManager).singleton()
             injector .initialize();
         });
 

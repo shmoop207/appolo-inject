@@ -1,21 +1,25 @@
 "use strict";
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import chai = require('chai');
+import    ioc = require('../lib/inject');
+import {define, singleton, initMethod} from "../lib/decorators";
+
+let should = chai.should();
+
 describe('initialize', function () {
 
 
     describe('should call initialize method', function () {
-        let injector:Injector, Rectangle;
+        let injector: Injector, Rectangle;
 
 
+        it('should call initialize method', async function () {
 
-        it('should call initialize method', function () {
+            injector = ioc.createContainer();
 
-            injector = inject.createContainer();
+            class Rectangle {
+                working: boolean
 
-            class Rectangle{
-                working:boolean
                 constructor() {
 
                 }
@@ -33,7 +37,7 @@ describe('initialize', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
 
             let rectangle = injector.getObject<Rectangle>('rectangle');
 
@@ -43,26 +47,65 @@ describe('initialize', function () {
     });
 
     describe('should call initialize method linq', function () {
-        let injector:Injector;
+        let injector: Injector;
 
-        injector = inject.createContainer();
 
-        class Rectangle{
-            working:boolean
-            constructor() {
 
+        it('should call initialize method', async function () {
+
+            injector = ioc.createContainer();
+
+            class Rectangle {
+                working: boolean
+
+                constructor() {
+
+                }
+
+                initialize() {
+                    this.working = true
+                }
             }
 
-            initialize() {
-                this.working = true
+            injector.register('rectangle', Rectangle).singleton().initMethod('initialize')
+            await injector.initialize()
+
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            rectangle.working.should.be.true;
+
+        });
+    });
+
+    describe('should call initialize method decorators', function () {
+
+
+
+        it('should call initialize method', async function () {
+
+            let injector: Injector;
+
+            injector = ioc.createContainer();
+
+            @define()
+            @singleton()
+            class Rectangle {
+                working: boolean;
+
+                constructor() {
+
+                }
+
+                @initMethod()
+                initialize() {
+                    this.working = true
+                }
             }
-        }
 
-        injector.define('rectangle', Rectangle).singleton().initMethod('initialize')
-        injector  .initialize()
+            injector.register(Rectangle);
 
-
-        it('should call initialize method', function () {
+            await injector.initialize();
 
             let rectangle = injector.getObject<Rectangle>('rectangle');
 

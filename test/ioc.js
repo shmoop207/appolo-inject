@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const inject = require("../lib/inject");
-let should = require('chai').should();
+const ioc = require("../lib/inject");
+const chai = require("chai");
+let should = chai.should();
 describe('Ioc', function () {
     describe('create ioc', function () {
         it('should crate empty Ioc', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
             should.exist(injector.getInstances());
         });
         it('should add add definitions', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
             injector.addDefinitions({
                 test: {
                     type: 'test'
@@ -18,7 +19,7 @@ describe('Ioc', function () {
             should.exist(injector.getDefinition('test'));
         });
         it('should add duplicate definitions', function () {
-            let injector = inject.createContainer();
+            let injector = ioc.createContainer();
             let Test1 = class Test1 {
             };
             let Test2 = class Test1 {
@@ -40,7 +41,7 @@ describe('Ioc', function () {
     describe('get simple object', function () {
         let injector;
         it('should get object', function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -61,8 +62,8 @@ describe('Ioc', function () {
                 constructor() {
                 }
             }
-            let injector = inject.createContainer();
-            injector.define('rectangle', Rectangle);
+            let injector = ioc.createContainer();
+            injector.register('rectangle', Rectangle);
             injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle);
@@ -71,7 +72,7 @@ describe('Ioc', function () {
     describe('get simple object error', function () {
         let injector;
         it('should throw error if object not found', function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -86,11 +87,28 @@ describe('Ioc', function () {
                 var rectangle = injector.getObject('rectangle2');
             }).should.throw("Injector:can't find object definition for objectID:rectangle2");
         });
+        it('should throw error if object not found inner', function () {
+            injector = ioc.createContainer();
+            class Rectangle {
+                constructor() {
+                }
+            }
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    inject: ["test"]
+                }
+            });
+            injector.initialize();
+            (function () {
+                var rectangle = injector.getObject('rectangle');
+            }).should.throw("Injector:can't find object definition for objectID:test");
+        });
     });
     describe('reset ioc', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -115,7 +133,7 @@ describe('Ioc', function () {
     describe('add object', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             injector.initialize();
         });
         it('should add object', function () {
@@ -130,7 +148,7 @@ describe('Ioc', function () {
     describe('get object by type', function () {
         let injector;
         it('should get by type', function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }
@@ -160,7 +178,7 @@ describe('Ioc', function () {
     describe('get object with existing obj', function () {
         let injector, Rectangle, Circle;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                 }

@@ -1,7 +1,10 @@
 "use strict";
 import {Injector} from "../lib/inject";
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+import ioc = require('../lib/inject');
+import chai = require('chai');
+import {define, singleton, inject} from "../lib/decorators";
+
+let should = chai.should();
 
 describe('Property Value',function(){
 
@@ -10,7 +13,7 @@ describe('Property Value',function(){
         let injector:Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 number:number
@@ -54,7 +57,7 @@ describe('Property Value',function(){
 
         it('should have the injected value', function () {
 
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle{
                 number:number
@@ -69,7 +72,7 @@ describe('Property Value',function(){
                 }
             }
 
-            injector.define('rectangle',Rectangle).singleton().injectValue('size',25)
+            injector.register('rectangle',Rectangle).singleton().injectValue('size',25)
 
             injector.initialize();
 

@@ -1,42 +1,45 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 const chai = require("chai");
-const inject = require("../lib/inject");
+const ioc = require("../lib/inject");
 let should = chai.should();
 describe('Alias', function () {
     describe('should inject alias', function () {
         let injector, CalcManager;
         beforeEach(function () {
-            injector = inject.createContainer();
-            let Rectangle = class {
-                constructor() {
-                }
-            };
-            CalcManager = class {
-                constructor() {
-                }
-                calc() {
-                    return 25;
-                }
-            };
-            injector.addDefinitions({
-                rectangle: {
-                    type: Rectangle,
-                    singleton: true,
-                    props: [
-                        {
-                            name: 'calcable',
-                            alias: 'calcable'
-                        }
-                    ]
-                },
-                calcManager: {
-                    type: CalcManager,
-                    alias: ['calcable'],
-                    singleton: true
-                }
+            return tslib_1.__awaiter(this, void 0, void 0, function* () {
+                injector = ioc.createContainer();
+                let Rectangle = class {
+                    constructor() {
+                    }
+                };
+                CalcManager = class {
+                    constructor() {
+                    }
+                    calc() {
+                        return 25;
+                    }
+                };
+                injector.addDefinitions({
+                    rectangle: {
+                        type: Rectangle,
+                        singleton: true,
+                        props: [
+                            {
+                                name: 'calcable',
+                                alias: 'calcable'
+                            }
+                        ]
+                    },
+                    calcManager: {
+                        type: CalcManager,
+                        alias: ['calcable'],
+                        singleton: true
+                    }
+                });
+                yield injector.initialize();
             });
-            injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');
@@ -44,7 +47,7 @@ describe('Alias', function () {
             rectangle.calcable.should.be.an.instanceOf(Array);
             rectangle.calcable.length.should.be.equal(1);
             rectangle.calcable[0].should.be.an.instanceOf(CalcManager);
-            rectangle.calcable[0].calc.should.be.a.Function;
+            rectangle.calcable[0].calc.should.be.a('function');
         });
         it('should getAlias', function () {
             let calcable = injector.getAlias('calcable');
@@ -52,45 +55,47 @@ describe('Alias', function () {
             calcable.should.be.an.instanceOf(Array);
             calcable.length.should.be.equal(1);
             calcable[0].should.be.an.instanceOf(CalcManager);
-            calcable[0].calc.should.be.a.Function;
+            calcable[0].calc.should.be.a('function');
         });
         it('should getAlias dict', function () {
-            let injector2 = inject.createContainer();
-            class Rectangle {
-                constructor() {
+            return tslib_1.__awaiter(this, void 0, void 0, function* () {
+                let injector2 = ioc.createContainer();
+                class Rectangle {
+                    constructor() {
+                    }
                 }
-            }
-            class CalcManager {
-                constructor() {
-                    this.NAME = "aaa";
+                class CalcManager {
+                    constructor() {
+                        this.NAME = "aaa";
+                    }
+                    calc() {
+                        return 25;
+                    }
                 }
-                calc() {
-                    return 25;
-                }
-            }
-            injector2.addDefinitions({
-                rectangle: {
-                    type: Rectangle,
-                    singleton: true,
-                    props: [
-                        {
-                            name: 'testables',
-                            alias: 'testable',
-                            indexBy: "NAME"
-                        }
-                    ]
-                },
-                calcManager: {
-                    type: CalcManager,
-                    alias: ['testable'],
-                    singleton: true
-                }
+                injector2.addDefinitions({
+                    rectangle: {
+                        type: Rectangle,
+                        singleton: true,
+                        props: [
+                            {
+                                name: 'testables',
+                                alias: 'testable',
+                                indexBy: "NAME"
+                            }
+                        ]
+                    },
+                    calcManager: {
+                        type: CalcManager,
+                        alias: ['testable'],
+                        singleton: true
+                    }
+                });
+                yield injector2.initialize();
+                let rectangle = injector2.getObject('rectangle');
+                should.exist(rectangle);
+                should.exist(rectangle.testables.aaa);
+                rectangle.testables.aaa.calc().should.be.eq(25);
             });
-            injector2.initialize();
-            let rectangle = injector2.getObject('rectangle');
-            should.exist(rectangle);
-            should.exist(rectangle.testables.aaa);
-            rectangle.testables.aaa.calc().should.be.eq(25);
         });
         it('should getAlias return empty array if not found', function () {
             let calcable = injector.getAlias('calcable2');
@@ -102,7 +107,7 @@ describe('Alias', function () {
     describe('should inject multi alias', function () {
         let injector, CalcManager, FooManager;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             let Rectangle = class {
                 constructor() {
                 }
@@ -169,7 +174,7 @@ describe('Alias', function () {
     describe('should inject multi alias by class type', function () {
         let injector, CalcManager, FooManager;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             let Cleanable = class {
                 constructor() {
                 }
@@ -240,83 +245,90 @@ describe('Alias', function () {
     describe('should inject multi alias by class type linq', function () {
         let injector, CalcManager, FooManager, Rectangle, Cleanable;
         beforeEach(function () {
-            injector = inject.createContainer();
-            Cleanable = class {
-                constructor() {
-                }
-            };
-            Rectangle = class {
-                constructor() {
-                }
-            };
-            CalcManager = class {
-                constructor() {
-                }
-                calc() {
-                    return 25;
-                }
-            };
-            FooManager = class {
-                constructor() {
-                }
-                calc() {
-                    return 25;
-                }
-                cleanable() {
-                }
-            };
-            injector.define('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable').injectAlias('cleanable', Cleanable)
-                .define('calcManager', CalcManager).alias('calcable').singleton()
-                .define('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
-                .define('barManager', CalcManager).alias(['calcable']).singleton();
-            injector.initialize();
+            return tslib_1.__awaiter(this, void 0, void 0, function* () {
+                injector = ioc.createContainer();
+                Cleanable = class {
+                    constructor() {
+                    }
+                };
+                Rectangle = class {
+                    constructor() {
+                    }
+                };
+                CalcManager = class {
+                    constructor() {
+                    }
+                    calc() {
+                        return 25;
+                    }
+                };
+                FooManager = class {
+                    constructor() {
+                    }
+                    calc() {
+                        return 25;
+                    }
+                    cleanable() {
+                    }
+                };
+                injector.register('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable')
+                    .injectAlias('cleanable', Cleanable);
+                injector.register('calcManager', CalcManager).alias('calcable').singleton();
+                injector.register('fooManager', FooManager).alias(['calcable', Cleanable]).singleton();
+                injector.register('barManager', CalcManager).alias(['calcable']).singleton();
+                yield injector.initialize();
+            });
         });
         it('should inject property ', function () {
-            let rectangle = injector.getObject('rectangle');
-            should.exist(rectangle.calcable);
-            should.exist(rectangle.cleanable);
-            rectangle.calcable.should.be.an.instanceOf(Array);
-            rectangle.cleanable.should.be.an.instanceOf(Array);
-            rectangle.calcable.length.should.be.equal(3);
-            rectangle.cleanable.length.should.be.equal(1);
+            return tslib_1.__awaiter(this, void 0, void 0, function* () {
+                let rectangle = injector.getObject('rectangle');
+                should.exist(rectangle.calcable);
+                should.exist(rectangle.cleanable);
+                rectangle.calcable.should.be.an.instanceOf(Array);
+                rectangle.cleanable.should.be.an.instanceOf(Array);
+                rectangle.calcable.length.should.be.equal(3);
+                rectangle.cleanable.length.should.be.equal(1);
+            });
         });
     });
     describe('should inject multi alias by class type linq indexBy', function () {
         let injector, CalcManager, FooManager, Cleanable, Rectangle;
         beforeEach(function () {
-            injector = inject.createContainer();
-            Cleanable = class {
-                constructor() {
-                    this.NAME = "cc";
-                }
-            };
-            Rectangle = class {
-                constructor() {
-                }
-            };
-            CalcManager = class {
-                constructor() {
-                    this.NAME = "bb";
-                }
-                calc() {
-                    return 25;
-                }
-            };
-            FooManager = class {
-                constructor() {
-                    this.NAME = "aa";
-                }
-                calc() {
-                    return 25;
-                }
-                cleanable() {
-                }
-            };
-            injector.define('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable', "NAME").injectAlias('cleanable', Cleanable, "NAME")
-                .define('calcManager', CalcManager).alias('calcable').singleton()
-                .define('fooManager', FooManager).alias(['calcable', Cleanable]).singleton()
-                .define('barManager', CalcManager).alias(['calcable']).singleton();
-            injector.initialize();
+            return tslib_1.__awaiter(this, void 0, void 0, function* () {
+                injector = ioc.createContainer();
+                Cleanable = class {
+                    constructor() {
+                        this.NAME = "cc";
+                    }
+                };
+                Rectangle = class {
+                    constructor() {
+                    }
+                };
+                CalcManager = class {
+                    constructor() {
+                        this.NAME = "bb";
+                    }
+                    calc() {
+                        return 25;
+                    }
+                };
+                FooManager = class {
+                    constructor() {
+                        this.NAME = "aa";
+                    }
+                    calc() {
+                        return 25;
+                    }
+                    cleanable() {
+                    }
+                };
+                injector.register('rectangle', Rectangle).singleton().injectAlias('calcable', 'calcable', "NAME").injectAlias('cleanable', Cleanable, "NAME");
+                injector.register('calcManager', CalcManager).alias('calcable').singleton();
+                injector.register('fooManager', FooManager).alias(['calcable', Cleanable]).singleton();
+                injector.register('barManager', CalcManager).alias(['calcable']).singleton();
+                yield injector.initialize();
+            });
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');

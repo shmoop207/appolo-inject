@@ -1,8 +1,9 @@
 "use strict";
 import {Injector} from "../lib/inject";
+import    ioc = require('../lib/inject');
+import chai = require('chai');
 
-let should = require('chai').should(),
-    inject = require('../lib/inject');
+let should = chai.should();
 
 describe('Lazy', function () {
 
@@ -11,7 +12,7 @@ describe('Lazy', function () {
         let injector: Injector;
 
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
 
             class Rectangle {
                 number: number
@@ -27,7 +28,7 @@ describe('Lazy', function () {
 
             }
 
-            injector.define('rectangle', Rectangle).singleton().lazy()
+            injector.register('rectangle', Rectangle).singleton().lazy()
 
 
             injector.initialize();

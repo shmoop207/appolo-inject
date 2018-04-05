@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let should = require('chai').should(), inject = require('../lib/inject');
+const ioc = require("../lib/inject");
+const chai = require("chai");
+let should = chai.should();
 describe('Lazy', function () {
     describe('create lazy object', function () {
         let injector;
         beforeEach(function () {
-            injector = inject.createContainer();
+            injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
                     this.number = Math.random();
@@ -14,7 +16,7 @@ describe('Lazy', function () {
                     return 25;
                 }
             }
-            injector.define('rectangle', Rectangle).singleton().lazy();
+            injector.register('rectangle', Rectangle).singleton().lazy();
             injector.initialize();
         });
         it('should not exist instances', function () {
