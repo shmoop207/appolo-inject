@@ -21,5 +21,6 @@ export {
     injectValue,
     aliasFactory,
     alias,
+    lazy,
     factory
 } from './lib/decorators'

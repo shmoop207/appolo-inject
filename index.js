@@ -23,5 +23,6 @@ exports.injectObjectProperty = decorators_1.injectObjectProperty;
 exports.injectValue = decorators_1.injectValue;
 exports.aliasFactory = decorators_1.aliasFactory;
 exports.alias = decorators_1.alias;
+exports.lazy = decorators_1.lazy;
 exports.factory = decorators_1.factory;
 //# sourceMappingURL=index.js.map
