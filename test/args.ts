@@ -384,7 +384,7 @@ describe('Constructor Args', function () {
                 size: number
                 name: string
 
-                constructor(name: string, size: number) {
+                constructor( size: number,name: string,) {
                     this.size = size;
                     this.name = name;
                 }
@@ -444,7 +444,7 @@ describe('Constructor Args', function () {
                 fooManager: FooManager;
                 name: string;
 
-                constructor(name, fooManager) {
+                constructor(fooManager,name) {
                     this.fooManager = fooManager;
                     this.name = name + this.fooManager.name;
                 }

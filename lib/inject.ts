@@ -406,12 +406,15 @@ export class Injector {
             return newObjectInstance;
         }
 
+
         //loop over args and get the arg value or create arg object instance
         if (objectDefinition.args && objectDefinition.args.length) {
+            let args = [];
             for (let i = 0, length = objectDefinition.args.length; i < length; i++) {
                 let arg = objectDefinition.args[i];
-                argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
+                args.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
             }
+            argumentInstances = [...args,...argumentInstances]
         }
 
         try {

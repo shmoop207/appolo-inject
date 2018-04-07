@@ -235,7 +235,7 @@ describe('Constructor Args', function () {
         beforeEach(function () {
             injector = ioc.createContainer();
             class Rectangle {
-                constructor(name, size) {
+                constructor(size, name) {
                     this.size = size;
                     this.name = name;
                 }
@@ -273,7 +273,7 @@ describe('Constructor Args', function () {
         beforeEach(function () {
             injector = ioc.createContainer();
             class Rectangle {
-                constructor(name, fooManager) {
+                constructor(fooManager, name) {
                     this.fooManager = fooManager;
                     this.name = name + this.fooManager.name;
                 }

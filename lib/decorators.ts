@@ -143,7 +143,7 @@ export function injectParam(name?: string) {
         if (!propertyKey) {
             args = Util.getFunctionArgs(target);
 
-            addDefinition("args", [{ref: name || args[index]}], target)
+            addDefinition("args", [{ref: name || args[index]}], target);
 
             return;
         }
