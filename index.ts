@@ -4,6 +4,7 @@ export {IFactory} from './lib/IFactory'
 export {IOptions} from './lib/IOptions'
 export {Injector, createContainer} from './lib/inject'
 export {Define} from './lib/define'
+export {Util} from './lib/util'
 export {
     InjectDefineSymbol,
     define,

@@ -12,12 +12,7 @@ const EmptyFunction = () => {
 
 function addDefinition(name: string, args: any[], type: any): void {
 
-    let injectDef = Reflect.getOwnMetadata(InjectDefinitionsSymbol, type) || _.cloneDeep(Reflect.getMetadata(InjectDefinitionsSymbol, type));
-
-    if (!injectDef) {
-        injectDef = [];
-        Reflect.defineMetadata(InjectDefinitionsSymbol, injectDef, type);
-    }
+    let injectDef = Util.getReflectData<{ name: string, args: any[] }[]>(InjectDefinitionsSymbol, type, []);
 
     injectDef.push({name: name, args: args})
 }

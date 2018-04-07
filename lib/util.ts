@@ -1,7 +1,8 @@
 import _ = require('lodash');
+import {InjectDefinitionsSymbol} from "./decorators";
 
-export class Util{
-    public static getClassName (fn:Function):string{
+export class Util {
+    public static getClassName(fn: Function): string {
         return fn.name.charAt(0).toLowerCase() + fn.name.slice(1)
     }
 
@@ -29,6 +30,22 @@ export class Util{
         args = _.compact(args);
 
         return args;
+    }
+
+    public static getReflectData<T>(symbol: Symbol, klass, defaultValue: T): T {
+        let value = Reflect.getOwnMetadata(symbol, klass);
+
+        if (!value && Reflect.hasMetadata(symbol, klass)) {
+            value = _.cloneDeep(Reflect.getMetadata(symbol, klass));
+            Reflect.defineMetadata(symbol, value, klass);
+        }
+
+        if (!value) {
+            value = defaultValue;
+            Reflect.defineMetadata(InjectDefinitionsSymbol, value, klass);
+        }
+
+        return value
     }
 
     public static mapPush(map: { [index: string]: Object[] }, key: string, obj: Object): void {
