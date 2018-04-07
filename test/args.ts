@@ -384,7 +384,7 @@ describe('Constructor Args', function () {
                 size: number
                 name: string
 
-                constructor(size: number, name: string) {
+                constructor(name: string, size: number) {
                     this.size = size;
                     this.name = name;
                 }
@@ -441,17 +441,19 @@ describe('Constructor Args', function () {
             injector = ioc.createContainer();
 
             class Rectangle {
-                fooManager:FooManager
-                name:string
-                constructor(fooManager, name) {
+                fooManager: FooManager;
+                name: string;
+
+                constructor(name, fooManager) {
                     this.fooManager = fooManager;
                     this.name = name + this.fooManager.name;
                 }
             }
 
             class FooManager {
-                barManager:BarManager
-                name:string
+                barManager: BarManager;
+                name: string;
+
                 constructor(name, barManager) {
 
                     this.barManager = barManager;
@@ -462,8 +464,9 @@ describe('Constructor Args', function () {
 
             }
 
-            class BarManager{
-                name:string
+            class BarManager {
+                name: string;
+
                 constructor(name) {
                     this.name = name;
                 }
@@ -501,7 +504,7 @@ describe('Constructor Args', function () {
 
         it('should inject to object runtime and ref objects', function () {
 
-            let rectangle:any = injector.getObject('rectangle', ['rectangle']);
+            let rectangle: any = injector.getObject('rectangle', ['rectangle']);
 
             should.exist(rectangle.fooManager);
             should.exist(rectangle.fooManager.barManager);

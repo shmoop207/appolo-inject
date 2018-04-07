@@ -1,7 +1,6 @@
 "use strict";
 
 import _ = require('lodash');
-import    path = require('path');
 import {IOptions} from "./IOptions";
 import {IFactory} from "./IFactory";
 import {IDefinition, IParamInject} from "./IDefinition";
@@ -134,13 +133,17 @@ export class Injector {
 
         _.forEach(paramGroups, (items: any[], method: string) => {
             let oldFn = def.type.prototype[method];
+            oldFn = oldFn.originFn || oldFn;
+
             def.type.prototype[method] = function (...args: any[]) {
                 for (let i = 0, length = (items.length || 0); i < length; i++) {
                     args[items[i].index] = $self.getObject(items[i].param)
                 }
 
                 return oldFn.apply(this, args)
-            }
+            };
+            def.type.prototype[method].originFn = oldFn;
+
         });
     }
 
@@ -277,7 +280,7 @@ export class Injector {
 
     public addObject<T>(objectId: string, instance: T, silent?: boolean): Injector {
 
-        return this.addInstance(objectId, instance);
+        return this.addInstance(objectId, instance, silent);
     }
 
     public addInstance<T>(objectId: string, instance: T, silent?: boolean): Injector {
@@ -377,7 +380,7 @@ export class Injector {
 
 
     private _createObjectInstance<T>(objectID: string, objectDefinition: IDefinition, runtimeArgs?: any[], referenceChain: any[] = []): T {
-        let argumentInstances = [],
+        let argumentInstances = runtimeArgs || [],
             args: IParamInject[],
             newObjectInstance;
 
@@ -403,22 +406,12 @@ export class Injector {
             return newObjectInstance;
         }
 
-        // //convert path to type
-        // if (objectDefinition.path) {
-        //     objectDefinition.type = require(path.join(this._options.root, objectDefinition.path + '.js'))
-        // }
-
-        args = (objectDefinition.args && objectDefinition.args.length > 0) ? objectDefinition.args : [];
-
-        //add runtime args to the end of args obj
-        for (let i = 0, length = (runtimeArgs ? runtimeArgs.length : 0); i < length; i++) {
-            args.push({value: runtimeArgs[i]});
-        }
-
         //loop over args and get the arg value or create arg object instance
-        for (let i = 0, length = (args ? args.length : 0); i < length; i++) {
-            let arg = args[i];
-            argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
+        if (objectDefinition.args && objectDefinition.args.length) {
+            for (let i = 0, length = objectDefinition.args.length; i < length; i++) {
+                let arg = objectDefinition.args[i];
+                argumentInstances.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
+            }
         }
 
         try {
