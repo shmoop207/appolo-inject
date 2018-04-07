@@ -1,5 +1,4 @@
 import _ = require('lodash');
-import {InjectDefinitionsSymbol} from "./decorators";
 
 export class Util {
     public static getClassName(fn: Function): string {
@@ -42,7 +41,7 @@ export class Util {
 
         if (!value) {
             value = defaultValue;
-            Reflect.defineMetadata(InjectDefinitionsSymbol, value, klass);
+            Reflect.defineMetadata(symbol, value, klass);
         }
 
         return value
