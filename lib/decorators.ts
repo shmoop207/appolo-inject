@@ -81,9 +81,9 @@ export function initMethod(): (target: any, propertyKey: string, descriptor?: Pr
     return addDefinitionProperty("initMethod", []);
 }
 
-export function inject(inject?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
+export function inject(inject?: string | Function): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
 
-    return addDefinitionProperty("inject", [inject]);
+    return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)]);
 }
 
 
