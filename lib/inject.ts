@@ -153,7 +153,7 @@ export class Injector {
 
     public get<T>(objectID: string | Function, runtimeArgs?: any[]): T {
 
-        objectID = Util.getClassNameOrId(objectID)
+        objectID = Util.getClassNameOrId(objectID);
 
         return this._get<T>(objectID as string, runtimeArgs)
     }
@@ -320,11 +320,11 @@ export class Injector {
     }
 
     public getAlias(aliasName: string): any[] {
-        return this._alias[aliasName] || [];
+        return this._alias[aliasName] || (this.parent ? this.parent.getAlias(aliasName) : []) || [];
     }
 
     public getAliasFactory(aliasName: string): any[] {
-        return this._aliasFactory[aliasName] || [];
+        return this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
     }
 
     public delegate(objectId: string): Function {
@@ -392,7 +392,7 @@ export class Injector {
                 let arg = objectDefinition.args[i];
                 args.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
             }
-            argumentInstances = [...args,...argumentInstances]
+            argumentInstances = [...args, ...argumentInstances]
         }
 
         try {
