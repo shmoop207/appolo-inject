@@ -1,10 +1,10 @@
 "use strict";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
+import sleep  = require ('sleep-promise');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {define, singleton, inject, injectAlias, alias, injectFactory, factory} from "../lib/decorators";
-import sleep  = require ('sleep-promise')
+import {define, factory, inject, injectFactory, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -467,7 +467,7 @@ describe('Property Factory', function () {
         });
 
 
-        it('should inject multi factory async different containers', async () => {
+        it.only('should inject multi factory async different containers', async () => {
 
             @define()
             @singleton()
@@ -540,7 +540,7 @@ describe('Property Factory', function () {
 
         })
 
-        it('should inject multi factory async parent container ', async () => {
+        it.only('should inject multi factory async parent container ', async () => {
 
             @define()
             @singleton()
@@ -604,9 +604,16 @@ describe('Property Factory', function () {
             injector2.register(Factory2);
             injector.addDefinition("factory2", {injector: injector2});
 
-            await injector2.initialize();
+            injector.startInitialize()
 
-            await injector.initialize();
+
+            injector2.startInitialize()
+
+
+            await injector2.finishInitialize();
+            await injector.finishInitialize();
+
+
 
             let rectangle = injector.getObject<Rectangle>(Rectangle);
 
@@ -666,7 +673,6 @@ describe('Property Factory', function () {
                     return "factory1"
                 }
             }
-
 
 
             injector = ioc.createContainer();

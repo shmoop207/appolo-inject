@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const chai = require("chai");
 const ioc = require("../lib/inject");
-const decorators_1 = require("../lib/decorators");
 const sleep = require("sleep-promise");
+const decorators_1 = require("../lib/decorators");
 let should = chai.should();
 describe('Property Factory', function () {
     describe('inject factory Object', function () {
@@ -354,7 +354,7 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory2factory1");
         });
-        it('should inject multi factory async different containers', async () => {
+        it.only('should inject multi factory async different containers', async () => {
             let Rectangle = class Rectangle {
                 constructor() {
                 }
@@ -410,7 +410,7 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory2factory1");
         });
-        it('should inject multi factory async parent container ', async () => {
+        it.only('should inject multi factory async parent container ', async () => {
             let Rectangle = class Rectangle {
                 constructor() {
                 }
@@ -467,8 +467,10 @@ describe('Property Factory', function () {
             injector2.parent = injector;
             injector2.register(Factory2);
             injector.addDefinition("factory2", { injector: injector2 });
-            await injector2.initialize();
-            await injector.initialize();
+            injector.startInitialize();
+            injector2.startInitialize();
+            await injector2.finishInitialize();
+            await injector.finishInitialize();
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory1factory1factory2");
         });

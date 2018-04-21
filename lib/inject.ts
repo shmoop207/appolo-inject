@@ -46,6 +46,13 @@ export class Injector {
     }
 
     public async initialize(options?: IOptions) {
+
+        this.startInitialize(options);
+
+        await this.finishInitialize();
+    }
+
+    public startInitialize(options?: IOptions) {
         this._options = options || {};
 
         let keys = Object.keys(this._options.definitions || {});
@@ -54,12 +61,19 @@ export class Injector {
             this._definitions[key] = this._options.definitions[key];
         }
 
+        this._initDefinitions();
 
-        await  this._wireObjects();
+        this._initInstances();
+
+
     }
 
-    private async _wireObjects() {
+    public async finishInitialize() {
 
+        await  this._initWireObjects();
+    }
+
+    private _initDefinitions() {
         let keys = Object.keys(this._definitions);
 
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -77,13 +91,20 @@ export class Injector {
                 this._populateAliasFactory(definition, objectId)
             }
         }
+    }
+
+    private _initInstances() {
+
+        let keys = Object.keys(this._definitions);
 
         for (let i = 0, len = keys.length; i < len; i++) {
             let objectId = keys[i], definition = this._definitions[objectId];
             (definition.singleton && !definition.lazy) && (this._createObjectInstance(objectId, definition));
         }
+    }
 
-        keys = Object.keys(this._instances);
+    private async _initWireObjects() {
+        let keys = Object.keys(this._instances);
 
         //loop over instances and inject properties and look up methods only if exist in def
         for (let i = 0, len = keys.length; i < len; i++) {
