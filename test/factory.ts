@@ -467,7 +467,7 @@ describe('Property Factory', function () {
         });
 
 
-        it.only('should inject multi factory async different containers', async () => {
+        it('should inject multi factory async different containers', async () => {
 
             @define()
             @singleton()
@@ -538,9 +538,9 @@ describe('Property Factory', function () {
 
             rectangle.getName().should.be.eq("factory2factory1");
 
-        })
+        });
 
-        it.only('should inject multi factory async parent container ', async () => {
+        it('should inject multi factory async parent container ', async () => {
 
             @define()
             @singleton()

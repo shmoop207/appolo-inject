@@ -354,7 +354,7 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory2factory1");
         });
-        it.only('should inject multi factory async different containers', async () => {
+        it('should inject multi factory async different containers', async () => {
             let Rectangle = class Rectangle {
                 constructor() {
                 }
@@ -410,7 +410,7 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory2factory1");
         });
-        it.only('should inject multi factory async parent container ', async () => {
+        it('should inject multi factory async parent container ', async () => {
             let Rectangle = class Rectangle {
                 constructor() {
                 }
