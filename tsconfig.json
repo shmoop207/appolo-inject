@@ -3,7 +3,7 @@
         "module": "commonjs",
         "alwaysStrict":true,
         "importHelpers":true,
-        "target": "es6",
+        "target": "es2017",
         "noImplicitAny": false,
         "sourceMap": true,
         "experimentalDecorators": true,

@@ -101,70 +101,68 @@ describe('Decorators', function () {
     });
     describe('should inject with decorators', function () {
         let injector, CalcManager, FooManager, Rectangle, Cleanable;
-        beforeEach(function () {
-            return tslib_1.__awaiter(this, void 0, void 0, function* () {
-                injector = ioc.createContainer();
-                let Rectangle = class Rectangle {
-                    constructor() {
-                    }
-                };
-                tslib_1.__decorate([
-                    decorators_1.injectAlias('calcable')
-                ], Rectangle.prototype, "calcable", void 0);
-                tslib_1.__decorate([
-                    decorators_1.injectAlias('cleanable')
-                ], Rectangle.prototype, "cleanable", void 0);
-                Rectangle = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton()
-                ], Rectangle);
-                let CalcManager = class CalcManager {
-                    constructor() {
-                    }
-                    calc() {
-                        return 25;
-                    }
-                };
-                CalcManager = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton(),
-                    decorators_1.alias('calcable')
-                ], CalcManager);
-                let FooManager = class FooManager {
-                    constructor() {
-                    }
-                    calc() {
-                        return 25;
-                    }
-                    cleanable() {
-                    }
-                };
-                FooManager = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton(),
-                    decorators_1.alias('calcable'),
-                    decorators_1.alias('cleanable')
-                ], FooManager);
-                let BarManager = class BarManager {
-                    constructor() {
-                    }
-                    calc() {
-                        return 25;
-                    }
-                    cleanable() {
-                    }
-                };
-                BarManager = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton(),
-                    decorators_1.alias('calcable')
-                ], BarManager);
-                injector.register(Rectangle);
-                injector.register(CalcManager);
-                injector.register(BarManager);
-                injector.register(FooManager);
-                yield injector.initialize();
-            });
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectAlias('calcable')
+            ], Rectangle.prototype, "calcable", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectAlias('cleanable')
+            ], Rectangle.prototype, "cleanable", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let CalcManager = class CalcManager {
+                constructor() {
+                }
+                calc() {
+                    return 25;
+                }
+            };
+            CalcManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias('calcable')
+            ], CalcManager);
+            let FooManager = class FooManager {
+                constructor() {
+                }
+                calc() {
+                    return 25;
+                }
+                cleanable() {
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias('calcable'),
+                decorators_1.alias('cleanable')
+            ], FooManager);
+            let BarManager = class BarManager {
+                constructor() {
+                }
+                calc() {
+                    return 25;
+                }
+                cleanable() {
+                }
+            };
+            BarManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias('calcable')
+            ], BarManager);
+            injector.register(Rectangle);
+            injector.register(CalcManager);
+            injector.register(BarManager);
+            injector.register(FooManager);
+            await injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');

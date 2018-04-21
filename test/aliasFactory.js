@@ -1,46 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const chai = require("chai");
 const ioc = require("../lib/inject");
 let should = chai.should();
 describe('Alias Factory', function () {
     describe('should inject alias factory', function () {
         let injector, CalcManager;
-        beforeEach(function () {
-            return tslib_1.__awaiter(this, void 0, void 0, function* () {
-                injector = ioc.createContainer();
-                let Rectangle = class {
-                    constructor() {
-                    }
-                };
-                CalcManager = class {
-                    constructor(num) {
-                        this.num = num || 25;
-                    }
-                    calc() {
-                        return this.num;
-                    }
-                };
-                injector.addDefinitions({
-                    rectangle: {
-                        type: Rectangle,
-                        singleton: true,
-                        props: [
-                            {
-                                name: 'calcable',
-                                aliasFactory: 'calcable'
-                            }
-                        ]
-                    },
-                    calcManager: {
-                        type: CalcManager,
-                        aliasFactory: ['calcable'],
-                        singleton: false
-                    }
-                });
-                yield injector.initialize();
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let Rectangle = class {
+                constructor() {
+                }
+            };
+            CalcManager = class {
+                constructor(num) {
+                    this.num = num || 25;
+                }
+                calc() {
+                    return this.num;
+                }
+            };
+            injector.addDefinitions({
+                rectangle: {
+                    type: Rectangle,
+                    singleton: true,
+                    props: [
+                        {
+                            name: 'calcable',
+                            aliasFactory: 'calcable'
+                        }
+                    ]
+                },
+                calcManager: {
+                    type: CalcManager,
+                    aliasFactory: ['calcable'],
+                    singleton: false
+                }
             });
+            await injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');
@@ -63,27 +60,25 @@ describe('Alias Factory', function () {
     });
     describe('should inject alias factory link', function () {
         let injector, CalcManager;
-        beforeEach(function () {
-            return tslib_1.__awaiter(this, void 0, void 0, function* () {
-                injector = ioc.createContainer();
-                let Rectangle = class {
-                    constructor() {
-                    }
-                };
-                CalcManager = class {
-                    constructor(num) {
-                        this.num = num || 25;
-                    }
-                    calc() {
-                        return this.num;
-                    }
-                };
-                injector.register('rectangle', Rectangle)
-                    .singleton()
-                    .injectAliasFactory('calcable', 'calcable');
-                injector.register('calcManager', CalcManager).aliasFactory(['calcable']);
-                yield injector.initialize();
-            });
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let Rectangle = class {
+                constructor() {
+                }
+            };
+            CalcManager = class {
+                constructor(num) {
+                    this.num = num || 25;
+                }
+                calc() {
+                    return this.num;
+                }
+            };
+            injector.register('rectangle', Rectangle)
+                .singleton()
+                .injectAliasFactory('calcable', 'calcable');
+            injector.register('calcManager', CalcManager).aliasFactory(['calcable']);
+            await injector.initialize();
         });
         it('should inject property ', function () {
             var rectangle = injector.getObject('rectangle');
@@ -106,28 +101,26 @@ describe('Alias Factory', function () {
     });
     describe('should inject alias factory link indexBy', function () {
         let injector, CalcManager;
-        beforeEach(function () {
-            return tslib_1.__awaiter(this, void 0, void 0, function* () {
-                injector = ioc.createContainer();
-                let Rectangle = class {
-                    constructor() {
-                    }
-                };
-                CalcManager = class {
-                    static get NAME() {
-                        return "test";
-                    }
-                    constructor(num) {
-                        this.num = num || 25;
-                    }
-                    calc() {
-                        return this.num;
-                    }
-                };
-                injector.register('rectangle', Rectangle).singleton().injectAliasFactory('calcable', 'calcable', "NAME");
-                injector.register('calcManager', CalcManager).aliasFactory(['calcable']);
-                yield injector.initialize();
-            });
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let Rectangle = class {
+                constructor() {
+                }
+            };
+            CalcManager = class {
+                static get NAME() {
+                    return "test";
+                }
+                constructor(num) {
+                    this.num = num || 25;
+                }
+                calc() {
+                    return this.num;
+                }
+            };
+            injector.register('rectangle', Rectangle).singleton().injectAliasFactory('calcable', 'calcable', "NAME");
+            injector.register('calcManager', CalcManager).aliasFactory(['calcable']);
+            await injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');
