@@ -1,3 +1,3 @@
-export interface IFactory<T>{
-    get():T
+export interface IFactory<T> {
+    get(): T | Promise<T>
 }
