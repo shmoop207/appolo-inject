@@ -467,10 +467,9 @@ describe('Property Factory', function () {
             injector2.parent = injector;
             injector2.register(Factory2);
             injector.addDefinition("factory2", { injector: injector2 });
-            injector.startInitialize();
-            injector2.startInitialize();
-            await injector2.finishInitialize();
-            await injector.finishInitialize();
+            //injector.startInitialize()
+            //injector2.startInitialize()
+            await injector.initialize();
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory1factory1factory2");
         });

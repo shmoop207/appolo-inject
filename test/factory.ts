@@ -604,14 +604,13 @@ describe('Property Factory', function () {
             injector2.register(Factory2);
             injector.addDefinition("factory2", {injector: injector2});
 
-            injector.startInitialize()
+            //injector.startInitialize()
 
 
-            injector2.startInitialize()
+            //injector2.startInitialize()
 
 
-            await injector2.finishInitialize();
-            await injector.finishInitialize();
+            await injector.initialize();
 
 
 

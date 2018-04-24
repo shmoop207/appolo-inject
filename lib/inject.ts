@@ -23,6 +23,7 @@ export class Injector {
     private _factories: string[];
 
     private _parent: Injector;
+    private _children: Injector[];
 
     private _options: IOptions;
 
@@ -35,6 +36,7 @@ export class Injector {
         this._aliasFactory = {};
         this._factoriesValues = {};
         this._factories = [];
+        this._children = []
     }
 
     public get parent(): Injector {
@@ -42,38 +44,46 @@ export class Injector {
     }
 
     public set parent(value: Injector) {
+
         this._parent = value;
+
+        value.children.push(this);
+    }
+
+    public get children(): Injector[] {
+        return this._children;
     }
 
     public async initialize(options?: IOptions) {
 
-        this.startInitialize(options);
-
-        await this.finishInitialize();
-    }
-
-    public startInitialize(options?: IOptions) {
         this._options = options || {};
 
-        let keys = Object.keys(this._options.definitions || {});
-        for (let i = 0, len = keys.length; i < len; i++) {
-            let key = keys[i];
-            this._definitions[key] = this._options.definitions[key];
+        _.forEach(this._options.definitions, (def, id) => this.addDefinition(id, def));
+
+        //we have parent so we wait until parent.initialize
+        if (this.parent) {
+            return;
         }
 
-        this._initDefinitions();
+        this.initDefinitions();
 
-        this._initInstances();
+        this.initInstances();
 
+        this.initProperties();
 
+        await this.initFactories();
+
+        this.initAlias();
+
+        this.initInitMethods();
     }
 
-    public async finishInitialize() {
 
-        await  this._initWireObjects();
-    }
+    public initDefinitions() {
 
-    private _initDefinitions() {
+        _.forEach(this.children, injector => injector.initDefinitions());
+
+
         let keys = Object.keys(this._definitions);
 
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -93,7 +103,9 @@ export class Injector {
         }
     }
 
-    private _initInstances() {
+    public initInstances() {
+
+        _.forEach(this.children, injector => injector.initInstances());
 
         let keys = Object.keys(this._definitions);
 
@@ -103,7 +115,9 @@ export class Injector {
         }
     }
 
-    private async _initWireObjects() {
+    public initProperties() {
+        _.forEach(this.children, injector => injector.initProperties());
+
         let keys = Object.keys(this._instances);
 
         //loop over instances and inject properties and look up methods only if exist in def
@@ -113,7 +127,22 @@ export class Injector {
             (this._definitions[objectId]) && (this._injectPropertiesAndLookUpMethods(instance, this._definitions[objectId], objectId));
         }
 
-        await this._loadFactories(this._factories);
+    }
+
+    public async initFactories() {
+
+        await Promise.all(this.children.map(injector => injector.initFactories()))
+
+        for (let factory of this._factories) {
+            await this.loadFactory(factory);
+        }
+    }
+
+    public  initAlias() {
+        let keys = Object.keys(this._instances);
+
+        _.forEach(this.children, injector => injector.initAlias());
+
 
         for (let i = 0, len = keys.length; i < len; i++) {
             let objectId = keys[i], instance = this._instances[objectId];
@@ -124,6 +153,14 @@ export class Injector {
                 this._injectAliasFactory(this._definitions[objectId], instance);
             }
         }
+
+    }
+
+    public initInitMethods(){
+
+        let keys = Object.keys(this._instances);
+
+        _.forEach(this.children, injector => injector.initInitMethods());
 
         for (let i = 0, len = keys.length; i < len; i++) {
             let objectId = keys[i], instance = this._instances[objectId];
@@ -581,11 +618,6 @@ export class Injector {
         }
     }
 
-    private async _loadFactories(factories: string[]) {
-        for (let factory of factories) {
-            await this.loadFactory(factory);
-        }
-    }
 
     private async loadFactory<T>(objectId: string) {
         let factoryData = this._factoriesObjects[objectId];
