@@ -37,7 +37,7 @@ describe('Property Factory', function () {
                     properties: [
                         {
                             name: 'manager',
-                            factory: 'fooManagerFactory'
+                            factory: { id: 'fooManagerFactory' }
                         }
                     ]
                 },
@@ -533,6 +533,58 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.getName().should.be.eq("factory1factory1FooManager");
         });
+        it('should inject factory with same name child containers ', async () => {
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                get name() {
+                    return this.fooManager[0].name + this.fooManager[1];
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "fooManager", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let FooManager = class FooManager {
+                constructor() {
+                    this.name = "FooManager";
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], FooManager);
+            let FooManagerFactory = class FooManagerFactory {
+                constructor() {
+                }
+                async get() {
+                    await sleep(10);
+                    return [this.fooManager, "WithFactory"];
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], FooManagerFactory.prototype, "fooManager", void 0);
+            FooManagerFactory = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory()
+            ], FooManagerFactory);
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            let injector2 = ioc.createContainer();
+            injector2.register(FooManager);
+            injector2.register(FooManagerFactory);
+            injector.addDefinition("fooManager", { injector: injector2 });
+            //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
+            injector2.parent = injector;
+            await injector.initialize();
+            let rectangle = injector.getObject(Rectangle);
+            rectangle.name.should.be.eq("FooManagerWithFactory");
+        });
     });
     describe('inject factory Object to not singleton ', function () {
         it('should inject object after factory', async function () {
@@ -563,7 +615,7 @@ describe('Property Factory', function () {
                     properties: [
                         {
                             name: 'manager',
-                            factory: 'fooManagerFactory'
+                            factory: { id: 'fooManagerFactory' }
                         }
                     ]
                 },
@@ -678,9 +730,9 @@ describe('Property Factory', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    inject: [{ name: 'barManager', factory: "barManagerFactory" }, {
+                    inject: [{ name: 'barManager', factory: { id: "barManagerFactory" } }, {
                             name: 'fooManager',
-                            factory: "fooManagerFactory"
+                            factory: { id: "fooManagerFactory" }
                         }]
                 }
             });
@@ -724,7 +776,7 @@ describe('Property Factory', function () {
                     singleton: true,
                     inject: [{
                             name: 'fooManager',
-                            factory: "fooManagerFactory"
+                            factory: { id: "fooManagerFactory" }
                         }]
                 },
                 fooManager: {

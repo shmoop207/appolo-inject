@@ -59,7 +59,7 @@ describe('Property Factory', function () {
                     properties: [
                         {
                             name: 'manager',
-                            factory: 'fooManagerFactory'
+                            factory: {id: 'fooManagerFactory'}
                         }
                     ]
                 },
@@ -613,7 +613,6 @@ describe('Property Factory', function () {
             await injector.initialize();
 
 
-
             let rectangle = injector.getObject<Rectangle>(Rectangle);
 
             rectangle.getName().should.be.eq("factory1factory1factory2");
@@ -700,6 +699,78 @@ describe('Property Factory', function () {
         })
 
 
+        it('should inject factory with same name child containers ', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() fooManager: [FooManager, string];
+
+                constructor() {
+
+                }
+
+                get name() {
+
+                    return this.fooManager[0].name + this.fooManager[1];
+                }
+
+            }
+
+            @define()
+            @singleton()
+            class FooManager {
+
+
+                public name: string;
+
+                constructor() {
+                    this.name = "FooManager"
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooManagerFactory implements IFactory<[FooManager, string]> {
+                @inject() fooManager: FooManager;
+
+                constructor() {
+                }
+
+                public async get(): Promise<[FooManager, string]> {
+                    await sleep(10);
+
+                    return [this.fooManager, "WithFactory"]
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+
+            let injector2 = ioc.createContainer();
+
+            injector2.register(FooManager);
+            injector2.register(FooManagerFactory);
+
+            injector.addDefinition("fooManager", {injector: injector2});
+            //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
+            injector2.parent = injector;
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("FooManagerWithFactory");
+
+        })
+
+
     });
 
 
@@ -752,7 +823,7 @@ describe('Property Factory', function () {
                     properties: [
                         {
                             name: 'manager',
-                            factory: 'fooManagerFactory'
+                            factory: {id: 'fooManagerFactory'}
                         }
                     ]
                 },
@@ -844,7 +915,7 @@ describe('Property Factory', function () {
             let injector = ioc.createContainer();
 
             class LocalFooManager {
-                name: string
+                name: string;
 
                 constructor() {
                     this.name = 'foo';
@@ -852,7 +923,7 @@ describe('Property Factory', function () {
             }
 
             class RemoteBarManager {
-                name: string
+                name: string;
 
                 constructor() {
                     this.name = 'bar';
@@ -860,7 +931,7 @@ describe('Property Factory', function () {
             }
 
             class FooManagerFactory implements IFactory<LocalFooManager> {
-                localFooManager: any
+                localFooManager: any;
 
                 constructor() {
 
@@ -872,7 +943,7 @@ describe('Property Factory', function () {
             }
 
             class BarManagerFactory implements IFactory<RemoteBarManager> {
-                remoteBarManager: any
+                remoteBarManager: any;
 
                 constructor() {
 
@@ -884,8 +955,8 @@ describe('Property Factory', function () {
             }
 
             class Rectangle {
-                fooManager: LocalFooManager
-                barManager: RemoteBarManager
+                fooManager: LocalFooManager;
+                barManager: RemoteBarManager;
 
                 constructor() {
 
@@ -931,9 +1002,9 @@ describe('Property Factory', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    inject: [{name: 'barManager', factory: "barManagerFactory"}, {
+                    inject: [{name: 'barManager', factory: {id: "barManagerFactory"}}, {
                         name: 'fooManager',
-                        factory: "fooManagerFactory"
+                        factory: {id: "fooManagerFactory"}
                     }]
                 }
             });
@@ -1004,7 +1075,7 @@ describe('Property Factory', function () {
                     singleton: true,
                     inject: [{
                         name: 'fooManager',
-                        factory: "fooManagerFactory"
+                        factory: {id: "fooManagerFactory"}
                     }]
 
 

@@ -119,7 +119,7 @@ export class Define {
     public injectFactory(name: string, factory?: string): this {
         return this.inject({
             name: name,
-            factory: factory || name + "Factory"
+            factory: {id:factory || name + "Factory"}
         })
     }
 

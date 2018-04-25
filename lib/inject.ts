@@ -15,7 +15,7 @@ export class Injector {
 
     private _definitions: { [index: string]: IDefinition };
     private _instances: keyObject;
-    private _factoriesObjects: { [index: string]: { [index: string]: string } };
+    private _factoriesObjects: { [index: string]: { [index: string]: { id: string, injector?: Injector } } };
     private _factoriesValues: { [index: string]: any };
     private _alias: { [index: string]: Object[] };
     private _aliasFactory: { [index: string]: Object[] };
@@ -89,9 +89,9 @@ export class Injector {
         for (let i = 0, len = keys.length; i < len; i++) {
             let objectId = keys[i], definition = this._definitions[objectId];
 
-            this._initInjectParams(definition);
+            this._prepareInjectParams(definition);
 
-            this._initProperties(definition);
+            this._prepareProperties(definition);
 
             if (definition.factory) {
                 this._factories.push(definition.id);
@@ -138,7 +138,7 @@ export class Injector {
         }
     }
 
-    public  initAlias() {
+    public initAlias() {
         let keys = Object.keys(this._instances);
 
         _.forEach(this.children, injector => injector.initAlias());
@@ -156,7 +156,7 @@ export class Injector {
 
     }
 
-    public initInitMethods(){
+    public initInitMethods() {
 
         let keys = Object.keys(this._instances);
 
@@ -168,7 +168,7 @@ export class Injector {
         }
     }
 
-    private _initInjectParams(def: IDefinition) {
+    private _prepareInjectParams(def: IDefinition) {
 
         let $self = this;
 
@@ -495,7 +495,7 @@ export class Injector {
         }
     }
 
-    private _initProperties(definition: IDefinition): void {
+    private _prepareProperties(definition: IDefinition): void {
 
         let properties = definition.props || definition.properties || [];
 
@@ -516,16 +516,26 @@ export class Injector {
             if (dto.ref) {
                 let factoryRef = dto.ref + this.FACTORY_POSTFIX,
                     factoryDef = this.getDefinition(factoryRef),
-                    refDef = this.getDefinition(dto.ref);
+                    refDef = this.getDefinition(dto.ref),
+                    localDef = this._definitions[dto.ref],
+                    localInjectorDef = localDef && localDef.injector && localDef.injector.getDefinition(factoryRef),
+                    factory;
 
-                if (refDef && refDef.factory) {
-                    dto.factory = refDef.id;
-                    delete dto.ref
+                if (localInjectorDef && localInjectorDef.factory) {
+                    //try to get local def factory from child injector
+                    factory = {id: factoryRef, injector: localDef.injector};
+
+                } else if (refDef && refDef.factory) {
+                    factory = {id: refDef.id};
+                }
+                else if (factoryDef && factoryDef.factory && definition.id != factoryRef) {
+                    factory = {id: factoryRef};
                 }
 
-                else if (factoryDef && factoryDef.factory && definition.id != factoryRef) {
-                    dto.factory = factoryRef;
-                    delete dto.ref
+                //wohoo we found a factory update the property
+                if (factory) {
+                    dto.factory = factory;
+                    delete dto.ref;
                 }
             }
 
@@ -627,7 +637,7 @@ export class Injector {
         for (let propName of keys) {
             let factory = factoryData[propName];
 
-            await this.loadFactory(factory);
+            await this.loadFactory(factory.id);
         }
 
         this._factoriesValues[objectId] = await this.getFactory(objectId);
@@ -646,7 +656,7 @@ export class Injector {
         for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i], factory = factoryData[propName];
 
-            object[propName] = this.getFactoryValue(factory);
+            object[propName] = factory.injector ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
         }
     }
 
