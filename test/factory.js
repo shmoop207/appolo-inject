@@ -538,12 +538,12 @@ describe('Property Factory', function () {
                 constructor() {
                 }
                 get name() {
-                    return this.fooManager[0].name + this.fooManager[1];
+                    return this.fooManagerProvider[0].name + this.fooManagerProvider[1];
                 }
             };
             tslib_1.__decorate([
                 decorators_1.inject()
-            ], Rectangle.prototype, "fooManager", void 0);
+            ], Rectangle.prototype, "fooManagerProvider", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton()
@@ -557,7 +557,7 @@ describe('Property Factory', function () {
                 decorators_1.define(),
                 decorators_1.singleton()
             ], FooManager);
-            let FooManagerFactory = class FooManagerFactory {
+            let FooManagerProvider = class FooManagerProvider {
                 constructor() {
                 }
                 async get() {
@@ -567,18 +567,18 @@ describe('Property Factory', function () {
             };
             tslib_1.__decorate([
                 decorators_1.inject()
-            ], FooManagerFactory.prototype, "fooManager", void 0);
-            FooManagerFactory = tslib_1.__decorate([
+            ], FooManagerProvider.prototype, "fooManager", void 0);
+            FooManagerProvider = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton(),
                 decorators_1.factory()
-            ], FooManagerFactory);
+            ], FooManagerProvider);
             injector = ioc.createContainer();
             injector.register(Rectangle);
             let injector2 = ioc.createContainer();
             injector2.register(FooManager);
-            injector2.register(FooManagerFactory);
-            injector.addDefinition("fooManager", { injector: injector2 });
+            injector2.register(FooManagerProvider);
+            injector.addDefinition("fooManagerProvider", { injector: injector2 });
             //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
             injector2.parent = injector;
             await injector.initialize();
@@ -609,7 +609,7 @@ describe('Property Factory', function () {
                 decorators_1.define(),
                 decorators_1.singleton()
             ], FooManager);
-            let FooManagerFactory = class FooManagerFactory {
+            let FooProvider = class FooProvider {
                 constructor() {
                 }
                 async get() {
@@ -619,19 +619,18 @@ describe('Property Factory', function () {
             };
             tslib_1.__decorate([
                 decorators_1.inject()
-            ], FooManagerFactory.prototype, "fooManager", void 0);
-            FooManagerFactory = tslib_1.__decorate([
+            ], FooProvider.prototype, "fooManager", void 0);
+            FooProvider = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton(),
                 decorators_1.factory()
-            ], FooManagerFactory);
+            ], FooProvider);
             injector = ioc.createContainer();
             injector.register(Rectangle);
             let injector2 = ioc.createContainer();
             injector2.register(FooManager);
-            injector2.register(FooManagerFactory);
-            injector.addDefinition("barManager", { injector: injector2, refName: "fooManager" });
-            //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
+            injector2.register(FooProvider);
+            injector.addDefinition("barManager", { injector: injector2, refName: "fooProvider" });
             injector2.parent = injector;
             await injector.initialize();
             let rectangle = injector.getObject(Rectangle);
@@ -715,7 +714,7 @@ describe('Property Factory', function () {
                 }
             });
             await injector.initialize();
-            let fooManager = await injector.getFactory('fooManager');
+            let fooManager = await injector.getFactory('fooManagerFactory');
             should.exist(fooManager);
             fooManager.should.be.instanceof(LocalFooManager);
             fooManager.name.should.be.equal("foo");

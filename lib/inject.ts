@@ -11,7 +11,7 @@ type keyObject = { [index: string]: Object }
 
 export class Injector {
 
-    private readonly FACTORY_POSTFIX = "Factory";
+    //private readonly FACTORY_POSTFIX = "Factory";
 
     private _definitions: { [index: string]: IDefinition };
     private _instances: keyObject;
@@ -234,7 +234,7 @@ export class Injector {
 
         objectID = Util.getClassNameOrId(objectID);
 
-        let def = this._definitions[objectID as string] || this._definitions[objectID + this.FACTORY_POSTFIX];
+        let def = this._definitions[objectID as string];
 
         if (!def) {
             return this.parent ? this.parent.getFactory<T>(objectID) : null;
@@ -514,24 +514,19 @@ export class Injector {
             }
 
             if (dto.ref) {
-                let factoryRef = dto.ref + this.FACTORY_POSTFIX,
-                    factoryDef = this.getDefinition(factoryRef),
-                    refDef = this.getDefinition(dto.ref),
+                let refDef = this.getDefinition(dto.ref),
                     localDef = this._definitions[dto.ref],
-                    localFactoryRef = localDef && localDef.injector  && localDef.refName? localDef.refName + this.FACTORY_POSTFIX:factoryRef ,
-                    localInjectorDef = localDef && localDef.injector && localDef.injector.getDefinition(localFactoryRef),
+                    localInjectorDef = localDef && localDef.injector && (localDef.injector.getDefinition(localDef.refName || localDef.id)),
                     factory;
 
                 if (localInjectorDef && localInjectorDef.factory) {
                     //try to get local def factory from child injector
-                    factory = {id: localFactoryRef, injector: localDef.injector};
+                    factory = {id: localDef.refName || localDef.id, injector: localDef.injector};
 
                 } else if (refDef && refDef.factory) {
                     factory = {id: refDef.id};
                 }
-                else if (factoryDef && factoryDef.factory && definition.id != factoryRef) {
-                    factory = {id: factoryRef};
-                }
+
 
                 //wohoo we found a factory update the property
                 if (factory) {

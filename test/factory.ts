@@ -696,7 +696,7 @@ describe('Property Factory', function () {
 
             rectangle.getName().should.be.eq("factory1factory1FooManager");
 
-        })
+        });
 
 
         it('should inject factory with same name child containers ', async () => {
@@ -705,7 +705,7 @@ describe('Property Factory', function () {
             @singleton()
             class Rectangle {
 
-                @inject() fooManager: [FooManager, string];
+                @inject() fooManagerProvider: [FooManager, string];
 
                 constructor() {
 
@@ -713,7 +713,7 @@ describe('Property Factory', function () {
 
                 get name() {
 
-                    return this.fooManager[0].name + this.fooManager[1];
+                    return this.fooManagerProvider[0].name + this.fooManagerProvider[1];
                 }
 
             }
@@ -735,7 +735,7 @@ describe('Property Factory', function () {
             @define()
             @singleton()
             @factory()
-            class FooManagerFactory implements IFactory<[FooManager, string]> {
+            class FooManagerProvider implements IFactory<[FooManager, string]> {
                 @inject() fooManager: FooManager;
 
                 constructor() {
@@ -755,9 +755,9 @@ describe('Property Factory', function () {
             let injector2 = ioc.createContainer();
 
             injector2.register(FooManager);
-            injector2.register(FooManagerFactory);
+            injector2.register(FooManagerProvider);
 
-            injector.addDefinition("fooManager", {injector: injector2});
+            injector.addDefinition("fooManagerProvider", {injector: injector2});
             //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
             injector2.parent = injector;
 
@@ -806,7 +806,7 @@ describe('Property Factory', function () {
             @define()
             @singleton()
             @factory()
-            class FooManagerFactory implements IFactory<[FooManager, string]> {
+            class FooProvider implements IFactory<[FooManager, string]> {
                 @inject() fooManager: FooManager;
 
                 constructor() {
@@ -826,10 +826,9 @@ describe('Property Factory', function () {
             let injector2 = ioc.createContainer();
 
             injector2.register(FooManager);
-            injector2.register(FooManagerFactory);
+            injector2.register(FooProvider);
 
-            injector.addDefinition("barManager", {injector: injector2,refName:"fooManager"});
-            //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
+            injector.addDefinition("barManager", {injector: injector2,refName:"fooProvider"});
             injector2.parent = injector;
 
 
@@ -967,7 +966,7 @@ describe('Property Factory', function () {
             await injector.initialize();
 
 
-            let fooManager = await injector.getFactory<LocalFooManager>('fooManager');
+            let fooManager = await injector.getFactory<LocalFooManager>('fooManagerFactory');
 
             should.exist(fooManager);
 
