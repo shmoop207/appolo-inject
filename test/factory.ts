@@ -768,6 +768,77 @@ describe('Property Factory', function () {
 
             rectangle.name.should.be.eq("FooManagerWithFactory");
 
+        });
+
+        it('should inject factory with ref name ', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() barManager: [FooManager, string];
+
+                constructor() {
+
+                }
+
+                get name() {
+
+                    return this.barManager[0].name + this.barManager[1];
+                }
+
+            }
+
+            @define()
+            @singleton()
+            class FooManager {
+
+
+                public name: string;
+
+                constructor() {
+                    this.name = "FooManager"
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooManagerFactory implements IFactory<[FooManager, string]> {
+                @inject() fooManager: FooManager;
+
+                constructor() {
+                }
+
+                public async get(): Promise<[FooManager, string]> {
+                    await sleep(10);
+
+                    return [this.fooManager, "WithFactory"]
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+
+            let injector2 = ioc.createContainer();
+
+            injector2.register(FooManager);
+            injector2.register(FooManagerFactory);
+
+            injector.addDefinition("barManager", {injector: injector2,refName:"fooManager"});
+            //injector.addDefinition("fooManagerFactory", {injector: injector2,factory:true});
+            injector2.parent = injector;
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("FooManagerWithFactory");
+
         })
 
 

@@ -12,6 +12,7 @@ export interface IParamInject {
     dictionary?: IParamInject[],
     factory?: { id: string, injector?: Injector },
     factoryMethod?: string,
+
     objectProperty?: {
         object: string,
         property: string
@@ -23,6 +24,7 @@ export interface IParamInject {
 export interface IDefinition {
     path?: string
     id?: string
+    refName?: string
     type?: Function
     args?: IParamInject[]
     singleton?: boolean

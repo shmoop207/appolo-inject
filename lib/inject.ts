@@ -217,14 +217,14 @@ export class Injector {
     }
 
     public getFactoryValue<T>(objectID: string): T {
-        let def = this._definitions[objectID as string]
+        let def = this._definitions[objectID as string];
 
         if (!def) {
             return this.parent ? this.parent.getFactoryValue<T>(objectID) : null;
         }
 
         if (def.injector) {
-            return def.injector.getFactoryValue<T>(def.id);
+            return def.injector.getFactoryValue<T>(def.refName || def.id);
         }
 
         return this._factoriesValues[def.id];
@@ -241,7 +241,7 @@ export class Injector {
         }
 
         if (def.injector) {
-            return def.injector.getFactory<T>(def.id);
+            return def.injector.getFactory<T>(def.refName || def.id);
         }
 
         let value = this._factoriesValues[def.id];
@@ -273,7 +273,7 @@ export class Injector {
 
         if (definition) {
             return definition.injector
-                ? definition.injector.getObject(objectID, runtimeArgs)
+                ? definition.injector.getObject(definition.refName || objectID, runtimeArgs)
                 : this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs, referenceChain);
         }
 
@@ -369,7 +369,7 @@ export class Injector {
         let def = this._definitions[id];
 
         if (def) {
-            return def.injector ? def.injector.getDefinition(id) : def;
+            return def.injector ? def.injector.getDefinition(def.refName || id) : def;
         }
 
         if (this.parent) {
@@ -518,12 +518,13 @@ export class Injector {
                     factoryDef = this.getDefinition(factoryRef),
                     refDef = this.getDefinition(dto.ref),
                     localDef = this._definitions[dto.ref],
-                    localInjectorDef = localDef && localDef.injector && localDef.injector.getDefinition(factoryRef),
+                    localFactoryRef = localDef && localDef.injector  && localDef.refName? localDef.refName + this.FACTORY_POSTFIX:factoryRef ,
+                    localInjectorDef = localDef && localDef.injector && localDef.injector.getDefinition(localFactoryRef),
                     factory;
 
                 if (localInjectorDef && localInjectorDef.factory) {
                     //try to get local def factory from child injector
-                    factory = {id: factoryRef, injector: localDef.injector};
+                    factory = {id: localFactoryRef, injector: localDef.injector};
 
                 } else if (refDef && refDef.factory) {
                     factory = {id: refDef.id};
