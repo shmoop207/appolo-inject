@@ -2,6 +2,7 @@ import _ = require('lodash');
 import "reflect-metadata";
 import {Define} from "./define";
 import {Util} from "./util";
+import {Class} from "./IDefinition";
 
 export const InjectDefinitionsSymbol = Symbol("__injectDefinitions__");
 export const InjectDefineSymbol = Symbol("__injectDefine__");
@@ -33,7 +34,7 @@ function addDefinitionProperty(name: string, args: any[]): (target: any, propert
 export function define(id?: string): (fn: Function) => void {
     return function (id: string, fn: Function) {
 
-        let define = new Define(id || Util.getClassName(fn), fn);
+        let define = new Define(id || Util.getClassName(fn), fn as Class);
 
         _.forEach(Reflect.getMetadata(InjectDefinitionsSymbol, fn), (item: { name: string, args: any[] }) => define[item.name].apply(define, item.args));
 
@@ -81,18 +82,15 @@ export function initMethod(): (target: any, propertyKey: string, descriptor?: Pr
     return addDefinitionProperty("initMethod", []);
 }
 
-export function inject(inject?: string | Function): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
+export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
 
     return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)]);
 }
 
 
-export function injectFactoryMethod(factoryMethod: string | Function): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
-    if (typeof factoryMethod == "function") {
-        factoryMethod = Util.getClassName(factoryMethod);
-    }
+export function injectFactoryMethod(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectFactoryMethod", [factoryMethod]);
+    return addDefinitionProperty("injectFactoryMethod", [Util.getClassNameOrId(factoryMethod)]);
 }
 
 export function injectAlias(alias: string, indexBy?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {

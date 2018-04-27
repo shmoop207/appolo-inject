@@ -1,7 +1,7 @@
 "use strict";
 import _ = require('lodash');
 import {Injector} from "./inject";
-import {IDefinition, IParamInject} from "./IDefinition";
+import {Class, IDefinition, IParamInject} from "./IDefinition";
 
 export class Define {
 
@@ -9,7 +9,7 @@ export class Define {
 
     protected _id: string;
 
-    constructor(id: string, type?: Function) {
+    constructor(id: string, type?: Class) {
 
         if (!id) {
             return

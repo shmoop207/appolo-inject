@@ -1,5 +1,8 @@
 import {Injector} from "./inject";
 
+export type Class = { new(...args: any[]): any; };
+
+
 export interface IParamInject {
     value?: any,
     ref?: string,

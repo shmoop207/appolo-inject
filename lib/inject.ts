@@ -2,7 +2,7 @@
 import _ = require('lodash');
 import {IOptions} from "./IOptions";
 import {IFactory} from "./IFactory";
-import {IDefinition, IParamInject} from "./IDefinition";
+import {Class, IDefinition, IParamInject} from "./IDefinition";
 import {Define} from "./define";
 import {InjectDefineSymbol, InjectParamSymbol} from "./decorators";
 import {Util} from "./util";
@@ -10,8 +10,6 @@ import {Util} from "./util";
 type keyObject = { [index: string]: Object }
 
 export class Injector {
-
-    //private readonly FACTORY_POSTFIX = "Factory";
 
     private _definitions: { [index: string]: IDefinition };
     private _instances: keyObject;
@@ -261,7 +259,7 @@ export class Injector {
         return value;
     }
 
-    private _get<T>(objectID: string, runtimeArgs?: any[], referenceChain: any[] = []): T {
+    private _get<T>(objectID: string, runtimeArgs?: any[]): T {
 
         let instance = this._instances[objectID] as T;
 
@@ -269,19 +267,19 @@ export class Injector {
             return instance;
         }
 
-        let definition = this._definitions[objectID];
+        let def = this._definitions[objectID];
 
-        if (definition) {
-            return definition.injector
-                ? definition.injector.getObject(definition.refName || objectID, runtimeArgs)
-                : this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs, referenceChain);
+        if (def) {
+            return def.injector
+                ? def.injector.getObject(def.refName || objectID, runtimeArgs)
+                : this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs);
         }
 
         if (this.parent) {
             return this.parent.getObject(objectID);
         }
 
-        throw new Error(`Injector:can't find object definition for objectID:${objectID} ${referenceChain.join(' -> ')}}`);
+        throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
     }
 
     public getInstance<T>(objectId: string): T {
@@ -292,7 +290,8 @@ export class Injector {
         if (this._definitions[objectId]) {
             console.log(`Injector:definition id already exists overriding:  ${objectId}`);
         }
-        definition.id = objectId;
+
+        definition = _.defaults(definition,{id:objectId,args:[],inject:[],alias:[],aliasFactory:[]});
 
         this._definitions[objectId] = definition;
 
@@ -396,7 +395,7 @@ export class Injector {
         }
     }
 
-    public registerMulti(fns: Function[]): this {
+    public registerMulti(fns: Class[]): this {
         for (let i = 0, len = fns.length; i < len; i++) {
             this.register(fns[i]);
         }
@@ -404,10 +403,10 @@ export class Injector {
         return this;
     }
 
-    public register(id: string | Function, type?: Function): Define {
+    public register(id: string | Class, type?: Class): Define {
 
         if (_.isFunction(id)) {
-            type = id;
+            type = id as Class;
             id = Util.getClassName(type);
         }
 
@@ -420,61 +419,51 @@ export class Injector {
         return define;
     }
 
-    private _createObjectInstance<T>(objectID: string, objectDefinition: IDefinition, runtimeArgs?: any[], referenceChain: any[] = []): T {
-        let argumentInstances = runtimeArgs || [],
-            args: IParamInject[],
-            newObjectInstance;
+    private _createObjectInstance<T>(objectID: string, def: IDefinition, runtimeArgs?: any[]): T {
+        let args = runtimeArgs || [], instance;
 
-        if (referenceChain.length && referenceChain.indexOf(objectID) > -1) {
-            referenceChain.push(objectID);
-
-            throw new Error(`Circular reference ${referenceChain.join(' -> ')}`)
+        if (!def) {
+            throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
         }
 
-        referenceChain.push(objectID);
+        instance = this._instances[objectID];
 
-        if (!objectDefinition) {
-            throw new Error(`Injector:can't find object definition for objectID:${objectID} ${referenceChain.join(' -> ')}}`);
-        }
-
-        newObjectInstance = this._instances[objectID];
-
-        if (newObjectInstance) {
-            return newObjectInstance;
+        if (instance) {
+            return instance;
         }
 
         //loop over args and get the arg value or create arg object instance
-        if (objectDefinition.args && objectDefinition.args.length) {
-            let args = [];
-            for (let i = 0, length = objectDefinition.args.length; i < length; i++) {
-                let arg = objectDefinition.args[i];
-                args.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, [], referenceChain));
+        if (def.args.length) {
+            let defArgs = [];
+            for (let i = 0, length = def.args.length; i < length; i++) {
+                let arg = def.args[i];
+                defArgs.push(arg.hasOwnProperty("value") ? arg.value : this._get(arg.ref, []));
             }
-            argumentInstances = [...args, ...argumentInstances]
+            args = [...defArgs, ...args]
         }
 
         try {
-            newObjectInstance = new (objectDefinition.type as any)(...argumentInstances);
+            instance = args.length ? new (def.type as any)(...args) :  new (def.type as any)();
         }
         catch (e) {
             throw new Error("Injector failed to create object objectID:" + objectID + "' \n" + e);
         }
 
-        if (objectDefinition.singleton && objectDefinition.lazy) {
+        if (def.singleton && def.lazy) {
 
-            this._wireObjectInstance(newObjectInstance, objectDefinition, objectID);
-            this._instances[objectID] = newObjectInstance;
+            this._wireObjectInstance(instance, def, objectID);
+            this._instances[objectID] = instance;
         }
-        else if (objectDefinition.singleton) {
+        else if (def.singleton) {
 
-            this._instances[objectID] = newObjectInstance;
+            this._instances[objectID] = instance;
         }
         else {
 
-            this._wireObjectInstance(newObjectInstance, objectDefinition, objectID);
+            this._wireObjectInstance(instance, def, objectID);
         }
 
-        return newObjectInstance;
+        return instance;
     }
 
     private _populateAliasFactory(definition: IDefinition, objectId: string) {
