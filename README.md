@@ -241,7 +241,7 @@ class FooManager{
 @define() 
 class BuzzController{
     @inject(FooManager) foo:FooManager;  
-	get name () { return this.foo.name}
+    get name () { return this.foo.name}
 }  
   
 let injector = inject.createContainer(); 
@@ -254,16 +254,15 @@ console.log(buzzController.name()) // foo
 you can inject instance to method param.
 ```javascript
 @define()  
-class FooManager{  
-
-	 get name () {return "foo"}
- }  
+class FooManager{
+	get name () {return "foo"}
+}  
  
 @define() 
 class BuzzController{ 
-	 name (@injectParam(FooManager) foo:FooManager) { 
-		 return this.foo.name
-	 }
+	public name (@injectParam(FooManager) foo:FooManager) { 
+		return this.foo.name
+	}
 }
 
 let injector = inject.createContainer(); 
@@ -282,7 +281,7 @@ the `get` method can return promise;
 @define()
 @singleton()
 class BarManager{  
- get name(){return 'bar'; }
+	get name(){return 'bar'; }
 }  
 
 @define()
@@ -320,7 +319,7 @@ class  Person{
 	 } 
 	 get name(){return this.name; }
 }  
- @define() 
+@define() 
 class FooController{ 
 	@injectFactoryMethod(Person) createPerson:(name)=>Person  
 	name () { return this.createPerson('foo').name; }
@@ -358,9 +357,9 @@ class BarManager implements IHandler{
 class BuzzController{
 	@injectAlias('handler') allHandlers:IHandler[]  
  
-	 get name(){      
-		 return this.allHandlers.map(obj =>obj.name).join(); 
-	} 
+	get name(){      
+		return this.allHandlers.map(obj =>obj.name).join(); 
+	}
 }  
   
 let injector = inject.createContainer();
@@ -381,7 +380,6 @@ interface IHandler{
 @define()
 @aliasFactory('IHandler')
 class FooManager implements IHandler{  
-	
 	constructor (private _name:string) {  } 
 	get name():string{ return this._name }
 }  
@@ -396,9 +394,9 @@ class BarManager implements IHandler{
 @define() 
 class BuzzController{  
 	@injectAliasFactory('IHandler') allHandlers:((name:string)=>IHandler)[] 
-	 
-	 get name(){      
-		 return this.allHandlers.map((createHandler,index) =>createHandler(index).name).join(); 
+	
+	get name(){      
+		return this.allHandlers.map((createHandler,index) =>createHandler(index).name).join(); 
 	}  
   
 let injector = inject.createContainer();
@@ -502,8 +500,8 @@ class FooController{
   
 ## Tests  
 ```javascript  
- grunt test
- ```  
+	grunt test
+```  
   
 ## License
   
