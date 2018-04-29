@@ -500,7 +500,7 @@ class FooController{
   
 ## Tests  
 ```javascript  
-	grunt test
+grunt test
 ```  
   
 ## License
