@@ -10,7 +10,7 @@ npm install appolo-inject --save
 ```  
 ## Typescript
 `appolo-inject` requires TypeScript compiler version > 2.1 and the following settings in `tsconfig.json`:
-```javascript
+```json
 {
     "experimentalDecorators": true
 }
@@ -106,18 +106,18 @@ it is not recommended to inject objects to constructor because you can easily ge
 @define()
 @singleton()
 class FooManager{  
-	get name () { 
-		return 'foo'
-	}
+    get name () { 
+        return 'foo'
+    }
 } 
 @define()
 class BuzzController{  
 	constructor (@injectParam() fooManager:FooManager,name:string) { 
-		this.fooManager = fooManager; 
-		this.name = name; 
+	    this.fooManager = fooManager; 
+	    this.name = name; 
 	} 
 	name () {
-		return   this.fooManager.name +this.name
+	    return   this.fooManager.name +this.name
 	}
 }  
   
@@ -133,10 +133,10 @@ console.log(buzzController.name()) // foobuzz
 @define()
 class BuzzController{  
 	constructor(name:string) { 
-		this.name = name; 
+	    this.name = name; 
 	} 
 	get name () {
-		return this.name
+	    return this.name
 	}
 }  
 
@@ -153,14 +153,14 @@ The `init method` will be called after all instances were created and all the pr
 @define()
 @singleton()
 class FooManager{  
-	get name(){return 'foo'; }
+    get name(){return 'foo'; }
 }  
 @define()  
 class FooController{  
-	@inject() fooManager:FooManager
-	@initMethod()
-	initialize(){ this.name = this.fooManager.name } 
-	get name () {return this.name}
+    @inject() fooManager:FooManager
+    @initMethod()
+    initialize(){ this.name = this.fooManager.name } 
+    get name () {return this.name}
 }  
   
 let injector = inject.createContainer();
@@ -178,20 +178,20 @@ fooController.name // foo
 @define()
 @singleton()
 class FooManager{  
-	get name () { return 'foo' }
+    get name () { return 'foo' }
 }  
 @define()
 @singleton()  
 class BarManager{  
-	get name () { return 'bar' }
+    get name () { return 'bar' }
 }  
 
 @define() 
 class BuzzController{ 
-	@inject() fooManager:FooManager; 
-	@inject() barManager:BarManager; 
+    @inject() fooManager:FooManager; 
+    @inject() barManager:BarManager; 
 	
-	get name () { return this.fooManager.name + this.barManager.name }
+    get name () { return this.fooManager.name + this.barManager.name }
 }  
   
 var injector = inject.createContainer(); 
@@ -207,19 +207,19 @@ you can set the name of the property the object will be injected to.
 @define()
 @singleton()
 class FooManager{  
-	get name() {return 'foo'}
+    get name() {return 'foo'}
 }  
 @define()
 @singleton()  
 class BarManager{  
-	get name() { return 'bar'}
+    get name() { return 'bar'}
 }  
 @deine()  
 class BuzzController{
-	@inject(FooManager) foo:FooManager; 
-	@inject('barManager') bar:BarManager;  
+    @inject(FooManager) foo:FooManager; 
+    @inject('barManager') bar:BarManager;  
 	
-	get name () { return this.foo.name + this.bar.name}
+    get name () { return this.foo.name + this.bar.name}
  }  
   
 var injector = inject.createContainer(); 
@@ -233,14 +233,14 @@ you can inject any value to object property.
   
 ```javascript
 @define()  
-class FooManager{  
-	@injectValue('foo') name:string
+class FooManager{
+    @injectValue('foo') name:string
 	 get name () {return this.name;}
  }  
  
 @define() 
-class BuzzController{ 
-	@inject(FooManager) foo:FooManager;  
+class BuzzController{
+    @inject(FooManager) foo:FooManager;  
 	get name () { return this.foo.name}
 }  
   
