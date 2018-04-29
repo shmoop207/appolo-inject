@@ -474,9 +474,9 @@ class FooManager{
 }  
 @define()
 class BuzzController{  
-	@injectObjectProperty(FooManager,'name') otherObjectProperty	  
+    @injectObjectProperty(FooManager,'name') otherObjectProperty	  
 	
-	name () {return return this.otherObjectProperty;}
+    name () {return return this.otherObjectProperty;}
 }  
   
 let injector = inject.createContainer(); 
@@ -493,8 +493,8 @@ you can get reference to the injector container by adding `injectorAware` the in
 @define()
 @injectorAware()
 class FooController{
-	@initMethod()
-	initialize(){ this.$injector.getObject('foo') }
+    @initMethod()
+    initialize(){ this.$injector.getObject('foo') }
 }  
 ```
   
