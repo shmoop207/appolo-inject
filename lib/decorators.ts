@@ -50,6 +50,11 @@ export function singleton(singleton?: boolean): (fn: Function) => void {
     return addDefinitionClass("singleton", [])
 }
 
+export function injectorAware(): (fn: Function) => void {
+
+    return addDefinitionClass("factory", [])
+}
+
 export function factory(factory?: boolean): (fn: Function) => void {
     if (factory === false) {
         return EmptyFunction;
@@ -83,7 +88,6 @@ export function initMethod(): (target: any, propertyKey: string, descriptor?: Pr
 }
 
 export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
-
     return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)]);
 }
 
@@ -103,24 +107,28 @@ export function injectAliasFactory(alias: string, indexBy?: string): (target: an
     return addDefinitionProperty("injectAliasFactory", [alias, indexBy]);
 }
 
-export function injectArray(arr: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+export function injectArray(arr: (string | Class)[]): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectArray", [arr]);
+    return addDefinitionProperty("injectArray", [_.map(arr, item => ({ref: Util.getClassNameOrId(item)}))]);
 }
 
-export function injectDictionary(dic: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+export function injectDictionary(dic: { [index: string]: (string | Class) }): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectDictionary", [dic]);
+    let args = _.map(dic, (item, key) => ({
+        key: key,
+        ref: Util.getClassNameOrId(item)
+    }));
+    return addDefinitionProperty("injectDictionary", [args]);
 }
 
-export function injectFactory(factory?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+export function injectFactory(factory?: string|Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectFactory", [factory]);
+    return addDefinitionProperty("injectFactory", [Util.getClassNameOrId(factory)]);
 }
 
-export function injectObjectProperty(object: string, propertyName: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+export function injectObjectProperty(object: string | Class, propertyName: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectObjectProperty", [object, propertyName]);
+    return addDefinitionProperty("injectObjectProperty", [ Util.getClassNameOrId(object), propertyName]);
 }
 
 export function injectValue(value: any): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
@@ -128,7 +136,8 @@ export function injectValue(value: any): (target: any, propertyKey: string, desc
     return addDefinitionProperty("injectValue", [value]);
 }
 
-export function injectParam(name?: string) {
+
+export function injectParam(name?: string|Class) {
     return function (target: any, propertyKey: string, index: number) {
         let args = [];
 
@@ -136,7 +145,7 @@ export function injectParam(name?: string) {
         if (!propertyKey) {
             args = Util.getFunctionArgs(target);
 
-            addDefinition("args", [{ref: name || args[index]}], target);
+            addDefinition("args", [{ref:  Util.getClassNameOrId(name) || args[index]}], target);
 
             return;
         }

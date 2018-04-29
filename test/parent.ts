@@ -3,6 +3,7 @@ import {Injector} from "../lib/inject";
 import {alias, define, initMethod, inject, injectAlias, singleton} from "../lib/decorators";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
+import ITest = Mocha.ITest;
 
 let should = chai.should();
 
@@ -152,7 +153,7 @@ describe('Parent', function () {
 
             @define()
             @singleton()
-            class Test2 {
+            class Test2{
                 @injectAlias("ITest") test1: Test1[];
 
                 len: number;

@@ -1,6 +1,5 @@
 "use strict";
 import _ = require('lodash');
-import {Injector} from "./inject";
 import {Class, IDefinition, IParamInject} from "./IDefinition";
 
 export class Define {
@@ -119,7 +118,7 @@ export class Define {
     public injectFactory(name: string, factory?: string): this {
         return this.inject({
             name: name,
-            factory: {id:factory || name + "Factory"}
+            factory: {id: factory || name}
         })
     }
 
