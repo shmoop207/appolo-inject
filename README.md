@@ -231,16 +231,17 @@ console.log(buzzController.name) // foobar ```
 ### Inject Property Value  
 you can inject any value to object property.  
   
-```javascript
+```javascript2
 @define()  
 class FooManager{
     @injectValue('foo') name:string
-	 get name () {return this.name;}
+    get name () {return this.name;}
  }  
  
 @define() 
 class BuzzController{
-    @inject(FooManager) foo:FooManager;  
+    @inject(FooManager) foo:FooManager;
+  
     get name () { return this.foo.name}
 }  
   
@@ -255,14 +256,14 @@ you can inject instance to method param.
 ```javascript
 @define()  
 class FooManager{
-	get name () {return "foo"}
+    get name () {return "foo"}
 }  
  
 @define() 
 class BuzzController{ 
-	public name (@injectParam(FooManager) foo:FooManager) { 
-		return this.foo.name
-	}
+    public name (@injectParam(FooManager) foo:FooManager) { 
+        return this.foo.name
+    }
 }
 
 let injector = inject.createContainer(); 
@@ -281,23 +282,23 @@ the `get` method can return promise;
 @define()
 @singleton()
 class BarManager{  
-	get name(){return 'bar'; }
+    get name(){return 'bar'; }
 }  
 
 @define()
 @singleton()
 @factory()  
 class Foo implements IFactory<BarManager>{
-	@inject() barManager:BarManager;  
-	async get ():Promise<BarManager> {
-		return this.barManager;
-	}
+    @inject() barManager:BarManager;  
+    async get ():Promise<BarManager> {
+        return this.barManager;
+    }
 }
   
 @define()  
 class BuzzController{
-	@inject() foo:BarManager  
-	get name () {return this.foo.name}
+    @inject() foo:BarManager  
+    get name () {return this.foo.name}
  }  
   
 let injector = inject.createContainer(); 
@@ -314,15 +315,15 @@ this is useful the create many instances of the same class.
 ```javascript  
 @define()
 class  Person{  
-	constructor (name) { 
-		this.name = name; 
-	 } 
-	 get name(){return this.name; }
+    constructor (name) { 
+        this.name = name; 
+    } 
+    get name(){return this.name; }
 }  
 @define() 
 class FooController{ 
-	@injectFactoryMethod(Person) createPerson:(name)=>Person  
-	name () { return this.createPerson('foo').name; }
+    @injectFactoryMethod(Person) createPerson:(name)=>Person  
+    name () { return this.createPerson('foo').name; }
 }  
   
 let injector = inject.createContainer();
@@ -337,29 +338,29 @@ you can add alias names to classes and get all the classes by single alias. all 
   
 ```javascript  
 interface IHandler{
-	name:string
+    name:string
 }
 
 @define()
 @singleton()
 @alias('IHandler')
 class FooManager implements IHandler {  
-	get name(){return 'foo'}
+    get name(){return 'foo'}
 }  
 @define()
 @singleton()
 @alias('IHandler') 
 class BarManager implements IHandler{  
-	get name(){return 'bar'}
+    get name(){return 'bar'}
 }  
 
 @define()  
 class BuzzController{
-	@injectAlias('handler') allHandlers:IHandler[]  
+    @injectAlias('handler') allHandlers:IHandler[]  
  
-	get name(){      
-		return this.allHandlers.map(obj =>obj.name).join(); 
-	}
+    get name(){      
+        return this.allHandlers.map(obj =>obj.name).join(); 
+    }
 }  
   
 let injector = inject.createContainer();
@@ -374,30 +375,30 @@ buzzController.name // foobar
 you can add alias factory names to classes and get all the classes new instance by factory method.  
 ```javascript  
 interface IHandler{
-	name:string
+    name:string
 }
 
 @define()
 @aliasFactory('IHandler')
 class FooManager implements IHandler{  
-	constructor (private _name:string) {  } 
-	get name():string{ return this._name }
+    constructor (private _name:string) {  } 
+    get name():string{ return this._name }
 }  
 @define()
 @aliasFactory('IHandler')  
 class BarManager implements IHandler{  
-	public name:string
-	constructor (private _name:string) {  } 
-	get name():string{ return this._name }
+    public name:string
+    constructor (private _name:string) {  } 
+    get name():string{ return this._name }
 }  
 
 @define() 
 class BuzzController{  
-	@injectAliasFactory('IHandler') allHandlers:((name:string)=>IHandler)[] 
+    @injectAliasFactory('IHandler') allHandlers:((name:string)=>IHandler)[] 
 	
-	get name(){      
-		return this.allHandlers.map((createHandler,index) =>createHandler(index).name).join(); 
-	}  
+    get name(){      
+        return this.allHandlers.map((createHandler,index) =>createHandler(index).name).join(); 
+    }  
   
 let injector = inject.createContainer();
 injector.registerMulti([BuzzController,BarManager,FooManager]); 
@@ -414,19 +415,19 @@ you can inject `array` of properties by `reference` or by `value`.
 @define()
 @singleton() 
 class FooManager{  
-	get name () { return 'foo' }
+    get name () { return 'foo' }
  }  
   
 @define()
 @singleton() 
 class BarManager{  
-	get name () {return 'bar'}
+    get name () {return 'bar'}
 }  
 @define()  
 class BuzzController{ 
-	@injectArray([FooManager,BarManager]) objects:any[]
+    @injectArray([FooManager,BarManager]) objects:any[]
 	
-	name () { this.objects.map(obj=>obj.name).join() }
+    name () { this.objects.map(obj=>obj.name).join() }
 }  
   
 let injector = inject.createContainer(); 
@@ -453,8 +454,8 @@ class BarManager{
 }  
 @define() 
 class BuzzController{
-	@injectDictionary({foo:FooManager,bar:BarManager}) objects:any[]	  
-	get name () {return this.objects.foo.name + this.objects.bar.name + this.objects.baz;}
+    @injectDictionary({foo:FooManager,bar:BarManager}) objects:any[]	  
+    get name () {return this.objects.foo.name + this.objects.bar.name + this.objects.baz;}
 }  
   
 let injector = inject.createContainer(); 
