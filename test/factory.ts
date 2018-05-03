@@ -166,7 +166,7 @@ describe('Property Factory', function () {
 
             @define()
             @singleton()
-            class FooManager {
+            class FooManager2 {
                 name: any;
 
                 constructor() {
@@ -177,32 +177,32 @@ describe('Property Factory', function () {
             @define()
             @singleton()
             @factory()
-            class FooManagerFactory {
-                @inject() fooManager: any;
+            class FooManager {
+                @inject() fooManager2: FooManager2;
 
                 constructor() {
 
                 }
 
                 get() {
-                    this.fooManager.name = this.fooManager.name + "Factory";
+                    this.fooManager2.name = this.fooManager2.name + "Factory";
 
 
-                    return this.fooManager;
+                    return this.fooManager2;
                 }
             }
 
             injector = ioc.createContainer();
             injector.register(Rectangle);
+            injector.register(FooManager2);
             injector.register(FooManager);
-            injector.register(FooManagerFactory);
             await injector.initialize();
 
             let rectangle: any = injector.getObject('rectangle');
 
             should.exist(rectangle.fooManager);
 
-            rectangle.fooManager.should.be.instanceof(FooManager);
+            rectangle.fooManager.should.be.instanceof(FooManager2);
             rectangle.fooManager.name.should.be.eq("fooFactory");
         });
 

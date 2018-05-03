@@ -107,39 +107,39 @@ describe('Property Factory', function () {
                 decorators_1.define(),
                 decorators_1.singleton()
             ], Rectangle);
-            let FooManager = class FooManager {
+            let FooManager2 = class FooManager2 {
                 constructor() {
                     this.name = 'foo';
                 }
             };
-            FooManager = tslib_1.__decorate([
+            FooManager2 = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton()
-            ], FooManager);
-            let FooManagerFactory = class FooManagerFactory {
+            ], FooManager2);
+            let FooManager = class FooManager {
                 constructor() {
                 }
                 get() {
-                    this.fooManager.name = this.fooManager.name + "Factory";
-                    return this.fooManager;
+                    this.fooManager2.name = this.fooManager2.name + "Factory";
+                    return this.fooManager2;
                 }
             };
             tslib_1.__decorate([
                 decorators_1.inject()
-            ], FooManagerFactory.prototype, "fooManager", void 0);
-            FooManagerFactory = tslib_1.__decorate([
+            ], FooManager.prototype, "fooManager2", void 0);
+            FooManager = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton(),
                 decorators_1.factory()
-            ], FooManagerFactory);
+            ], FooManager);
             injector = ioc.createContainer();
             injector.register(Rectangle);
+            injector.register(FooManager2);
             injector.register(FooManager);
-            injector.register(FooManagerFactory);
             await injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle.fooManager);
-            rectangle.fooManager.should.be.instanceof(FooManager);
+            rectangle.fooManager.should.be.instanceof(FooManager2);
             rectangle.fooManager.name.should.be.eq("fooFactory");
         });
         it('should inject object after factory with inject and same name as factory', async function () {

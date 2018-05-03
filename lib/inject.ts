@@ -25,6 +25,8 @@ export class Injector {
 
     private _options: IOptions;
 
+    private _isInitialized: boolean = false;
+
     constructor() {
         this._instances = {};
         this._definitions = {};
@@ -53,13 +55,15 @@ export class Injector {
     }
 
     public async initialize(options?: IOptions) {
-
+        if (this._isInitialized) {
+            return;
+        }
         this._options = options || {};
 
         _.forEach(this._options.definitions, (def, id) => this.addDefinition(id, def));
 
         //we have parent so we wait until parent.initialize
-        if (this.parent) {
+        if (this.parent && !this._options.immediate) {
             return;
         }
 
@@ -74,10 +78,15 @@ export class Injector {
         this.initAlias();
 
         this.initInitMethods();
+
+        this._isInitialized = true;
     }
 
 
-    public initDefinitions() {
+    protected initDefinitions() {
+        if (this._isInitialized) {
+            return;
+        }
 
         _.forEach(this.children, injector => injector.initDefinitions());
 
@@ -101,7 +110,10 @@ export class Injector {
         }
     }
 
-    public initInstances() {
+    protected initInstances() {
+        if (this._isInitialized) {
+            return;
+        }
 
         _.forEach(this.children, injector => injector.initInstances());
 
@@ -113,7 +125,10 @@ export class Injector {
         }
     }
 
-    public initProperties() {
+    protected initProperties() {
+        if (this._isInitialized) {
+            return;
+        }
         _.forEach(this.children, injector => injector.initProperties());
 
         let keys = Object.keys(this._instances);
@@ -127,16 +142,26 @@ export class Injector {
 
     }
 
-    public async initFactories() {
+    protected async initFactories() {
+        if (this._isInitialized) {
+            return;
+        }
 
-        await Promise.all(this.children.map(injector => injector.initFactories()))
+        for (let injector of this.children) {
+            await injector.initFactories()
+        }
 
         for (let factory of this._factories) {
             await this.loadFactory(factory);
         }
     }
 
-    public initAlias() {
+    protected initAlias() {
+
+        if (this._isInitialized) {
+            return;
+        }
+
         let keys = Object.keys(this._instances);
 
         _.forEach(this.children, injector => injector.initAlias());
@@ -154,7 +179,11 @@ export class Injector {
 
     }
 
-    public initInitMethods() {
+    protected initInitMethods() {
+
+        if (this._isInitialized) {
+            return;
+        }
 
         let keys = Object.keys(this._instances);
 
@@ -164,6 +193,8 @@ export class Injector {
             let objectId = keys[i], instance = this._instances[objectId];
             (this._definitions[objectId]) && (this._invokeInitMethod(instance, this._definitions[objectId]));
         }
+
+        this._isInitialized = true;
     }
 
     private _prepareInjectParams(def: IDefinition) {
@@ -291,7 +322,7 @@ export class Injector {
             console.log(`Injector:definition id already exists overriding:  ${objectId}`);
         }
 
-        definition = _.defaults(definition,{id:objectId,args:[],inject:[],alias:[],aliasFactory:[]});
+        definition = _.defaults(definition, {id: objectId, args: [], inject: [], alias: [], aliasFactory: []});
 
         this._definitions[objectId] = definition;
 
@@ -443,7 +474,7 @@ export class Injector {
         }
 
         try {
-            instance = args.length ? new (def.type as any)(...args) :  new (def.type as any)();
+            instance = args.length ? new (def.type as any)(...args) : new (def.type as any)();
         }
         catch (e) {
             throw new Error("Injector failed to create object objectID:" + objectID + "' \n" + e);

@@ -4,9 +4,9 @@ import {Define} from "./define";
 import {Util} from "./util";
 import {Class} from "./IDefinition";
 
-export const InjectDefinitionsSymbol = Symbol("__injectDefinitions__");
-export const InjectDefineSymbol = Symbol("__injectDefine__");
-export const InjectParamSymbol = Symbol("__injectParam__");
+export const InjectDefinitionsSymbol = "__injectDefinitions__";
+export const InjectDefineSymbol = "__injectDefine__";
+export const InjectParamSymbol = "__injectParam__";
 
 const EmptyFunction = () => {
 };
