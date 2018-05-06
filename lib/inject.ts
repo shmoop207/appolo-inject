@@ -244,15 +244,15 @@ export class Injector {
 
         let def = this._definitions[objectID];
 
-        if(def && def.factory){
-            return this.getFactoryValue(objectID);
+        if (def && def.factory) {
+            return this.getFactoryValue(objectID, def);
         }
 
         return this._get<T>(objectID as string, runtimeArgs)
     }
 
-    public getFactoryValue<T>(objectID: string): T {
-        let def = this._definitions[objectID as string];
+    public getFactoryValue<T>(objectID: string, definitions?: IDefinition): T {
+        let def = definitions || this._definitions[objectID];
 
         if (!def) {
             return this.parent ? this.parent.getFactoryValue<T>(objectID) : null;
