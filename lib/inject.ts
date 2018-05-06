@@ -242,6 +242,12 @@ export class Injector {
 
         objectID = Util.getClassNameOrId(objectID);
 
+        let def = this._definitions[objectID];
+
+        if(def && def.factory){
+            return this.getFactoryValue(objectID);
+        }
+
         return this._get<T>(objectID as string, runtimeArgs)
     }
 

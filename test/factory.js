@@ -845,8 +845,9 @@ describe('Property Factory', function () {
             //var rectangle = injector.getObject('rectangle');
             var fooManagerFactory = injector.getObject('fooManagerFactory');
             var rectangle = injector.getObject(Rectangle);
-            should.exist(fooManagerFactory.fooManager);
+            should.exist(fooManagerFactory);
             should.exist(rectangle.fooManager);
+            fooManagerFactory.should.be.instanceof(FooManager);
             rectangle.fooManager.should.be.instanceof(FooManager);
             rectangle.fooManager.name.should.be.eq("fooFactory");
         });
