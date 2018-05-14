@@ -23,7 +23,8 @@ export class Define {
             inject: [],
             alias: [],
             aliasFactory: [],
-            args: []
+            args: [],
+            path: ""
         };
 
     }
@@ -48,6 +49,11 @@ export class Define {
 
         this._definition.factory = _.isUndefined(factory) ? true : factory;
         return this
+    }
+
+    public path(path: string): this {
+        this._definition.path = path;
+        return this;
     }
 
     public lazy(lazy: boolean = true): this {

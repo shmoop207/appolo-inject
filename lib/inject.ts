@@ -440,7 +440,7 @@ export class Injector {
         return this;
     }
 
-    public register(id: string | Class, type?: Class): Define {
+    public register(id: string | Class, type?: Class, filePath?: string): Define {
 
         if (_.isFunction(id)) {
             type = id as Class;
@@ -450,6 +450,8 @@ export class Injector {
         let define = type
             ? (Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type))
             : new Define(id as string);
+
+        define.path(filePath);
 
         this.addDefinition(id as string, define.definition);
 
