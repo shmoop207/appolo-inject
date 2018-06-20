@@ -65,7 +65,7 @@ export class Define {
 
     public override(override: boolean = true): this {
 
-        this._definition.lazy = _.isUndefined(override) ? true : override;
+        this._definition.override = _.isUndefined(override) ? true : override;
         return this
     }
 
