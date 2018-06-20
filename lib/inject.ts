@@ -325,18 +325,14 @@ export class Injector {
 
     public addDefinition(objectId: string, definition: IDefinition): Injector {
 
-        if (this._definitions[objectId]) {
+        //we have definition and is already override mode so we do nothing
+        if (this._definitions[objectId] && this._definitions[objectId].override && !definition.override) {
+            return this;
+        }
 
-            if (this._definitions[objectId].override && !definition.override) {
-
-                return this;
-
-            } else if (definition.override) {
-
-                console.log(`Injector:definition id already exists overriding:  ${objectId}`);
-            } else {
-                throw new Error(`Injector:definition id ${objectId} already exists use override decorator`);
-            }
+        //we have definition and the new definition is not in override mode so we throw error
+        if (this._definitions[objectId] && !definition.override) {
+            throw new Error(`Injector:definition id ${objectId} already exists use override decorator`);
         }
 
         definition = _.defaults(definition, {id: objectId, args: [], inject: [], alias: [], aliasFactory: []});
