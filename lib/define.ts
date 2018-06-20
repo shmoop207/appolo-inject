@@ -24,7 +24,8 @@ export class Define {
             alias: [],
             aliasFactory: [],
             args: [],
-            path: ""
+            path: "",
+            override: false
         };
 
     }
@@ -59,6 +60,12 @@ export class Define {
     public lazy(lazy: boolean = true): this {
 
         this._definition.lazy = _.isUndefined(lazy) ? true : lazy;
+        return this
+    }
+
+    public override(override: boolean = true): this {
+
+        this._definition.lazy = _.isUndefined(override) ? true : override;
         return this
     }
 

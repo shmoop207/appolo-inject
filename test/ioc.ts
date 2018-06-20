@@ -28,25 +28,26 @@ describe('Ioc', function () {
         });
 
 
-
         it('should add duplicate definitions', function () {
             let injector = ioc.createContainer();
 
 
-            let Test1 = class Test1{}
-            let Test2 = class Test1{}
+            let Test1 = class Test1 {
+            }
+            let Test2 = class Test1 {
+            }
 
             injector.addDefinitions({
-                    test: {
-                        type: Test1
-                    }
-                });
+                test: {
+                    type: Test1
+                }
+            });
 
-                injector.addDefinitions({
-                    test: {
-                        type: Test2
-                    }
-                })
+            injector.addDefinitions({
+                test: {
+                    type: Test2, override: true
+                }
+            })
 
             injector.initialize();
 
@@ -56,15 +57,15 @@ describe('Ioc', function () {
     });
 
     describe('get simple object', function () {
-        let injector:Injector;
+        let injector: Injector;
 
         it('should get object', function () {
 
             injector = ioc.createContainer();
 
-            class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
@@ -86,18 +87,17 @@ describe('Ioc', function () {
     describe('get simple object with linq', function () {
 
 
-
         it('should get object', function () {
 
-           class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
 
             let injector = ioc.createContainer();
-            injector.register('rectangle',Rectangle)
+            injector.register('rectangle', Rectangle)
 
             injector.initialize();
 
@@ -108,15 +108,15 @@ describe('Ioc', function () {
     });
 
     describe('get simple object error', function () {
-        let injector:Injector;
+        let injector: Injector;
 
         it('should throw error if object not found', function () {
 
             injector = ioc.createContainer();
 
-            class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
@@ -139,9 +139,10 @@ describe('Ioc', function () {
         it('should throw error if object not found inner', function () {
 
             injector = ioc.createContainer();
-            class Rectangle{
 
-                constructor () {
+            class Rectangle {
+
+                constructor() {
 
                 }
             }
@@ -150,7 +151,7 @@ describe('Ioc', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    inject:["test"]
+                    inject: ["test"]
                 }
             });
 
@@ -167,14 +168,14 @@ describe('Ioc', function () {
 
 
     describe('reset ioc', function () {
-        let injector:Injector;
+        let injector: Injector;
 
         beforeEach(function () {
             injector = ioc.createContainer();
 
-             class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
@@ -205,7 +206,7 @@ describe('Ioc', function () {
     });
 
     describe('add object', function () {
-        let injector:Injector;
+        let injector: Injector;
 
         beforeEach(function () {
             injector = ioc.createContainer();
@@ -232,23 +233,23 @@ describe('Ioc', function () {
     });
 
     describe('get object by type', function () {
-        let injector:Injector;
+        let injector: Injector;
 
 
         it('should get by type', function () {
 
             injector = ioc.createContainer();
 
-            class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
 
-            class Circle{
+            class Circle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
@@ -256,20 +257,20 @@ describe('Ioc', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    singleton:true
+                    singleton: true
                 }
             });
 
             injector.addDefinitions({
                 circle: {
                     type: Circle,
-                    singleton:true
+                    singleton: true
                 }
             });
 
             injector.initialize();
 
-            let objects= injector.getObjectsByType(Rectangle);
+            let objects = injector.getObjectsByType(Rectangle);
 
             objects.should.be.instanceof(Array).and.have.lengthOf(1);
 
@@ -279,21 +280,21 @@ describe('Ioc', function () {
 
 
     describe('get object with existing obj', function () {
-        let injector:Injector, Rectangle, Circle;
+        let injector: Injector, Rectangle, Circle;
 
         beforeEach(function () {
             injector = ioc.createContainer();
 
-             class Rectangle{
+            class Rectangle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
 
-           class Circle{
+            class Circle {
 
-                constructor () {
+                constructor() {
 
                 }
             }
@@ -301,18 +302,18 @@ describe('Ioc', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    singleton:true
+                    singleton: true
                 }
             });
 
             injector.addDefinitions({
                 circle: {
                     type: Circle,
-                    singleton:true
+                    singleton: true
                 }
             });
 
-            injector.addObject("test",{})
+            injector.addObject("test", {})
 
 
         });

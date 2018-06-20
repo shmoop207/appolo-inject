@@ -71,6 +71,12 @@ export function lazy(lazy?: boolean): (fn: Function) => void {
 }
 
 
+export function override(): (fn: Function) => void {
+
+    return addDefinitionClass("override", [])
+}
+
+
 export function alias(alias: string): (fn: Function) => void {
     return addDefinitionClass("alias", [alias]);
 }

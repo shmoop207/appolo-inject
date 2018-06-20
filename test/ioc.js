@@ -31,7 +31,7 @@ describe('Ioc', function () {
             });
             injector.addDefinitions({
                 test: {
-                    type: Test2
+                    type: Test2, override: true
                 }
             });
             injector.initialize();

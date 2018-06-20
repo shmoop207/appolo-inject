@@ -33,6 +33,7 @@ export interface IDefinition {
     singleton?: boolean
     factory?: boolean
     lazy?: boolean
+    override?: boolean
     aliasFactory?: string[]
     alias?: string[]
     initMethod?: string

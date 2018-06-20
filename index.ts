@@ -23,5 +23,6 @@ export {
     aliasFactory,
     alias,
     lazy,
-    factory
+    factory,
+    override
 } from './lib/decorators'
