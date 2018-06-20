@@ -327,7 +327,7 @@ export class Injector {
 
         if (this._definitions[objectId]) {
 
-            if (this._definitions[objectId].override) {
+            if (this._definitions[objectId].override && !definition.override) {
 
                 return this;
 
