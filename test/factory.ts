@@ -4,7 +4,7 @@ import    ioc = require('../lib/inject');
 import sleep  = require ('sleep-promise');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {define, factory, inject, injectFactory, singleton} from "../lib/decorators";
+import {define, factory, inject, injectFactory, singleton,alias,injectAlias} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -837,6 +837,73 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject<Rectangle>(Rectangle);
 
             rectangle.name.should.be.eq("FooManagerWithFactory");
+
+        })
+
+
+        it('should inject factory with alias ', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() fooProvider: FooManager[];
+
+                constructor() {
+
+                }
+
+                get name() {
+
+                    return this.fooProvider;
+                }
+
+            }
+
+            @define()
+            @singleton()
+            @alias("test")
+            class FooManager {
+
+
+                public name: string;
+
+                constructor() {
+                    this.name = "FooManager"
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooProvider implements IFactory<FooManager[]> {
+                @injectAlias("test") fooManagers: FooManager[];
+
+                constructor() {
+                }
+
+                public async get(): Promise<FooManager[]> {
+                    await sleep(10);
+
+                    return this.fooManagers
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(FooProvider);
+            injector.register(FooManager);
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.length.should.be.eq(1);
+            rectangle.name[0].name.should.be.eq("FooManager");
 
         })
 

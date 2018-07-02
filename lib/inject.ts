@@ -288,6 +288,9 @@ export class Injector {
         let factory = this._get<IFactory<T>>(def.id);
 
         this._injectFactoryObject(this._instances[def.id], def.id);
+        this._injectAlias(def, this._instances[def.id]);
+        this._injectAliasFactory(def, this._instances[def.id]);
+        this._invokeInitMethod(this._instances[def.id], def);
 
         value = await factory.get();
 

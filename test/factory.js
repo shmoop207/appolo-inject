@@ -636,6 +636,56 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.name.should.be.eq("FooManagerWithFactory");
         });
+        it('should inject factory with alias ', async () => {
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                get name() {
+                    return this.fooProvider;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "fooProvider", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let FooManager = class FooManager {
+                constructor() {
+                    this.name = "FooManager";
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias("test")
+            ], FooManager);
+            let FooProvider = class FooProvider {
+                constructor() {
+                }
+                async get() {
+                    await sleep(10);
+                    return this.fooManagers;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectAlias("test")
+            ], FooProvider.prototype, "fooManagers", void 0);
+            FooProvider = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory()
+            ], FooProvider);
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(FooProvider);
+            injector.register(FooManager);
+            await injector.initialize();
+            let rectangle = injector.getObject(Rectangle);
+            rectangle.name.length.should.be.eq(1);
+            rectangle.name[0].name.should.be.eq("FooManager");
+        });
     });
     describe('inject factory Object to not singleton ', function () {
         it('should inject object after factory', async function () {
