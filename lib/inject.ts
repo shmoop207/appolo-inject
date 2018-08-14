@@ -316,7 +316,7 @@ export class Injector {
         }
 
         if (this.parent) {
-            return this.parent.getObject(objectID);
+            return this.parent.getObject(objectID, runtimeArgs);
         }
 
         throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
