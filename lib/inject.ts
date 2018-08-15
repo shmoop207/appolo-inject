@@ -463,7 +463,7 @@ export class Injector {
 
         define.path(filePath);
 
-        this.addDefinition(id as string, define.definition);
+        this.addDefinition(define.definition.id || id, define.definition);
 
         return define;
     }
