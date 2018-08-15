@@ -144,5 +144,43 @@ describe('Parent', function () {
             test2.len.should.be.eq(1);
         });
     });
+    xdescribe('inherit from child', function () {
+        let injector, Rectangle;
+        xit('should inherit  object from child', async function () {
+            injector = ioc.createContainer();
+            let Test1 = class Test1 {
+                constructor() {
+                }
+                initialize() {
+                    this.name = "aa" + this.env.name;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Test1.prototype, "env", void 0);
+            tslib_1.__decorate([
+                decorators_1.initMethod()
+            ], Test1.prototype, "initialize", null);
+            Test1 = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Test1);
+            let Test2 = class Test2 extends Test1 {
+            };
+            Test2 = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Test2);
+            injector = ioc.createContainer();
+            injector.register(Test1);
+            injector.addObject("env", { name: "bbb" });
+            let injector2 = ioc.createContainer();
+            injector2.register(Test2);
+            injector.parent = injector2;
+            await injector2.initialize();
+            let test2 = injector2.getObject('test2');
+            test2.name.should.be.eq(1);
+        });
+    });
 });
 //# sourceMappingURL=parent.js.map

@@ -153,7 +153,7 @@ describe('Parent', function () {
 
             @define()
             @singleton()
-            class Test2{
+            class Test2 {
                 @injectAlias("ITest") test1: Test1[];
 
                 len: number;
@@ -183,6 +183,59 @@ describe('Parent', function () {
             let test2 = injector2.getObject<Test2>('test2');
 
             test2.len.should.be.eq(1);
+
+        });
+    });
+
+
+    xdescribe('inherit from child', function () {
+        let injector: Injector, Rectangle;
+
+
+        xit('should inherit  object from child', async function () {
+
+            injector = ioc.createContainer();
+
+            @define()
+            @singleton()
+            class Test1 {
+                @inject() env: any;
+
+                name: string;
+
+                constructor() {
+
+                }
+
+                @initMethod()
+                initialize() {
+                    this.name = "aa" + this.env.name
+                }
+            }
+
+            @define()
+            @singleton()
+            class Test2 extends Test1 {
+
+
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Test1);
+            injector.addObject("env", {name: "bbb"})
+
+            let injector2 = ioc.createContainer();
+            injector2.register(Test2);
+
+
+            injector.parent = injector2;
+
+            await injector2.initialize();
+
+            let test2 = injector2.getObject<Test2>('test2');
+
+            test2.name.should.be.eq(1);
 
         });
     });
