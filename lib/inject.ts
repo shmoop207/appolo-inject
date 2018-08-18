@@ -411,6 +411,10 @@ export class Injector {
         return this._definitions;
     }
 
+    public getDefinitionsValue(): IDefinition[] {
+        return _.values(this._definitions);
+    }
+
     public getDefinition(id: string): IDefinition {
         let def = this._definitions[id];
 
@@ -551,18 +555,24 @@ export class Injector {
                 }
             }
 
+            if (dto.parent && dto.parent !== definition.type) {
+                dto.injector = this._children.find(injector => !!injector.getDefinitionsValue().find(def => def.type === dto.parent))
+            }
+
+            let injector = dto.injector || this;
+
             if (dto.ref) {
-                let refDef = this.getDefinition(dto.ref),
+                let refDef = injector.getDefinition(dto.ref),
                     localDef = this._definitions[dto.ref],
                     localInjectorDef = localDef && localDef.injector && (localDef.injector.getDefinition(localDef.refName || localDef.id)),
                     factory;
 
                 if (localInjectorDef && localInjectorDef.factory) {
                     //try to get local def factory from child injector
-                    factory = {id: localDef.refName || localDef.id, injector: localDef.injector};
+                    factory = {id: localDef.refName || localDef.id, injector:  localDef.injector};
 
                 } else if (refDef && refDef.factory) {
-                    factory = {id: refDef.id};
+                    factory = {id: refDef.id,injector:dto.injector};
                 }
 
 
@@ -595,6 +605,10 @@ export class Injector {
         definition.singleton && (definition.$isWired = true);
     }
 
+    private _getByParamObj(propObj: IParamInject, ref: string,args?:any[]) {
+        return propObj.injector ? propObj.injector._get(ref,args) : this._get(ref,args)
+    }
+
     private _injectPropertiesAndLookUpMethods<T>(object: T, objectDefinition: IDefinition, objectId: string) {
         let injectObject,
             obj, properties = objectDefinition.properties;
@@ -604,12 +618,12 @@ export class Injector {
             injectObject = null;
             if (prop.array) {
 
-                injectObject = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._get(propObj.ref));
+                injectObject = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._getByParamObj(propObj,propObj.ref));
             }
             else if (prop.dictionary) {
                 injectObject = {};
 
-                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._get(propObj.ref));
+                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj,propObj.ref));
 
             }
             else if (prop.value) {
@@ -619,11 +633,11 @@ export class Injector {
             }
             else if (prop.ref) { //check if we have ref and we don't have factory with the same name
 
-                injectObject = this._get(prop.ref);
+                injectObject = this._getByParamObj(prop,prop.ref);
 
             }
             else if (prop.objectProperty) {
-                obj = this._get(prop.objectProperty.object);
+                obj = this._getByParamObj(prop,prop.objectProperty.object);
 
                 injectObject = obj[prop.objectProperty.property];
 
@@ -639,7 +653,7 @@ export class Injector {
             }
             else if (prop.factoryMethod) {
 
-                injectObject = Util.createDelegate(this._get, this, [prop.factoryMethod])
+                injectObject = Util.createDelegate(this._getByParamObj, this, [prop,prop.factoryMethod])
             }
 
             if (injectObject) {
@@ -697,8 +711,11 @@ export class Injector {
     private _injectAlias<T>(definition: IDefinition, instance: T) {
         for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
             let prop = definition.properties[i];
+            let injector = prop.injector ? prop.injector : this;
 
-            (prop.alias) && (instance[prop.name] = prop.indexBy ? _.keyBy(this.getAlias(prop.alias), prop.indexBy) : this.getAlias(prop.alias));
+            (prop.alias) && (instance[prop.name] = prop.indexBy
+                ? _.keyBy(injector.getAlias(prop.alias), prop.indexBy)
+                : injector.getAlias(prop.alias));
         }
     }
 
@@ -706,7 +723,13 @@ export class Injector {
 
         for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
             let prop = definition.properties[i];
-            (prop.aliasFactory) && (instance[prop.name] = prop.indexBy ? _.keyBy(this.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy]) : this.getAliasFactory(prop.aliasFactory))
+
+            let injector = prop.injector ? prop.injector : this;
+
+
+            (prop.aliasFactory) && (instance[prop.name] = prop.indexBy
+                ? _.keyBy(injector.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy])
+                : injector.getAliasFactory(prop.aliasFactory))
         }
     }
 

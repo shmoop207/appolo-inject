@@ -144,10 +144,33 @@ describe('Parent', function () {
             test2.len.should.be.eq(1);
         });
     });
-    xdescribe('inherit from child', function () {
+    describe('inherit from child', function () {
         let injector, Rectangle;
-        xit('should inherit  object from child', async function () {
+        it('should inherit  object from child', async function () {
             injector = ioc.createContainer();
+            let Alias = class Alias {
+            };
+            Alias = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias("Alias")
+            ], Alias);
+            let Alias2 = class Alias2 {
+            };
+            Alias2 = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.aliasFactory("Alias2")
+            ], Alias2);
+            let Factory = class Factory {
+                async get() {
+                    return "working";
+                }
+            };
+            Factory = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory()
+            ], Factory);
             let Test1 = class Test1 {
                 constructor() {
                 }
@@ -158,6 +181,21 @@ describe('Parent', function () {
             tslib_1.__decorate([
                 decorators_1.inject()
             ], Test1.prototype, "env", void 0);
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Test1.prototype, "logger", void 0);
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Test1.prototype, "factory", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectAlias("Alias")
+            ], Test1.prototype, "test", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectAliasFactory("Alias2")
+            ], Test1.prototype, "createAlias2", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectFactoryMethod(Alias)
+            ], Test1.prototype, "createAlias", void 0);
             tslib_1.__decorate([
                 decorators_1.initMethod()
             ], Test1.prototype, "initialize", null);
@@ -173,13 +211,24 @@ describe('Parent', function () {
             ], Test2);
             injector = ioc.createContainer();
             injector.register(Test1);
+            injector.register(Alias);
+            injector.register(Alias2);
+            injector.register(Factory);
             injector.addObject("env", { name: "bbb" });
             let injector2 = ioc.createContainer();
+            injector2.addObject("env", { name: "ccc" });
+            injector2.addObject("logger", { info: "bla" });
             injector2.register(Test2);
             injector.parent = injector2;
             await injector2.initialize();
+            let test1 = injector.getObject('test1');
             let test2 = injector2.getObject('test2');
-            test2.name.should.be.eq(1);
+            test2.name.should.be.eq("aabbb");
+            test2.test[0].constructor.name.should.be.eq("Alias");
+            test2.createAlias().constructor.name.should.be.eq("Alias");
+            test2.createAlias2[0]().constructor.name.should.be.eq("Alias2");
+            test2.factory.should.be.eq("working");
+            test2.logger.info.should.be.eq("bla");
         });
     });
 });

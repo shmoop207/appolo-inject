@@ -69,7 +69,7 @@ export class Define {
         return this
     }
 
-    public inject(name: string | string[] | IParamInject | IParamInject[], inject?: string): this {
+    public inject(name: string | string[] | IParamInject | IParamInject[], inject?: string, parent?: Class): this {
 
         if (_.isString(name) && _.includes(name, " ")) {
             name = name.split(" ");
@@ -79,59 +79,65 @@ export class Define {
             this._definition.inject.push.apply(this._definition.inject, name)
         } else if (_.isObject(name)) {
             this._definition.inject.push(name as IParamInject)
+        } else {
+            this._definition.inject.push({name: name as string, ref: inject || (name as string), parent: parent})
         }
 
-        else if (_.toArray(arguments).length == 1 && _.isString(name)) {
-            this._definition.inject.push({name: name, ref: name})
-        } else if (_.toArray(arguments).length == 2 && _.isString(name)) {
-            this._definition.inject.push({name: name, ref: inject || name})
-        }
+        // else if (_.toArray(arguments).length == 1 && _.isString(name)) {
+        //     this._definition.inject.push({name: name, ref: name})
+        // } else if (_.toArray(arguments).length == 2 && _.isString(name)) {
+        //     this._definition.inject.push({name: name, ref: inject || name})
+        // } else {
+        //
+        // }
 
         return this;
     }
 
-    public injectFactoryMethod(name: string, factoryMethod: string): this {
+    public injectFactoryMethod(name: string, factoryMethod: string, parent?: Class): this {
         return this.inject({
             name: name,
-            factoryMethod: factoryMethod
+            factoryMethod: factoryMethod,
+            parent: parent
         })
     }
 
-    public injectAlias(name: string, alias: string, indexBy?: string): this {
+    public injectAlias(name: string, alias: string, indexBy?: string, parent?: Class): this {
         return this.inject({
             name: name,
             alias: alias,
-            indexBy: indexBy
+            indexBy: indexBy, parent
         })
     }
 
-    public injectAliasFactory(name: string, alias: string, indexBy?: string): this {
+    public injectAliasFactory(name: string, alias: string, indexBy?: string, parent?: Class): this {
         return this.inject({
             name: name,
             aliasFactory: alias,
-            indexBy: indexBy
+            indexBy: indexBy, parent
         })
     }
 
-    public injectArray(name: string, arr: IParamInject[]): this {
+    public injectArray(name: string, arr: IParamInject[], parent?: Class): this {
         return this.inject({
             name: name,
-            array: arr
+            array: arr, parent
         })
     }
 
 
-    public injectDictionary(name: string, dic: IParamInject[]): this {
+    public injectDictionary(name: string, dic: IParamInject[], parent?: Class): this {
         return this.inject({
             name: name,
-            dictionary: dic
+            dictionary: dic, parent
         })
     }
 
-    public injectFactory(name: string, factory?: string): this {
+    public injectFactory(name: string, factory?: string, parent?: Class): this {
         return this.inject({
             name: name,
-            factory: {id: factory || name}
+            factory: {id: factory || name},
+            parent
         })
     }
 
