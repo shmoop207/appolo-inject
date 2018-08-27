@@ -569,10 +569,10 @@ export class Injector {
 
                 if (localInjectorDef && localInjectorDef.factory) {
                     //try to get local def factory from child injector
-                    factory = {id: localDef.refName || localDef.id, injector:  localDef.injector};
+                    factory = {id: localDef.refName || localDef.id, injector: localDef.injector};
 
                 } else if (refDef && refDef.factory) {
-                    factory = {id: refDef.id,injector:dto.injector};
+                    factory = {id: refDef.id, injector: dto.injector};
                 }
 
 
@@ -605,41 +605,47 @@ export class Injector {
         definition.singleton && (definition.$isWired = true);
     }
 
-    private _getByParamObj(propObj: IParamInject, ref: string,args?:any[]) {
-        return propObj.injector ? propObj.injector._get(ref,args) : this._get(ref,args)
+    private _getByParamObj(propObj: IParamInject, ref: string, args?: any[]) {
+        return propObj.injector ? propObj.injector._get(ref, args) : this._get(ref, args)
     }
 
     private _injectPropertiesAndLookUpMethods<T>(object: T, objectDefinition: IDefinition, objectId: string) {
-        let injectObject,
-            obj, properties = objectDefinition.properties;
+
+        let obj, properties = objectDefinition.properties;
 
         for (let i = 0, length = (properties ? properties.length : 0); i < length; i++) {
             let prop = properties[i];
-            injectObject = null;
             if (prop.array) {
 
-                injectObject = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._getByParamObj(propObj,propObj.ref));
+                object[prop.name] = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._getByParamObj(propObj, propObj.ref));
             }
             else if (prop.dictionary) {
-                injectObject = {};
+                let injectObject = {};
 
-                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj,propObj.ref));
+                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj, propObj.ref));
+
+                object[prop.name] = injectObject;
 
             }
             else if (prop.value) {
 
-                injectObject = prop.value;
+                object[prop.name] = prop.value;
 
             }
             else if (prop.ref) { //check if we have ref and we don't have factory with the same name
 
-                injectObject = this._getByParamObj(prop,prop.ref);
+
+                if (prop.lazy) {
+                    this._defineProperty(object,prop.name,Util.createDelegate(this._getByParamObj, this, [prop, prop.ref]))
+                } else {
+                    object[prop.name] = this._getByParamObj(prop, prop.ref);
+                }
 
             }
             else if (prop.objectProperty) {
-                obj = this._getByParamObj(prop,prop.objectProperty.object);
+                obj = this._getByParamObj(prop, prop.objectProperty.object);
 
-                injectObject = obj[prop.objectProperty.property];
+                object[prop.name] = obj[prop.objectProperty.property];
 
             }
             else if (prop.factory) {
@@ -653,12 +659,9 @@ export class Injector {
             }
             else if (prop.factoryMethod) {
 
-                injectObject = Util.createDelegate(this._getByParamObj, this, [prop,prop.factoryMethod])
+                object[prop.name] = Util.createDelegate(this._getByParamObj, this, [prop, prop.factoryMethod])
             }
 
-            if (injectObject) {
-                object[prop.name] = injectObject;
-            }
         }
 
         if (objectDefinition.injectorAware) {
@@ -676,6 +679,13 @@ export class Injector {
         }
     }
 
+    private _defineProperty(object:any,name:string,fn:Function){
+        Object.defineProperty(object, name, {
+            get() {
+                return fn()
+            }
+        });
+    }
 
     private async loadFactory<T>(objectId: string) {
         let factoryData = this._factoriesObjects[objectId];

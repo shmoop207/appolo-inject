@@ -16,6 +16,7 @@ export interface IParamInject {
     factory?: { id: string, injector?: Injector },
     factoryMethod?: string,
     parent?: Class
+    lazy?: true
     injector?: Injector,
     objectProperty?: {
         object: string,

@@ -174,5 +174,44 @@ describe('Decorators', function () {
             rectangle.cleanable.length.should.be.equal(1);
         });
     });
+    describe('should inject with lazy', function () {
+        let injector, CalcManager, FooManager, Rectangle, Cleanable;
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let FooManager = class FooManager {
+                get name() {
+                    return this.constructor.name;
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], FooManager);
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectLazy()
+            ], Rectangle.prototype, "fooManager", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectLazy("someName")
+            ], Rectangle.prototype, "fooManager2", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            injector.register(Rectangle);
+            await injector.initialize();
+            injector.addObject("fooManager", new FooManager());
+            injector.addObject("someName", new FooManager());
+        });
+        it('should inject property with lazy ', function () {
+            let rectangle = injector.getObject('rectangle');
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.fooManager2);
+            rectangle.fooManager2.name.should.be.eq("FooManager");
+        });
+    });
 });
 //# sourceMappingURL=decorators.js.map

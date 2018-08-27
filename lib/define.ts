@@ -94,6 +94,15 @@ export class Define {
         return this;
     }
 
+    public injectLazy(name: string, inject?: string, parent?: Class): this {
+        return this.inject({
+            name: name,
+            ref: inject || name,
+            lazy: true,
+            parent: parent
+        })
+    }
+
     public injectFactoryMethod(name: string, factoryMethod: string, parent?: Class): this {
         return this.inject({
             name: name,

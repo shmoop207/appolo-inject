@@ -101,6 +101,10 @@ export function inject(inject?: string | Class): (target: any, propertyKey: stri
     return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)], true);
 }
 
+export function injectLazy(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
+    return addDefinitionProperty("injectLazy", [Util.getClassNameOrId(inject)], true);
+}
+
 
 export function injectFactoryMethod(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 

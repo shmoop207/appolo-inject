@@ -2,7 +2,7 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
-import {define, singleton, injectAlias, alias,injectParam} from "../lib/decorators";
+import {define, singleton, injectAlias, alias,injectParam,injectLazy,inject} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -211,6 +211,58 @@ describe('Decorators', function () {
 
             rectangle.calcable.length.should.be.equal(3);
             rectangle.cleanable.length.should.be.equal(1);
+
+        });
+
+    })
+
+
+
+    describe('should inject with lazy', function () {
+
+        let injector: Injector, CalcManager, FooManager, Rectangle, Cleanable;
+
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+
+
+            @define()
+            @singleton()
+            class FooManager {
+                public get name(){
+                    return this.constructor.name;
+                }
+            }
+
+
+            @define()
+            @singleton()
+            class Rectangle {
+                @injectLazy() fooManager: FooManager;
+
+                @injectLazy("someName") fooManager2: FooManager;
+
+                constructor() {
+
+                }
+            }
+
+            injector.register(Rectangle);
+
+            await injector.initialize();
+
+            injector.addObject("fooManager",new FooManager());
+            injector.addObject("someName",new FooManager());
+        });
+
+        it('should inject property with lazy ', function () {
+
+            let rectangle: any = injector.getObject('rectangle');
+
+            should.exist(rectangle.fooManager);
+            should.exist(rectangle.fooManager2);
+
+            rectangle.fooManager2.name.should.be.eq("FooManager")
 
         });
 
