@@ -151,11 +151,7 @@ export class Injector {
             return;
         }
 
-        let children = Util.regroupByParallel<Injector>(this.children, inject => inject.options.parallel);
-
-        for (let injectors of children) {
-            await Promise.all(_.map(injectors, injector => injector.initFactories()))
-        }
+        await Util.runRegroupByParallel<Injector>(this.children, inject => inject.options.parallel,injector => injector.initFactories());
 
         for (let factory of this._factories) {
             await this.loadFactory(factory);
@@ -441,9 +437,9 @@ export class Injector {
         return this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
     }
 
-    public getFactoryMethod(objectId: string): Function {
+    public getFactoryMethod(objectId: string|Function): Function {
 
-        return Util.createDelegate(this._get, this, [objectId]);
+        return Util.createDelegate(this.get, this, [objectId]);
     }
 
     public registerMulti(fns: Class[]): this {

@@ -31,7 +31,7 @@ export class Util {
         return args;
     }
 
-    public static getReflectData<T>(symbol: Symbol|string, klass, defaultValue: T): T {
+    public static getReflectData<T>(symbol: Symbol | string, klass, defaultValue: T): T {
         let value = Reflect.getOwnMetadata(symbol, klass);
 
         if (!value && Reflect.hasMetadata(symbol, klass)) {
@@ -78,5 +78,16 @@ export class Util {
         }
 
         return output;
+    }
+
+    public static async runRegroupByParallel<T>(arr: T[], fn: (item: T) => boolean, runFn: (item: T) => Promise<any>): Promise<void> {
+        let itemsArr = Util.regroupByParallel(arr, fn);
+
+        for (let items of itemsArr) {
+
+            let promises = _.map(items, item => runFn(item));
+
+            await Promise.all(promises)
+        }
     }
 }

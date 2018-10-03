@@ -28,7 +28,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "6.0.14",
+  "version": "6.0.15",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -37,9 +37,9 @@
   "readme": "",
   "readmeFilename": "README.md",
   "dependencies": {
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.11",
     "reflect-metadata": "^0.1.12",
-    "tslib": "^1.9.0"
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@types/benchmark": "^1.0.31",

@@ -2,20 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
 const ioc = require("../lib/inject");
-const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 describe('delegate', function () {
     describe('delegate function', function () {
         let injector;
         class Rectangle {
-            constructor() {
-                this.number = Math.random();
+            constructor(_name) {
+                this._name = _name;
             }
-            run() {
-            }
-            area() {
-                return this.size;
+            get name() {
+                return this._name;
             }
         }
         beforeEach(function () {
@@ -23,28 +20,15 @@ describe('delegate', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    singleton: true,
-                    properties: [{
-                            name: 'size',
-                            value: 25
-                        }]
+                    singleton: false,
                 }
             });
             injector.initialize();
         });
         it('should delegate function', function () {
-            let rectangle = injector.getObject('rectangle');
-            let func = injector.delegate('rectangle');
-            let spy = sinon.spy(rectangle, 'run');
-            func();
-            spy.should.have.been.called;
-        });
-        it('should delegate function with params', function () {
-            var rectangle = injector.getObject('rectangle');
-            var func = injector.delegate('rectangle');
-            var spy = sinon.spy(rectangle, 'run');
-            func("test", "test2");
-            spy.should.have.been.calledWithExactly("test", "test2");
+            let func = injector.getFactoryMethod(Rectangle);
+            let obj = func("test");
+            obj.name.should.be.eq("test");
         });
     });
 });
