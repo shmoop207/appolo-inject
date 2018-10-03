@@ -441,15 +441,9 @@ export class Injector {
         return this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
     }
 
-    public delegate(objectId: string): Function {
+    public getFactoryMethod(objectId: string): Function {
 
-        let self = this;
-
-        return function () {
-            let object = self._get<any>(objectId);
-
-            object.run.apply(object, arguments);
-        }
+        return Util.createDelegate(this._get, this, [objectId]);
     }
 
     public registerMulti(fns: Class[]): this {
