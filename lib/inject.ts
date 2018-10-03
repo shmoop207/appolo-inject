@@ -50,6 +50,10 @@ export class Injector {
         value.children.push(this);
     }
 
+    public get options(): IOptions {
+        return this._options
+    }
+
     public get children(): Injector[] {
         return this._children;
     }
@@ -147,8 +151,10 @@ export class Injector {
             return;
         }
 
-        for (let injector of this.children) {
-            await injector.initFactories()
+        let children = Util.regroupByParallel<Injector>(this.children, inject => inject.options.parallel);
+
+        for (let injectors of children) {
+            await Promise.all(_.map(injectors, injector => injector.initFactories()))
         }
 
         for (let factory of this._factories) {
@@ -636,7 +642,7 @@ export class Injector {
 
 
                 if (prop.lazy) {
-                    this._defineProperty(object,prop.name,Util.createDelegate(this._getByParamObj, this, [prop, prop.ref]))
+                    this._defineProperty(object, prop.name, Util.createDelegate(this._getByParamObj, this, [prop, prop.ref]))
                 } else {
                     object[prop.name] = this._getByParamObj(prop, prop.ref);
                 }
@@ -679,7 +685,7 @@ export class Injector {
         }
     }
 
-    private _defineProperty(object:any,name:string,fn:Function){
+    private _defineProperty(object: any, name: string, fn: Function) {
         Object.defineProperty(object, name, {
             get() {
                 return fn()

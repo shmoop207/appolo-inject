@@ -61,4 +61,22 @@ export class Util {
             return fn.apply(obj, callArgs);
         };
     }
+
+    public static regroupByParallel<T>(arr: T[], fn: (item: T) => boolean): T[][] {
+        let output: T[][] = [];
+
+        for (let i = 0, len = arr ? arr.length : 0; i < len; i++) {
+            let item = arr[i], lastItemArr = output[output.length - 1];
+
+            if (fn(item) && lastItemArr && lastItemArr.length && fn(lastItemArr[0])) {
+
+                lastItemArr.push(item)
+
+            } else {
+                output.push([item])
+            }
+        }
+
+        return output;
+    }
 }
