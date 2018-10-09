@@ -24,5 +24,5 @@ export {
     alias,
     lazy,
     factory,
-    override
+    override, injectLazy
 } from './lib/decorators'

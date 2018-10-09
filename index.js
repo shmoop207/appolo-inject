@@ -28,4 +28,5 @@ exports.alias = decorators_1.alias;
 exports.lazy = decorators_1.lazy;
 exports.factory = decorators_1.factory;
 exports.override = decorators_1.override;
+exports.injectLazy = decorators_1.injectLazy;
 //# sourceMappingURL=index.js.map
