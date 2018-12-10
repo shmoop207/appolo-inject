@@ -151,7 +151,7 @@ export class Injector {
             return;
         }
 
-        await Util.runRegroupByParallel<Injector>(this.children, inject => inject.options.parallel,injector => injector.initFactories());
+        await Util.runRegroupByParallel<Injector>(this.children, inject => inject.options.parallel, injector => injector.initFactories());
 
         for (let factory of this._factories) {
             await this.loadFactory(factory);
@@ -417,6 +417,10 @@ export class Injector {
         return _.values(this._definitions);
     }
 
+    public getTypes(): Function[] {
+        return this.getDefinitionsValue().map(item => item.type)
+    }
+
     public getDefinition(id: string): IDefinition {
         let def = this._definitions[id];
 
@@ -437,7 +441,7 @@ export class Injector {
         return this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
     }
 
-    public getFactoryMethod(objectId: string|Function): Function {
+    public getFactoryMethod(objectId: string | Function): Function {
 
         return Util.createDelegate(this.get, this, [objectId]);
     }

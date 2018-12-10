@@ -49,6 +49,12 @@ export class Define {
     public factory(factory: boolean = true): this {
 
         this._definition.factory = _.isUndefined(factory) ? true : factory;
+
+        //factory must be singleton
+        if (this._definition.factory) {
+            this._definition.singleton = true;
+        }
+
         return this
     }
 
