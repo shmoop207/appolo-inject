@@ -433,12 +433,28 @@ export class Injector {
         }
     }
 
+    public addAlias(aliasName: string, value: any) {
+        this.getAlias(name).push(value)
+    }
+
+    public removeAlias(aliasName: string, value: any) {
+        _.pull(this.getAlias(name), value)
+    }
+
     public getAlias(aliasName: string): any[] {
-        return this._alias[aliasName] || (this.parent ? this.parent.getAlias(aliasName) : []) || [];
+        return this._alias[aliasName] = this._alias[aliasName] || (this.parent ? this.parent.getAlias(aliasName) : []) || [];
+    }
+
+    public addAliasFactory(aliasName: string, value: any) {
+        this.getAliasFactory(name).push(value);
+    }
+
+    public removeAliasFactory(aliasName: string, value: any) {
+        _.pull(this.getAliasFactory(name), value);
     }
 
     public getAliasFactory(aliasName: string): any[] {
-        return this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
+        return this._aliasFactory[aliasName] = this._aliasFactory[aliasName] || (this.parent ? this.parent.getAliasFactory(aliasName) : []) || [];
     }
 
     public getFactoryMethod(objectId: string | Function): Function {
