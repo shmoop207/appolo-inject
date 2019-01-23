@@ -686,6 +686,69 @@ describe('Property Factory', function () {
             rectangle.name.length.should.be.eq(1);
             rectangle.name[0].name.should.be.eq("FooManager");
         });
+        it('should inject factory with nested factory ', async () => {
+            let Rectangle = class Rectangle {
+                get name() {
+                    return this.booFactory;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "booFactory", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let BooFactory = class BooFactory {
+                get() {
+                    return this.fooManager.working();
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], BooFactory.prototype, "fooManager", void 0);
+            BooFactory = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory()
+            ], BooFactory);
+            let FooManager = class FooManager {
+                working() {
+                    return this.fooProvider;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], FooManager.prototype, "fooProvider", void 0);
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], FooManager);
+            let FooProvider = class FooProvider {
+                constructor() {
+                }
+                async get() {
+                    await sleep(10);
+                    return "working";
+                }
+            };
+            FooProvider = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory()
+            ], FooProvider);
+            injector = ioc.createContainer();
+            let injector2 = ioc.createContainer();
+            injector2.parent = injector;
+            injector.register(Rectangle);
+            injector.register(BooFactory);
+            injector2.register(FooProvider);
+            injector2.register(FooManager);
+            injector.addDefinition("fooManager", { injector: injector2 });
+            await injector.initialize();
+            let rectangle = injector.getObject(Rectangle);
+            rectangle.name.should.be.eq("working");
+        });
     });
     describe('inject factory Object to not singleton ', function () {
         it('should inject object after factory', async function () {

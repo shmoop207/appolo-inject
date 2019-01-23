@@ -1,10 +1,10 @@
 "use strict";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
-import sleep  = require ('sleep-promise');
+import sleep = require ('sleep-promise');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {define, factory, inject, injectFactory, singleton,alias,injectAlias} from "../lib/decorators";
+import {alias, define, factory, inject, injectAlias, injectFactory, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -828,7 +828,7 @@ describe('Property Factory', function () {
             injector2.register(FooManager);
             injector2.register(FooProvider);
 
-            injector.addDefinition("barManager", {injector: injector2,refName:"fooProvider"});
+            injector.addDefinition("barManager", {injector: injector2, refName: "fooProvider"});
             injector2.parent = injector;
 
 
@@ -904,6 +904,90 @@ describe('Property Factory', function () {
 
             rectangle.name.length.should.be.eq(1);
             rectangle.name[0].name.should.be.eq("FooManager");
+
+        })
+
+
+        it('should inject factory with nested factory ', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() booFactory: BooFactory[];
+
+
+                get name() {
+
+                    return this.booFactory;
+                }
+
+            }
+
+            @define()
+            @singleton()
+            @factory()
+            class BooFactory implements IFactory<string> {
+
+                @inject() fooManager: FooManager;
+
+                get() {
+                    return this.fooManager.working();
+                }
+
+
+            }
+
+
+            @define()
+            @singleton()
+
+            class FooManager {
+                @inject() fooProvider: string;
+
+
+                public working(): string {
+                    return this.fooProvider;
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooProvider implements IFactory<string> {
+
+                constructor() {
+                }
+
+                public async get(): Promise<string> {
+                    await sleep(10);
+
+                    return "working"
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            let injector2 = ioc.createContainer();
+            injector2.parent = injector;
+
+            injector.register(Rectangle);
+            injector.register(BooFactory);
+
+            injector2.register(FooProvider);
+            injector2.register(FooManager);
+
+
+            injector.addDefinition("fooManager", {injector: injector2});
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("working");
 
         })
 

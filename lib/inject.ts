@@ -294,7 +294,7 @@ export class Injector {
         this._injectAliasFactory(def, this._instances[def.id]);
         this._invokeInitMethod(this._instances[def.id], def);
 
-        value = await factory.get();
+        value = def.factoryDepend ? factory: (await factory.get());
 
         this._factoriesValues[def.id] = value;
 
@@ -556,6 +556,20 @@ export class Injector {
     private _prepareProperties(definition: IDefinition): void {
 
         let properties = definition.props || definition.properties || [];
+
+        if(definition.factory){
+            for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
+                let injectable = definition.inject[i];
+                if (injectable.ref ) {
+                   let  refDef = this.getDefinition(injectable.ref);
+
+                    if(refDef && !refDef.factory){
+                        refDef.factory = true;
+                        refDef.factoryDepend = true;
+                    }
+                }
+            }
+        }
 
 
         for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
