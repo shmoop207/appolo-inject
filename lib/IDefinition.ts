@@ -34,7 +34,6 @@ export interface IDefinition {
     args?: IParamInject[]
     singleton?: boolean
     factory?: boolean
-    factoryDepend?:boolean,
     lazy?: boolean
     override?: boolean
     aliasFactory?: string[]
