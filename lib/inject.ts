@@ -237,7 +237,12 @@ export class Injector {
 
     public resolve<T>(objectID: string | Function, runtimeArgs?: any[]): T {
 
-        return this.get<T>(objectID, runtimeArgs)
+        try {
+            return this.get<T>(objectID, runtimeArgs)
+
+        } catch (e) {
+            return null;
+        }
     }
 
     public get<T>(objectID: string | Function, runtimeArgs?: any[]): T {
@@ -324,8 +329,23 @@ export class Injector {
         throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
     }
 
-    public getInstance<T>(objectId: string): T {
-        return this._instances[objectId] as T;
+    public getInstance<T>(id: string): T {
+
+        let instance = this._instances[id];
+
+        if (instance) {
+            return instance as T;
+        }
+
+        if (this.parent) {
+            return this.parent.getInstance(id);
+        }
+
+        return null
+    }
+
+    public hasInstance(id: string) {
+        return !!this.getInstance(id)
     }
 
     public addDefinition(objectId: string, definition: IDefinition): Injector {
@@ -419,6 +439,10 @@ export class Injector {
 
     public getTypes(): Function[] {
         return this.getDefinitionsValue().map(item => item.type)
+    }
+
+    public hasDefinition(id: string): boolean {
+        return !!this.getDefinition(id);
     }
 
     public getDefinition(id: string): IDefinition {
@@ -718,25 +742,7 @@ export class Injector {
 
     private _injectFactoryObject<T>(object: T, objectId: string) {
 
-        let def = this._definitions[objectId];
-
-        //recursive load all object inject
-        if (def && !def.$isFactoryWired) {
-            def.$isFactoryWired = true;
-            for (let i = 0; i < def.inject.length; i++) {
-
-                let ref = def.inject[i].ref,
-                localProp = this._definitions[ref],
-                prop = this.getDefinition(ref);
-
-                if (ref && localProp && prop) {
-                    let instance = this._get(ref);
-
-                    (localProp.injector ? localProp.injector : this)._injectFactoryObject(instance, prop.id)
-                }
-            }
-        }
-
+        this._injectFactoryObjectInner(objectId);
 
         let factoryData = this._factoriesObjects[objectId];
 
@@ -751,7 +757,35 @@ export class Injector {
 
             object[propName] = factory.injector ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
         }
+    }
 
+    private _injectFactoryObjectInner(objectId: string) {
+
+        if (this._isInitialized) {
+            return;
+        }
+
+        let def = this._definitions[objectId];
+
+        //recursive load all object inject
+        if (!def || def.$isFactoryWired) {
+            return;
+        }
+
+        def.$isFactoryWired = true;
+
+        for (let i = 0; i < def.inject.length; i++) {
+
+            let ref = def.inject[i].ref,
+                localProp = this._definitions[ref],
+                prop = this.getDefinition(ref);
+
+            if (ref && localProp && prop) {
+                let instance = this._get(ref);
+
+                (localProp.injector ? localProp.injector : this)._injectFactoryObject(instance, prop.id)
+            }
+        }
 
     }
 

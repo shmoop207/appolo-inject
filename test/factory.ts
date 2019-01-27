@@ -1027,8 +1027,6 @@ describe('Property Factory', function () {
             }
 
 
-
-
             @define()
             @singleton()
             class FooManager {
