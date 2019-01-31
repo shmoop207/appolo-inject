@@ -17,6 +17,7 @@ export interface IParamInject {
     factoryMethod?: string,
     parent?: Class
     lazy?: true
+    lazyFn?:Function
     injector?: Injector,
     objectProperty?: {
         object: string,
@@ -35,6 +36,7 @@ export interface IDefinition {
     singleton?: boolean
     factory?: boolean
     lazy?: boolean
+    lazyFn?:Function
     override?: boolean
     aliasFactory?: string[]
     alias?: string[]
@@ -42,9 +44,6 @@ export interface IDefinition {
     injector?: Injector;
     $isWired?: boolean
     $isFactoryWired?: boolean
-    //$hasFactory?:boolean
-    //$sameNameFactory?:boolean
-    //$propertiesGenerated?:boolean
     properties?: IParamInject[]
     props?: IParamInject[]
     inject?: IParamInject[]

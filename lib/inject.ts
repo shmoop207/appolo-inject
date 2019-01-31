@@ -620,6 +620,11 @@ export class Injector {
                     dto.factory = factory;
                     delete dto.ref;
                 }
+
+                if(refDef.lazyFn){
+                    dto.lazyFn = refDef.lazyFn;
+                    delete dto.ref;
+                }
             }
 
             properties.push(dto)
@@ -699,6 +704,9 @@ export class Injector {
             else if (prop.factoryMethod) {
 
                 object[prop.name] = Util.createDelegate(this._getByParamObj, this, [prop, prop.factoryMethod])
+            } else if(prop.lazyFn){
+                this._defineProperty(object, prop.name, prop.lazyFn)
+
             }
 
         }

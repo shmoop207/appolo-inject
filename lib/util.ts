@@ -31,7 +31,7 @@ export class Util {
         return args;
     }
 
-    public static getReflectData<T>(symbol: Symbol | string, klass, defaultValue: T): T {
+    public static getReflectData<T>(symbol: Symbol | string, klass, defaultValue?: T): T {
         let value = Reflect.getOwnMetadata(symbol, klass);
 
         if (!value && Reflect.hasMetadata(symbol, klass)) {
@@ -39,7 +39,7 @@ export class Util {
             Reflect.defineMetadata(symbol, value, klass);
         }
 
-        if (!value) {
+        if (!value && defaultValue!= undefined) {
             value = defaultValue;
             Reflect.defineMetadata(symbol, value, klass);
         }

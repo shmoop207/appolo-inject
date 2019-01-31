@@ -2,10 +2,43 @@
 import {Injector} from "../lib/inject";
 import    ioc = require('../lib/inject');
 import chai = require('chai');
+import {alias, define, factory, inject, injectAlias, injectFactory, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
 describe('Lazy', function () {
+
+    describe('inject lazy fn', function () {
+        let injector: Injector;
+
+        beforeEach(function () {
+            injector = ioc.createContainer();
+
+            @define()
+            class Test {
+            @inject() testLazy: string;
+
+
+            }
+
+            injector.register('test', Test);
+            injector.addDefinition("testLazy", {
+                lazyFn: () => {
+                    return "working"
+                }
+            })
+
+
+            injector.initialize();
+        });
+
+        it('should inject lazy fn', function () {
+            let test: any = injector.getObject('test');
+
+            test.testLazy.should.be.eq("working");
+
+        });
+    })
 
 
     describe('create lazy object', function () {
