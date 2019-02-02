@@ -621,7 +621,7 @@ export class Injector {
                     delete dto.ref;
                 }
 
-                if(refDef.lazyFn){
+                if(refDef &&refDef.lazyFn){
                     dto.lazyFn = refDef.lazyFn;
                     delete dto.ref;
                 }
