@@ -213,5 +213,37 @@ describe('Decorators', function () {
             rectangle.fooManager2.name.should.be.eq("FooManager");
         });
     });
+    describe('should inject with lazy inject the same instance', function () {
+        let injector;
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+            let FooManager = class FooManager {
+                get name() {
+                    return this.constructor.name;
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define()
+            ], FooManager);
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectLazy()
+            ], Rectangle.prototype, "fooManager", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            injector.register(Rectangle);
+            injector.register(FooManager);
+            await injector.initialize();
+        });
+        it('should inject property with lazy ', function () {
+            let rectangle = injector.getObject('rectangle');
+            (rectangle.fooManager === rectangle.fooManager).should.be.ok;
+        });
+    });
 });
 //# sourceMappingURL=decorators.js.map

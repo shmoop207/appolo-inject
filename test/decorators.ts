@@ -262,10 +262,56 @@ describe('Decorators', function () {
             should.exist(rectangle.fooManager);
             should.exist(rectangle.fooManager2);
 
+
             rectangle.fooManager2.name.should.be.eq("FooManager")
 
         });
 
     })
+
+
+    describe('should inject with lazy inject the same instance', function () {
+
+        let injector: Injector
+
+        beforeEach(async function () {
+            injector = ioc.createContainer();
+
+
+            @define()
+            class FooManager {
+                public get name(){
+                    return this.constructor.name;
+                }
+            }
+
+
+            @define()
+            @singleton()
+            class Rectangle {
+                @injectLazy() fooManager: FooManager;
+
+                constructor() {
+
+                }
+            }
+
+            injector.register(Rectangle);
+            injector.register(FooManager)
+
+            await injector.initialize();
+
+        });
+
+        it('should inject property with lazy ', function () {
+
+            let rectangle: any = injector.getObject('rectangle');
+
+            (rectangle.fooManager === rectangle.fooManager).should.be.ok;
+
+        });
+
+    })
+
 
 });

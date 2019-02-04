@@ -621,10 +621,19 @@ export class Injector {
                     delete dto.ref;
                 }
 
-                if(refDef &&refDef.lazyFn){
-                    dto.lazyFn = refDef.lazyFn;
-                    delete dto.ref;
+                if (refDef) {
+                    if (refDef.lazyFn) {
+                        dto.lazyFn = refDef.lazyFn;
+                        delete dto.ref;
+                    }
+
+                    if (!refDef.singleton) {
+                        dto.lazy = true;
+                    }
+
                 }
+
+
             }
 
             properties.push(dto)
@@ -680,7 +689,7 @@ export class Injector {
 
 
                 if (prop.lazy) {
-                    this._defineProperty(object, prop.name, Util.createDelegate(this._getByParamObj, this, [prop, prop.ref]))
+                    this._defineProperty(object, prop.name, Util.createDelegate(this._getByParamObj, this, [prop, prop.ref]), true)
                 } else {
                     object[prop.name] = this._getByParamObj(prop, prop.ref);
                 }
@@ -704,7 +713,7 @@ export class Injector {
             else if (prop.factoryMethod) {
 
                 object[prop.name] = Util.createDelegate(this._getByParamObj, this, [prop, prop.factoryMethod])
-            } else if(prop.lazyFn){
+            } else if (prop.lazyFn) {
                 this._defineProperty(object, prop.name, prop.lazyFn)
 
             }
@@ -726,10 +735,37 @@ export class Injector {
         }
     }
 
-    private _defineProperty(object: any, name: string, fn: Function) {
+    private _defineProperty(object: any, name: string, fn: Function, cache: boolean = false) {
+
+        if (!cache) {
+            Object.defineProperty(object, name, {
+                get() {
+                    return fn();
+                }
+            });
+
+            return;
+        }
+
+
+        let func = fn as any;
+        func.__cached__ = {};
+
         Object.defineProperty(object, name, {
+
             get() {
-                return fn()
+
+                let cached = func.__cached__[name];
+
+                if (cached) {
+                    return cached;
+                }
+
+                let value = fn();
+
+                func.__cached__[name] = value;
+
+                return value;
             }
         });
     }
