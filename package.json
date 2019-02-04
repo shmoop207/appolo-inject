@@ -28,7 +28,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "6.0.24",
+  "version": "6.0.25",
   "license": "MIT",
   "repository": {
     "type": "git",
