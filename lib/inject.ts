@@ -276,7 +276,7 @@ export class Injector {
         return this._factoriesValues[def.id];
     }
 
-    public async getFactory<T>(objectID: string | Function, refs: { ids: {}, paths: string[] }): Promise<T> {
+    public async getFactory<T>(objectID: string | Function, refs?: { ids: {}, paths: string[] }): Promise<T> {
 
         if (!refs) {
             refs = {ids: {}, paths: []}
@@ -294,7 +294,7 @@ export class Injector {
             return def.injector.getFactory<T>(def.refName || def.id, refs);
         }
 
-        if(refs.ids[objectID]){
+        if (refs.ids[objectID]) {
             throw new Error(`Factory circular reference ${refs.paths.concat(objectID).join("-->")}`)
         }
 
