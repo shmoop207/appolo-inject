@@ -12,7 +12,7 @@ describe('Property Value',function(){
     describe('inject value to object', function () {
         let injector:Injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
             class Rectangle{
@@ -38,7 +38,7 @@ describe('Property Value',function(){
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should have the injected value', function () {
@@ -55,7 +55,7 @@ describe('Property Value',function(){
     describe('inject value to object linq', function () {
         let injector:Injector;
 
-        it('should have the injected value', function () {
+        it('should have the injected value', async function () {
 
             injector = ioc.createContainer();
 
@@ -74,7 +74,7 @@ describe('Property Value',function(){
 
             injector.register('rectangle',Rectangle).singleton().injectValue('size',25)
 
-            injector.initialize();
+            await injector.initialize();
 
             let rectangle:any = injector.getObject('rectangle');
 

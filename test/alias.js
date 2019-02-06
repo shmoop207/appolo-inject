@@ -101,7 +101,7 @@ describe('Alias', function () {
     });
     describe('should inject multi alias', function () {
         let injector, CalcManager, FooManager;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             let Rectangle = class {
                 constructor() {
@@ -154,7 +154,7 @@ describe('Alias', function () {
                     singleton: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');
@@ -168,7 +168,7 @@ describe('Alias', function () {
     });
     describe('should inject multi alias by class type', function () {
         let injector, CalcManager, FooManager;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             let Cleanable = class {
                 constructor() {
@@ -225,7 +225,7 @@ describe('Alias', function () {
                     singleton: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should inject property ', function () {
             let rectangle = injector.getObject('rectangle');

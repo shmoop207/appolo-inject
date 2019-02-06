@@ -263,7 +263,7 @@ describe('Property Ref', function () {
     describe('inject property with nested properties', function () {
         let injector:Injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
              class Rectangle{
@@ -316,7 +316,7 @@ describe('Property Ref', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property with nested properties', function () {

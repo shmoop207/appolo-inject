@@ -6,7 +6,7 @@ let should = chai.should();
 describe('Property Value', function () {
     describe('inject value to object', function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -26,7 +26,7 @@ describe('Property Value', function () {
                         }]
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should have the injected value', function () {
             let rectangle = injector.getObject('rectangle');
@@ -36,7 +36,7 @@ describe('Property Value', function () {
     });
     describe('inject value to object linq', function () {
         let injector;
-        it('should have the injected value', function () {
+        it('should have the injected value', async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -47,7 +47,7 @@ describe('Property Value', function () {
                 }
             }
             injector.register('rectangle', Rectangle).singleton().injectValue('size', 25);
-            injector.initialize();
+            await injector.initialize();
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle.size);
             rectangle.area().should.equal(25);

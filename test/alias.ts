@@ -150,10 +150,10 @@ describe('Alias', function () {
         });
     });
 
-    describe('should inject multi alias', function () {
+    describe('should inject multi alias',  function () {
         let injector:Injector, CalcManager, FooManager;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
             let Rectangle = class {
@@ -223,7 +223,7 @@ describe('Alias', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {
@@ -246,7 +246,7 @@ describe('Alias', function () {
     describe('should inject multi alias by class type', function () {
         let injector:Injector, CalcManager, FooManager;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
 
@@ -325,7 +325,7 @@ describe('Alias', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property ', function () {

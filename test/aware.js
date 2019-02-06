@@ -6,7 +6,7 @@ let should = chai.should();
 describe('Injector Aware', function () {
     describe('should inject injector to object', function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -19,7 +19,7 @@ describe('Injector Aware', function () {
                     injectorAware: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should have the injected value', function () {
             let rectangle = injector.getObject('rectangle');

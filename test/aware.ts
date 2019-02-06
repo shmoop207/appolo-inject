@@ -10,7 +10,7 @@ describe('Injector Aware',function(){
     describe('should inject injector to object', function () {
         let injector:Injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
            class Rectangle{
@@ -28,7 +28,7 @@ describe('Injector Aware',function(){
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should have the injected value', function () {
