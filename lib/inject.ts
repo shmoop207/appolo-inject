@@ -9,6 +9,8 @@ import {Util} from "./util";
 
 type keyObject = { [index: string]: Object }
 
+const IsWiredSymbol = Symbol("isWired");
+
 export class Injector {
 
     private _definitions: { [index: string]: IDefinition };
@@ -177,7 +179,7 @@ export class Injector {
             let def = this._definitions[objectId];
 
             if (def) {
-                this._injectFactoryObject(def, instance, objectId);
+                this._injectFactoryObject(instance, objectId);
                 this._injectAlias(def, instance);
                 this._injectAliasFactory(def, instance);
             }
@@ -318,13 +320,6 @@ export class Injector {
         let factory = this._get<IFactory<T>>(def.id);
 
         this._wireObjectInstance(factory, def, def.id);
-
-
-        // this._injectFactoryObject(this._instances[def.id], def.id);
-        // this._injectAlias(def, this._instances[def.id]);
-        // this._injectAliasFactory(def, this._instances[def.id]);
-        // this._invokeInitMethod(this._instances[def.id], def);
-
 
         if (def.factory) {
             value = await factory.get();
@@ -601,10 +596,17 @@ export class Injector {
         }
     }
 
-    private _invokeInitMethod<T>(object: T, definition: IDefinition) {
-        if (definition.initMethod && !definition.$isWired) {
-            object[definition.initMethod]();
+    private _invokeInitMethod<T>(instance: T, definition: IDefinition) {
+
+        if (instance[IsWiredSymbol]) {
+            return
         }
+
+        if (definition.initMethod) {
+            instance[definition.initMethod]();
+        }
+
+        instance[IsWiredSymbol] = true;
     }
 
     private _prepareProperties(definition: IDefinition): void {
@@ -672,23 +674,23 @@ export class Injector {
         definition.properties = properties;
     }
 
-    private _wireObjectInstance<T>(object: T, definition: IDefinition, objectId: string) {
+    private _wireObjectInstance<T>(instance: T, definition: IDefinition, objectId: string) {
 
-        if (definition.$isWired) {
+        if (instance[IsWiredSymbol]) {
             return;
         }
         //inject properties  and look up methods
-        this._injectPropertiesAndLookUpMethods<T>(object, definition, objectId);
+        this._injectPropertiesAndLookUpMethods<T>(instance, definition, objectId);
 
-        this._injectFactoryObject<T>(definition, object, objectId);
+        this._injectFactoryObject<T>(instance, objectId);
 
-        this._injectAlias<T>(definition, object);
+        this._injectAlias<T>(definition, instance);
 
-        this._injectAliasFactory<T>(definition, object);
+        this._injectAliasFactory<T>(definition, instance);
 
-        this._invokeInitMethod<T>(object, definition);
+        this._invokeInitMethod<T>(instance, definition);
 
-        definition.singleton && (definition.$isWired = true);
+        instance[IsWiredSymbol] = true;
     }
 
     private _getByParamObj(propObj: IParamInject, ref: string, args?: any[]) {
@@ -696,7 +698,7 @@ export class Injector {
     }
 
     private _injectPropertiesAndLookUpMethods<T>(object: T, objectDefinition: IDefinition, objectId: string) {
-        if (objectDefinition.$isWired) {
+        if (object[IsWiredSymbol]) {
             return;
         }
         let obj, properties = objectDefinition.properties;
@@ -819,9 +821,9 @@ export class Injector {
         this._factoriesValues[objectId] = await this.getFactory(objectId);
     }
 
-    private _injectFactoryObject<T>(definition: IDefinition, object: T, objectId: string) {
+    private _injectFactoryObject<T>(instance: T, objectId: string) {
 
-        if (definition.$isWired) {
+        if (instance[IsWiredSymbol]) {
             return;
         }
 
@@ -836,7 +838,7 @@ export class Injector {
         for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i], factory = factoryData[propName];
 
-            object[propName] = factory.injector ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
+            instance[propName] = factory.injector ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
         }
     }
 
@@ -871,7 +873,7 @@ export class Injector {
     // }
 
     private _injectAlias<T>(definition: IDefinition, instance: T) {
-        if (definition.$isWired) {
+        if (instance[IsWiredSymbol]) {
             return;
         }
 
@@ -886,9 +888,10 @@ export class Injector {
     }
 
     private _injectAliasFactory<T>(definition: IDefinition, instance: T) {
-        if (definition.$isWired) {
+        if (instance[IsWiredSymbol]) {
             return;
         }
+
         for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
             let prop = definition.properties[i];
 

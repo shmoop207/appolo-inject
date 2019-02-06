@@ -1090,6 +1090,107 @@ describe('Property Factory', function () {
 
             rectangle.name.should.be.eq("working");
 
+        });
+
+        it('should inject factory with nested factory same class', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() booFactory: BooFactory[];
+
+
+                get name() {
+
+                    return this.booFactory;
+                }
+
+            }
+
+            @define()
+            @singleton()
+            @factory()
+            class BooFactory implements IFactory<string> {
+
+                @inject() fooFooManager: FooManager;
+                @inject() fooFooManager2: FooManager;
+
+                async get() {
+                    await sleep(10);
+
+                    return this.fooFooManager.working() + this.fooFooManager2.working();
+                }
+
+
+            }
+
+
+            @define()
+            @singleton()
+            class FooManager {
+                @inject() fooManager2: FooManager2;
+
+
+                public working(): string {
+
+                    return this.fooManager2.working();
+                }
+
+            }
+
+            @define()
+            @singleton()
+            class FooManager2 {
+                @inject() fooProvider: { name: string };
+
+
+                public working(): string {
+
+                    return this.fooProvider.name;
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooProvider implements IFactory<{ name: string }> {
+
+                constructor() {
+                }
+
+                public async get(): Promise<{ name: string }> {
+                    await sleep(10);
+
+                    return {name: "working"}
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            let injector2 = ioc.createContainer();
+            injector2.parent = injector;
+
+            injector.register(Rectangle);
+            injector.register(BooFactory);
+
+            injector2.register(FooProvider);
+            injector2.register(FooManager);
+            injector2.register(FooManager2);
+
+
+            injector.addDefinition("fooFooManager", {injector: injector2, refName: "fooManager"});
+            injector.addDefinition("fooFooManager2", {injector: injector2, refName: "fooManager"});
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("workingworking");
+
         })
 
 
