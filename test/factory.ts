@@ -2,9 +2,20 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import sleep = require ('sleep-promise');
+import _ = require ('lodash');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {alias, define, factory, initMethod, inject, injectAlias, injectFactory, singleton} from "../lib/decorators";
+import {
+    alias,
+    define,
+    factory,
+    initMethod,
+    inject,
+    injectAlias,
+    injectFactory,
+    injectorAware,
+    singleton
+} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -989,6 +1000,86 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject<Rectangle>(Rectangle);
 
             rectangle.name.should.be.eq("working");
+
+        })
+
+        it('should inject factory with nested  get alias', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() booFactory: BooFactory[];
+
+
+                get name() {
+
+                    return this.booFactory;
+                }
+
+            }
+
+            @define()
+            @singleton()
+            @factory()
+            @injectorAware()
+            class BooFactory implements IFactory<string> {
+
+                @inject() fooManager: FooManager;
+                @injectAlias("aaa") alias:any[]
+
+                $injector:Injector
+
+                async get() {
+                    return _.map(this.$injector.getAlias("aaa").concat(this.alias),item=>item.working()).join(",")
+                }
+
+
+            }
+
+
+            @define()
+            @singleton()
+            @alias("aaa")
+            class FooManager {
+
+
+                public working(): string {
+
+                    return "FooManager"
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @alias("aaa")
+            class FooManager2 {
+
+                public working(): string {
+
+                    return "FooManager2"
+                }
+            }
+
+
+            injector = ioc.createContainer();
+
+            injector.register(Rectangle);
+            injector.register(BooFactory);
+
+            injector.register(FooManager2);
+            injector.register(FooManager);
+
+
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("FooManager2,FooManager,FooManager2,FooManager");
 
         })
 

@@ -569,11 +569,12 @@ export class Injector {
 
         if (def.singleton && def.lazy) {
 
+            this._addSingletonAliases(def,instance);
             this._wireObjectInstance(instance, def, objectID);
             this._instances[objectID] = instance;
         }
         else if (def.singleton) {
-
+            this._addSingletonAliases(def,instance);
             this._instances[objectID] = instance;
         }
         else {
@@ -581,7 +582,23 @@ export class Injector {
             this._wireObjectInstance(instance, def, objectID);
         }
 
+        if (def.injectorAware) {
+            (instance as any).$injector = this;
+        }
+
         return instance;
+    }
+
+    private _addSingletonAliases(def:IDefinition,instance:Object){
+        if (def.alias) {
+
+            let keys = Object.keys(def.alias);
+
+            for (let i = 0, len = keys.length; i < len; i++) {
+                let key = keys[i];
+                Util.mapPush(this._alias, def.alias[key], instance)
+            }
+        }
     }
 
     private _populateAliasFactory(definition: IDefinition, objectId: string) {
@@ -757,19 +774,7 @@ export class Injector {
 
         }
 
-        if (objectDefinition.injectorAware) {
-            (object as any).$injector = this;
-        }
 
-        if (objectDefinition.alias && objectDefinition.singleton) {
-
-            let keys = Object.keys(objectDefinition.alias);
-
-            for (let i = 0, len = keys.length; i < len; i++) {
-                let key = keys[i];
-                Util.mapPush(this._alias, objectDefinition.alias[key], object)
-            }
-        }
     }
 
     private _defineProperty(object: any, name: string, fn: Function, cache: boolean = false) {

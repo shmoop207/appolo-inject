@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const chai = require("chai");
 const ioc = require("../lib/inject");
 const sleep = require("sleep-promise");
+const _ = require("lodash");
 const decorators_1 = require("../lib/decorators");
 let should = chai.should();
 describe('Property Factory', function () {
@@ -746,6 +747,65 @@ describe('Property Factory', function () {
             await injector.initialize();
             let rectangle = injector.getObject(Rectangle);
             rectangle.name.should.be.eq("working");
+        });
+        it('should inject factory with nested  get alias', async () => {
+            let Rectangle = class Rectangle {
+                get name() {
+                    return this.booFactory;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], Rectangle.prototype, "booFactory", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let BooFactory = class BooFactory {
+                async get() {
+                    return _.map(this.$injector.getAlias("aaa").concat(this.alias), item => item.working()).join(",");
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.inject()
+            ], BooFactory.prototype, "fooManager", void 0);
+            tslib_1.__decorate([
+                decorators_1.injectAlias("aaa")
+            ], BooFactory.prototype, "alias", void 0);
+            BooFactory = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory(),
+                decorators_1.injectorAware()
+            ], BooFactory);
+            let FooManager = class FooManager {
+                working() {
+                    return "FooManager";
+                }
+            };
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias("aaa")
+            ], FooManager);
+            let FooManager2 = class FooManager2 {
+                working() {
+                    return "FooManager2";
+                }
+            };
+            FooManager2 = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.alias("aaa")
+            ], FooManager2);
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(BooFactory);
+            injector.register(FooManager2);
+            injector.register(FooManager);
+            await injector.initialize();
+            let rectangle = injector.getObject(Rectangle);
+            rectangle.name.should.be.eq("FooManager2,FooManager,FooManager2,FooManager");
         });
         it('should inject factory with nested factory', async () => {
             let Rectangle = class Rectangle {

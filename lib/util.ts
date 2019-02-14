@@ -50,7 +50,7 @@ export class Util {
     public static mapPush(map: { [index: string]: Object[] }, key: string, obj: Object): void {
         (!map[key]) && (map[key] = []);
 
-        map[key].push(obj)
+        map[key].push(obj);
     }
 
     public static createDelegate(fn: Function, obj: any, args: any[]): Function {

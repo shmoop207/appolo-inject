@@ -56,7 +56,7 @@ export function singleton(singleton?: boolean): (fn: Function) => void {
 
 export function injectorAware(): (fn: Function) => void {
 
-    return addDefinitionClass("factory", [])
+    return addDefinitionClass("injectorAware", [])
 }
 
 export function factory(factory?: boolean): (fn: Function) => void {
