@@ -1,4 +1,6 @@
 import _ = require('lodash');
+import {InjectDefineSymbol} from "./decorators";
+import {Define} from "./define";
 
 export class Util {
     public static getClassName(fn: Function): string {
@@ -10,8 +12,39 @@ export class Util {
             objectId = Util.getClassName(objectId);
         }
 
-
         return objectId as string;
+    }
+
+    public static isClass(v: any): boolean {
+        return typeof v === 'function' && v.name && /^\s*class\s+/.test(v.toString());
+    }
+
+    public static getClassDefinition(fn: any): Define {
+        return Util.getReflectData<Define>(InjectDefineSymbol, fn)
+    }
+
+    public static getClassId(fn: any): string {
+
+        if (!fn) {
+            return null;
+        }
+
+        if (_.isString(fn)) {
+            return fn
+        }
+
+        let define = Util.getClassDefinition(fn);
+
+        if (define) {
+            return define.definition.id;
+        }
+
+        if (Util.isClass(fn)) {
+            return Util.getClassName(fn);
+        }
+
+        return null;
+
     }
 
     public static getFunctionArgs(func: (...args: any[]) => any) {
@@ -39,7 +72,7 @@ export class Util {
             Reflect.defineMetadata(symbol, value, klass);
         }
 
-        if (!value && defaultValue!= undefined) {
+        if (!value && defaultValue != undefined) {
             value = defaultValue;
             Reflect.defineMetadata(symbol, value, klass);
         }
