@@ -1,8 +1,8 @@
 "use strict";
 import {Injector} from "../lib/inject";
+import {customInjectFn, define, inject} from "../lib/decorators";
 import    ioc = require('../lib/inject');
 import chai = require('chai');
-import {alias, define, factory, inject, injectAlias, injectFactory, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -11,12 +11,13 @@ describe('Lazy', function () {
     describe('inject lazy fn', function () {
         let injector: Injector;
 
-        beforeEach(function () {
+        it('should inject lazy fn', function () {
+
             injector = ioc.createContainer();
 
             @define()
             class Test {
-            @inject() testLazy: string;
+                @inject() testLazy: string;
 
 
             }
@@ -30,12 +31,73 @@ describe('Lazy', function () {
 
 
             injector.initialize();
-        });
 
-        it('should inject lazy fn', function () {
             let test: any = injector.getObject('test');
 
             test.testLazy.should.be.eq("working");
+
+        });
+
+        it('should inject lazy fn to class', function () {
+
+            injector = ioc.createContainer();
+
+            @define()
+            class Test {
+
+                test: string
+
+
+            }
+
+            injector.register('test', Test).injectLazyFn("test", function (inject) {
+                return "working"
+            });
+
+
+            injector.initialize();
+
+            let test: any = injector.getObject('test');
+
+            test.test.should.be.eq("working");
+
+        });
+
+        it('should custom inject lazy fn to class', function () {
+
+            injector = ioc.createContainer();
+
+            let customDecorator = function (id: string) {
+                return customInjectFn((inject: Injector) => {
+                    return inject.get<Test2>(id).name
+                })
+            };
+
+            @define()
+            class Test2 {
+
+                name = "bbb"
+
+            }
+
+
+            @define()
+            class Test {
+
+                @customDecorator("test2")
+                test: string
+
+
+            }
+
+            injector.registerMulti([Test, Test2])
+
+
+            injector.initialize();
+
+            let test: any = injector.getObject('test');
+
+            test.test.should.be.eq("bbb");
 
         });
     })

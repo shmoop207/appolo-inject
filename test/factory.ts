@@ -1084,6 +1084,66 @@ describe('Property Factory', function () {
         })
 
 
+        it('should inject factory values to alias', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @injectAlias("aaa") names:string[];
+
+
+                get name() {
+
+                    return this.names;
+                }
+
+            }
+
+            @define()
+            @singleton()
+            @factory()
+            @alias("aaa")
+            class BooFactory implements IFactory<string> {
+
+                async get() {
+                    return "1"
+                }
+
+
+            }
+
+            @define()
+            @singleton()
+            @factory()
+            @alias("aaa")
+            class BooFactory2 implements IFactory<string>{
+
+                public get(): string {
+
+                    return "2"
+                }
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(BooFactory2);
+            injector.register(BooFactory);
+
+
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.join(",").should.be.eq("2,1");
+
+        })
+
+
+
         it('should inject factory with nested factory', async () => {
 
             @define()

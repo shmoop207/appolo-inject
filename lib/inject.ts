@@ -326,6 +326,8 @@ export class Injector {
 
             this._factoriesValues[def.id] = value;
 
+            this._addSingletonAliases(def,value,false);
+
             return value;
         }
 
@@ -589,8 +591,8 @@ export class Injector {
         return instance;
     }
 
-    private _addSingletonAliases(def:IDefinition,instance:Object){
-        if (def.alias) {
+    private _addSingletonAliases(def:IDefinition,instance:Object,checkFactory:boolean = true){
+        if (def.alias && def.alias.length && (!checkFactory || !def.factory )) {
 
             let keys = Object.keys(def.alias);
 
@@ -671,7 +673,7 @@ export class Injector {
                 }
 
                 if (refDef) {
-                    if (refDef.lazyFn) {
+                        if (refDef.lazyFn) {
                         dto.lazyFn = refDef.lazyFn;
                         delete dto.ref;
                     }
@@ -778,11 +780,11 @@ export class Injector {
     }
 
     private _defineProperty(object: any, name: string, fn: Function, cache: boolean = false) {
-
+       let  $self = this;
         if (!cache) {
             Object.defineProperty(object, name, {
                 get() {
-                    return fn();
+                    return fn($self);
                 }
             });
 
@@ -803,7 +805,7 @@ export class Injector {
                     return cached;
                 }
 
-                let value = fn();
+                let value = fn($self);
 
                 func.__cached__[name] = value;
 

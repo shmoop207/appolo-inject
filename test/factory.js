@@ -807,6 +807,49 @@ describe('Property Factory', function () {
             let rectangle = injector.getObject(Rectangle);
             rectangle.name.should.be.eq("FooManager2,FooManager,FooManager2,FooManager");
         });
+        it('should inject factory values to alias', async () => {
+            let Rectangle = class Rectangle {
+                get name() {
+                    return this.names;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectAlias("aaa")
+            ], Rectangle.prototype, "names", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            let BooFactory = class BooFactory {
+                async get() {
+                    return "1";
+                }
+            };
+            BooFactory = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory(),
+                decorators_1.alias("aaa")
+            ], BooFactory);
+            let BooFactory2 = class BooFactory2 {
+                get() {
+                    return "2";
+                }
+            };
+            BooFactory2 = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                decorators_1.factory(),
+                decorators_1.alias("aaa")
+            ], BooFactory2);
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(BooFactory2);
+            injector.register(BooFactory);
+            await injector.initialize();
+            let rectangle = injector.getObject(Rectangle);
+            rectangle.name.join(",").should.be.eq("2,1");
+        });
         it('should inject factory with nested factory', async () => {
             let Rectangle = class Rectangle {
                 get name() {

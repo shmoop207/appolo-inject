@@ -63,6 +63,10 @@ export class Define {
         return this;
     }
 
+    public injectLazyFn(name, fn: Function) {
+        this.inject({name, lazyFn: fn})
+    }
+
     public lazy(lazy: boolean = true): this {
 
         this._definition.lazy = _.isUndefined(lazy) ? true : lazy;

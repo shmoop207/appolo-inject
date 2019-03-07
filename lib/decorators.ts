@@ -105,6 +105,11 @@ export function injectLazy(inject?: string | Class): (target: any, propertyKey: 
     return addDefinitionProperty("injectLazy", [Util.getClassNameOrId(inject)], true);
 }
 
+export function customInjectFn(fn:Function) {
+
+        return addDefinitionProperty("injectLazyFn", [fn], true);
+}
+
 
 export function injectFactoryMethod(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
