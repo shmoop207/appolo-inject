@@ -870,19 +870,7 @@ describe('Property Factory', function () {
 
             }
 
-            @define()
-            @singleton()
-            @alias("test")
-            class FooManager {
 
-
-                public name: string;
-
-                constructor() {
-                    this.name = "FooManager"
-                }
-
-            }
 
 
             @define()
@@ -901,6 +889,20 @@ describe('Property Factory', function () {
                 }
             }
 
+            @define()
+            @singleton()
+            @alias("test")
+            class FooManager {
+
+
+                public name: string;
+
+                constructor() {
+                    this.name = "FooManager"
+                }
+
+            }
+
 
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -914,6 +916,85 @@ describe('Property Factory', function () {
 
             rectangle.name.length.should.be.eq(1);
             rectangle.name[0].name.should.be.eq("FooManager");
+
+        })
+
+        it('should inject factory with alias nested ', async () => {
+
+            @define()
+            @singleton()
+            class Rectangle {
+
+                @inject() fooProvider: FooManager[];
+
+                constructor() {
+
+                }
+
+                get name() {
+
+                    return this.fooProvider;
+                }
+
+            }
+
+
+            @define()
+            @singleton()
+            @factory()
+            class FooProvider implements IFactory<string> {
+                @injectAlias("test") fooManagers: FooManager[];
+
+                constructor() {
+                }
+
+                public async get(): Promise<string> {
+
+                    return this.fooManagers[0].getName()
+                }
+            }
+
+            @define()
+            @singleton()
+            @alias("test")
+            class FooManager {
+
+                @inject() barManager:BarManager
+
+
+                @initMethod()
+                getName() {
+                   return this.barManager.name
+                }
+
+            }
+
+            @define()
+            @singleton()
+            class BarManager {
+
+
+                public name: string;
+
+                constructor() {
+                    this.name = "BarManager"
+                }
+
+            }
+
+
+            injector = ioc.createContainer();
+            injector.register(Rectangle);
+            injector.register(FooProvider);
+            injector.register(FooManager);
+            injector.register(BarManager);
+
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>(Rectangle);
+
+            rectangle.name.should.be.eq("BarManager");
 
         })
 

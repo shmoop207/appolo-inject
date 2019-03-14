@@ -309,13 +309,9 @@ export class Injector {
             return value;
         }
 
-        for (let inject of def.inject) {
-            let id = inject.ref || (inject.factory ? inject.factory.id : null);
 
-            if (id) {
-                await this.getFactory(id, JSON.parse(JSON.stringify(refs)))
-            }
-        }
+        await this._loadFactoryInject(def,refs);
+
 
         let factory = this._get<IFactory<T>>(def.id);
 
@@ -326,11 +322,27 @@ export class Injector {
 
             this._factoriesValues[def.id] = value;
 
-            this._addSingletonAliases(def,value,false);
+            this._addSingletonAliases(def, value, false);
 
             return value;
         }
 
+    }
+
+    private async _loadFactoryInject(def:IDefinition,refs?: { ids: {}, paths: string[] }){
+        for (let inject of def.inject) {
+            let id = inject.ref || (inject.factory ? inject.factory.id : null);
+
+            if (id) {
+                await this.getFactory(id, JSON.parse(JSON.stringify(refs)))
+            }
+            if (inject.alias) {
+                let ids = this.getAliasDefinitions(inject.alias).map((def => def.id));
+                for (let id of ids) {
+                    await this.getFactory(id, JSON.parse(JSON.stringify(refs)))
+                }
+            }
+        }
     }
 
     private _get<T>(objectID: string, runtimeArgs?: any[]): T {
@@ -464,6 +476,10 @@ export class Injector {
         return _.values(this._definitions);
     }
 
+    public getAliasDefinitions(alias: string): IDefinition[] {
+        return _.filter(this._definitions, (item) => _.includes(item.alias, alias))
+    }
+
     public getTypes(): Function[] {
         return this.getDefinitionsValue().map(item => item.type)
     }
@@ -564,22 +580,19 @@ export class Injector {
 
         try {
             instance = args.length ? new (def.type as any)(...args) : new (def.type as any)();
-        }
-        catch (e) {
+        } catch (e) {
             throw new Error("Injector failed to create object objectID:" + objectID + "' \n" + e);
         }
 
         if (def.singleton && def.lazy) {
 
-            this._addSingletonAliases(def,instance);
+            this._addSingletonAliases(def, instance);
             this._wireObjectInstance(instance, def, objectID);
             this._instances[objectID] = instance;
-        }
-        else if (def.singleton) {
-            this._addSingletonAliases(def,instance);
+        } else if (def.singleton) {
+            this._addSingletonAliases(def, instance);
             this._instances[objectID] = instance;
-        }
-        else {
+        } else {
 
             this._wireObjectInstance(instance, def, objectID);
         }
@@ -591,8 +604,8 @@ export class Injector {
         return instance;
     }
 
-    private _addSingletonAliases(def:IDefinition,instance:Object,checkFactory:boolean = true){
-        if (def.alias && def.alias.length && (!checkFactory || !def.factory )) {
+    private _addSingletonAliases(def: IDefinition, instance: Object, checkFactory: boolean = true) {
+        if (def.alias && def.alias.length && (!checkFactory || !def.factory)) {
 
             let keys = Object.keys(def.alias);
 
@@ -673,7 +686,7 @@ export class Injector {
                 }
 
                 if (refDef) {
-                        if (refDef.lazyFn) {
+                    if (refDef.lazyFn) {
                         dto.lazyFn = refDef.lazyFn;
                         delete dto.ref;
                     }
@@ -727,21 +740,18 @@ export class Injector {
             if (prop.array) {
 
                 object[prop.name] = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._getByParamObj(propObj, propObj.ref));
-            }
-            else if (prop.dictionary) {
+            } else if (prop.dictionary) {
                 let injectObject = {};
 
                 _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj, propObj.ref));
 
                 object[prop.name] = injectObject;
 
-            }
-            else if (prop.value) {
+            } else if (prop.value) {
 
                 object[prop.name] = prop.value;
 
-            }
-            else if (prop.ref) { //check if we have ref and we don't have factory with the same name
+            } else if (prop.ref) { //check if we have ref and we don't have factory with the same name
 
 
                 if (prop.lazy) {
@@ -750,14 +760,12 @@ export class Injector {
                     object[prop.name] = this._getByParamObj(prop, prop.ref);
                 }
 
-            }
-            else if (prop.objectProperty) {
+            } else if (prop.objectProperty) {
                 obj = this._getByParamObj(prop, prop.objectProperty.object);
 
                 object[prop.name] = obj[prop.objectProperty.property];
 
-            }
-            else if (prop.factory) {
+            } else if (prop.factory) {
 
                 if (!this._factoriesObjects[objectId]) {
                     this._factoriesObjects[objectId] = {};
@@ -765,8 +773,7 @@ export class Injector {
 
                 this._factoriesObjects[objectId][prop.name] = prop.factory;
 
-            }
-            else if (prop.factoryMethod) {
+            } else if (prop.factoryMethod) {
 
                 object[prop.name] = Util.createDelegate(this._getByParamObj, this, [prop, prop.factoryMethod])
             } else if (prop.lazyFn) {
@@ -780,7 +787,7 @@ export class Injector {
     }
 
     private _defineProperty(object: any, name: string, fn: Function, cache: boolean = false) {
-       let  $self = this;
+        let $self = this;
         if (!cache) {
             Object.defineProperty(object, name, {
                 get() {
