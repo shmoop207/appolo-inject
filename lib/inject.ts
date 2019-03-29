@@ -310,7 +310,7 @@ export class Injector {
         }
 
 
-        await this._loadFactoryInject(def,refs);
+        await this._loadFactoryInject(def, refs);
 
 
         let factory = this._get<IFactory<T>>(def.id);
@@ -329,7 +329,7 @@ export class Injector {
 
     }
 
-    private async _loadFactoryInject(def:IDefinition,refs?: { ids: {}, paths: string[] }){
+    private async _loadFactoryInject(def: IDefinition, refs?: { ids: {}, paths: string[] }) {
         for (let inject of def.inject) {
             let id = inject.ref || (inject.factory ? inject.factory.id : null);
 
@@ -622,10 +622,17 @@ export class Injector {
 
             let aliasName = definition.aliasFactory[i];
 
-            let delegateFn = Util.createDelegate(this._get, this, [objectId]);
+            let delegateFn = Util.createDelegate(this._createFactoryMethod, this, [objectId,this]);
             (delegateFn as any).type = definition.type;
             Util.mapPush(this._aliasFactory, aliasName, delegateFn)
         }
+    }
+
+    private _createFactoryMethod(objectId: string, injector: Injector, runtimeArgs?: any[]) {
+
+        let instance = injector._get(objectId, runtimeArgs);
+        let def = injector.getDefinition(objectId);
+        return def.dynamicFactory ? (instance as IFactory<any>).get() : instance
     }
 
     private _invokeInitMethod<T>(instance: T, definition: IDefinition) {
@@ -775,7 +782,7 @@ export class Injector {
 
             } else if (prop.factoryMethod) {
 
-                object[prop.name] = Util.createDelegate(this._getByParamObj, this, [prop, prop.factoryMethod])
+                object[prop.name] = Util.createDelegate(this._createFactoryMethod, this, [prop.factoryMethod, prop.injector|| this])
             } else if (prop.lazyFn) {
                 this._defineProperty(object, prop.name, prop.lazyFn)
 
@@ -911,10 +918,11 @@ export class Injector {
 
             let injector = prop.injector ? prop.injector : this;
 
-
-            (prop.aliasFactory) && (instance[prop.name] = prop.indexBy
-                ? _.keyBy(injector.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy])
-                : injector.getAliasFactory(prop.aliasFactory))
+            if (prop.aliasFactory) {
+                instance[prop.name] = prop.indexBy
+                    ? _.keyBy(injector.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy])
+                    : injector.getAliasFactory(prop.aliasFactory)
+            }
         }
     }
 

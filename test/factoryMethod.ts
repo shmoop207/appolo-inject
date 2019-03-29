@@ -3,7 +3,7 @@ import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {define, singleton, inject, injectAlias, alias, injectFactory, factory,initMethod,injectFactoryMethod} from "../lib/decorators";
+import {define, singleton, inject, injectAlias, alias, injectFactory, factory,initMethod,injectFactoryMethod,dynamicFactory} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -280,7 +280,6 @@ describe('Property Factory Method', function () {
         let injector:Injector, FooManager;
 
 
-
         it('should inject factory method that creates objects and call object with initialize', function () {
             injector = ioc.createContainer();
 
@@ -342,6 +341,71 @@ describe('Property Factory Method', function () {
             should.exist(name2);
 
             name1.should.not.be.equal(name2)
+        });
+    });
+
+
+    describe('inject factory method with dynamic factory', function () {
+        let injector:Injector, FooManager;
+
+
+        it('should inject factory method with dynamic factory', async function () {
+            injector = ioc.createContainer();
+
+
+            @define()
+            class BooManager{
+
+                constructor(public name2:string) {
+
+                }
+            }
+            @define()
+            @dynamicFactory()
+            class FooManager{
+
+                @injectFactoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
+                constructor(public name:string) {
+
+                }
+
+                get(){
+                    return this.createFooManager(this.name);
+                }
+
+            }
+
+
+
+            @define()
+            class Rectangle {
+                @injectFactoryMethod(FooManager) createFooManager: (name:string)=>BooManager;
+
+                constructor() {
+
+                }
+                getName(name) {
+
+                    return this.createFooManager(name).name2;
+                }
+            }
+
+
+            injector.registerMulti([FooManager,Rectangle,BooManager]);
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            should.exist(rectangle.createFooManager);
+
+            rectangle.createFooManager.should.be.a('Function');
+
+            rectangle.createFooManager("boo").should.be.instanceof(BooManager);
+
+            should.exist(rectangle.createFooManager("boo").name2);
+
+            rectangle.createFooManager("boo").name2.should.be.eq("boo")
         });
     });
 

@@ -2,6 +2,14 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
+import {
+    aliasFactory,
+    define,
+    dynamicFactory,
+    injectAlias,
+    injectAliasFactory,
+    injectFactoryMethod
+} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -194,7 +202,7 @@ describe('Alias Factory', function () {
             }
 
             injector.register('rectangle',Rectangle).singleton().injectAliasFactory('calcable','calcable',"NAME")
-            injector.register('calcManager',CalcManager).aliasFactory(['calcable'])
+            injector.register('calcManager',CalcManager).aliasFactory(['calcable']);
 
 
             await injector.initialize();
@@ -219,6 +227,70 @@ describe('Alias Factory', function () {
 
 
 
+    });
+
+    describe('inject factory alias with dynamic factory', function () {
+        let injector:Injector, FooManager;
+
+
+        it('should inject factory alias with dynamic factory', async function () {
+            injector = ioc.createContainer();
+
+
+            @define()
+            class BooManager{
+
+                constructor(public name2:string) {
+
+                }
+            }
+            @define()
+            @dynamicFactory()
+            @aliasFactory("test")
+            class FooManager{
+
+                @injectFactoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
+                constructor(public name:string) {
+
+                }
+
+                get(){
+                    return this.createFooManager(this.name);
+                }
+
+            }
+
+
+
+            @define()
+            class Rectangle {
+                @injectAliasFactory("test") createFooManager: ((name:string)=>BooManager)[];
+
+                constructor() {
+
+                }
+                getName(name) {
+
+                    return this.createFooManager[0](name).name2;
+                }
+            }
+
+
+            injector.registerMulti([FooManager,Rectangle,BooManager]);
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            should.exist(rectangle.createFooManager);
+
+            rectangle.createFooManager.should.be.a('Array');
+            rectangle.createFooManager.length.should.eq(1);
+
+            rectangle.createFooManager[0]("boo").should.be.instanceof(BooManager);
+
+            rectangle.getName("boo").should.be.eq("boo")
+        });
     });
 
 

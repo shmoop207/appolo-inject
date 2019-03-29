@@ -220,5 +220,55 @@ describe('Property Factory Method', function () {
             name1.should.not.be.equal(name2);
         });
     });
+    describe('inject factory method with dynamic factory', function () {
+        let injector, FooManager;
+        it('should inject factory method with dynamic factory', async function () {
+            injector = ioc.createContainer();
+            let BooManager = class BooManager {
+                constructor(name2) {
+                    this.name2 = name2;
+                }
+            };
+            BooManager = tslib_1.__decorate([
+                decorators_1.define()
+            ], BooManager);
+            let FooManager = class FooManager {
+                constructor(name) {
+                    this.name = name;
+                }
+                get() {
+                    return this.createFooManager(this.name);
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectFactoryMethod(BooManager)
+            ], FooManager.prototype, "createFooManager", void 0);
+            FooManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.dynamicFactory()
+            ], FooManager);
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                getName(name) {
+                    return this.createFooManager(name).name2;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectFactoryMethod(FooManager)
+            ], Rectangle.prototype, "createFooManager", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define()
+            ], Rectangle);
+            injector.registerMulti([FooManager, Rectangle, BooManager]);
+            await injector.initialize();
+            let rectangle = injector.getObject('rectangle');
+            should.exist(rectangle.createFooManager);
+            rectangle.createFooManager.should.be.a('Function');
+            rectangle.createFooManager("boo").should.be.instanceof(BooManager);
+            should.exist(rectangle.createFooManager("boo").name2);
+            rectangle.createFooManager("boo").name2.should.be.eq("boo");
+        });
+    });
 });
 //# sourceMappingURL=factoryMethod.js.map

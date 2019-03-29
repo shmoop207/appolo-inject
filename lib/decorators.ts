@@ -66,6 +66,10 @@ export function factory(factory?: boolean): (fn: Function) => void {
     return addDefinitionClass("factory", [])
 }
 
+export function dynamicFactory(factory?: boolean): (fn: Function) => void {
+    return addDefinitionClass("dynamicFactory", [factory])
+}
+
 export function lazy(lazy?: boolean): (fn: Function) => void {
     if (lazy === false) {
         return EmptyFunction;

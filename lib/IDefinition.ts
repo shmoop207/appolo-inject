@@ -37,6 +37,7 @@ export interface IDefinition {
     factory?: boolean
     lazy?: boolean
     lazyFn?: Function
+    dynamicFactory?: boolean
     override?: boolean
     aliasFactory?: string[]
     alias?: string[]

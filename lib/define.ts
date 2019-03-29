@@ -58,6 +58,13 @@ export class Define {
         return this
     }
 
+    public dynamicFactory(factory: boolean = true): this {
+
+        this._definition.dynamicFactory = _.isUndefined(factory) ? true : factory;
+
+        return this
+    }
+
     public path(path: string): this {
         this._definition.path = path;
         return this;
