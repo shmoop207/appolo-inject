@@ -29,4 +29,5 @@ exports.lazy = decorators_1.lazy;
 exports.factory = decorators_1.factory;
 exports.override = decorators_1.override;
 exports.injectLazy = decorators_1.injectLazy;
+exports.dynamicFactory = decorators_1.dynamicFactory;
 //# sourceMappingURL=index.js.map
