@@ -287,8 +287,49 @@ describe('Parent', function () {
             test2.factory.should.be.eq("working")
             test2.logger.info.should.be.eq("bla")
         });
+
+
+        describe('inherit from child', function () {
+
+
+            it('should inject nested parent', async function () {
+
+                let injector = ioc.createContainer();
+                let injector2 = ioc.createContainer();
+                let injector3 = ioc.createContainer();
+
+                @define()
+                @singleton()
+                class ClassA {
+
+                    public name: string = "working";
+                }
+
+
+                injector.register(ClassA);
+                injector.parent = injector2;
+
+                injector2.addDefinition("classA", {
+                    injector: injector,
+                    refName: "classA"
+                });
+                injector2.parent = injector3;
+                injector3.addDefinition("classA", {
+                    injector: injector2,
+                    refName: "classA"
+                });
+
+
+                await injector3.initialize();
+                let test1 = injector3.getObject<ClassA>(ClassA);
+
+                test1.name.should.be.ok;
+            });
+
+
+        });
+
+
     });
 
-
 });
-
