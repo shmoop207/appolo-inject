@@ -562,6 +562,10 @@ export class Injector {
             throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
         }
 
+        if(def.lazyFn){
+            return def.lazyFn()
+        }
+
         instance = this._instances[objectID];
 
         if (instance) {

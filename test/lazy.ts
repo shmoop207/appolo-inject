@@ -36,6 +36,13 @@ describe('Lazy', function () {
 
             test.testLazy.should.be.eq("working");
 
+            let test2: any = injector.getObject('testLazy');
+
+            test2.should.be.eq("working");
+
+
+
+
         });
 
         it('should inject lazy fn to class', function () {

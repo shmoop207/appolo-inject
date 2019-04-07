@@ -27,6 +27,8 @@ describe('Lazy', function () {
             injector.initialize();
             let test = injector.getObject('test');
             test.testLazy.should.be.eq("working");
+            let test2 = injector.getObject('testLazy');
+            test2.should.be.eq("working");
         });
         it('should inject lazy fn to class', function () {
             injector = ioc.createContainer();
