@@ -30,4 +30,6 @@ exports.factory = decorators_1.factory;
 exports.override = decorators_1.override;
 exports.injectLazy = decorators_1.injectLazy;
 exports.dynamicFactory = decorators_1.dynamicFactory;
+exports.customInjectFn = decorators_1.customInjectFn;
+exports.initMethodAsync = decorators_1.initMethodAsync;
 //# sourceMappingURL=index.js.map

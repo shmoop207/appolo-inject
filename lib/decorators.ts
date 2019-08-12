@@ -101,6 +101,11 @@ export function initMethod(): (target: any, propertyKey: string, descriptor?: Pr
     return addDefinitionProperty("initMethod", []);
 }
 
+export function initMethodAsync(): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("initMethodAsync", []);
+}
+
 export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
     return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)], true);
 }
@@ -109,30 +114,30 @@ export function injectLazy(inject?: string | Class): (target: any, propertyKey: 
     return addDefinitionProperty("injectLazy", [Util.getClassNameOrId(inject)], true);
 }
 
-export function customInjectFn(fn:Function) {
+export function customInjectFn(fn: Function) {
 
-        return addDefinitionProperty("injectLazyFn", [fn], true);
+    return addDefinitionProperty("injectLazyFn", [fn], true);
 }
 
 
 export function injectFactoryMethod(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectFactoryMethod", [Util.getClassNameOrId(factoryMethod)],true);
+    return addDefinitionProperty("injectFactoryMethod", [Util.getClassNameOrId(factoryMethod)], true);
 }
 
 export function injectAlias(alias: string, indexBy?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectAlias", [alias, indexBy],true);
+    return addDefinitionProperty("injectAlias", [alias, indexBy], true);
 }
 
 export function injectAliasFactory(alias: string, indexBy?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectAliasFactory", [alias, indexBy],true);
+    return addDefinitionProperty("injectAliasFactory", [alias, indexBy], true);
 }
 
 export function injectArray(arr: (string | Class)[]): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectArray", [_.map(arr, item => ({ref: Util.getClassNameOrId(item)}))],true);
+    return addDefinitionProperty("injectArray", [_.map(arr, item => ({ref: Util.getClassNameOrId(item)}))], true);
 }
 
 export function injectDictionary(dic: { [index: string]: (string | Class) }): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
@@ -141,17 +146,17 @@ export function injectDictionary(dic: { [index: string]: (string | Class) }): (t
         key: key,
         ref: Util.getClassNameOrId(item)
     }));
-    return addDefinitionProperty("injectDictionary", [args],true);
+    return addDefinitionProperty("injectDictionary", [args], true);
 }
 
 export function injectFactory(factory?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectFactory", [Util.getClassNameOrId(factory)],true);
+    return addDefinitionProperty("injectFactory", [Util.getClassNameOrId(factory)], true);
 }
 
 export function injectObjectProperty(object: string | Class, propertyName: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectObjectProperty", [Util.getClassNameOrId(object), propertyName],true);
+    return addDefinitionProperty("injectObjectProperty", [Util.getClassNameOrId(object), propertyName], true);
 }
 
 export function injectValue(value: any): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {

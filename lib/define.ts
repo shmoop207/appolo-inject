@@ -199,6 +199,11 @@ export class Define {
         return this;
     }
 
+    public initMethodAsync(initMethod?: string): this {
+        this._definition.initMethodAsync = initMethod || "initialize";
+        return this;
+    }
+
     public injectorAware(): this {
         this._definition.injectorAware = true;
         return this;

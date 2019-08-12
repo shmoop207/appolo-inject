@@ -72,6 +72,37 @@ describe('Lazy', function () {
             let test = injector.getObject('test');
             test.test.should.be.eq("bbb");
         });
+        it('should custom inject lazy fn to class nested parent', function () {
+            injector = ioc.createContainer();
+            let injector2 = ioc.createContainer();
+            let customDecorator = function (id) {
+                return decorators_1.customInjectFn((inject) => {
+                    return injector2.get(id).name;
+                });
+            };
+            let Test2 = class Test2 {
+                constructor() {
+                    this.name = "bbb";
+                }
+            };
+            Test2 = tslib_1.__decorate([
+                decorators_1.define()
+            ], Test2);
+            let Test = class Test {
+            };
+            tslib_1.__decorate([
+                customDecorator("test2")
+            ], Test.prototype, "test", void 0);
+            Test = tslib_1.__decorate([
+                decorators_1.define()
+            ], Test);
+            injector2.parent = injector;
+            injector2.register(Test2);
+            injector.registerMulti([Test]);
+            injector.initialize();
+            let test = injector.getObject('test');
+            test.test.should.be.eq("bbb");
+        });
     });
     describe('create lazy object', function () {
         let injector;

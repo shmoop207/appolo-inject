@@ -85,7 +85,7 @@ export class Injector {
 
         this.initAlias();
 
-        this.initInitMethods();
+        await this.initInitMethods();
 
         this._isInitialized = true;
     }
@@ -187,7 +187,7 @@ export class Injector {
 
     }
 
-    protected initInitMethods() {
+    protected async initInitMethods() {
 
         if (this._isInitialized) {
             return;
@@ -195,15 +195,27 @@ export class Injector {
 
         let keys = Object.keys(this._instances);
 
-        _.forEach(this.children, injector => injector.initInitMethods());
+        await Promise.all(_.map(this.children, injector => injector.initInitMethods()));
+
+        let asyncInitPromises = [];
 
         for (let i = 0, len = keys.length; i < len; i++) {
             let objectId = keys[i], instance = this._instances[objectId];
-            (this._definitions[objectId]) && (this._invokeInitMethod(instance, this._definitions[objectId]));
+
+            let def = this._definitions[objectId];
+            if (def) {
+                def.initMethod && (this._invokeInitMethod(instance, this._definitions[objectId]));
+                def.initMethodAsync && asyncInitPromises.push(instance[def.initMethodAsync]())
+            }
+        }
+
+        if(asyncInitPromises.length){
+            await Promise.all(asyncInitPromises);
         }
 
         this._isInitialized = true;
     }
+
 
     private _prepareInjectParams(def: IDefinition) {
 
@@ -562,7 +574,7 @@ export class Injector {
             throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
         }
 
-        if(def.lazyFn){
+        if (def.lazyFn) {
             return def.lazyFn()
         }
 
@@ -626,7 +638,7 @@ export class Injector {
 
             let aliasName = definition.aliasFactory[i];
 
-            let delegateFn = Util.createDelegate(this._createFactoryMethod, this, [objectId,this]);
+            let delegateFn = Util.createDelegate(this._createFactoryMethod, this, [objectId, this]);
             (delegateFn as any).type = definition.type;
             Util.mapPush(this._aliasFactory, aliasName, delegateFn)
         }
@@ -786,7 +798,7 @@ export class Injector {
 
             } else if (prop.factoryMethod) {
 
-                object[prop.name] = Util.createDelegate(this._createFactoryMethod, this, [prop.factoryMethod, prop.injector|| this])
+                object[prop.name] = Util.createDelegate(this._createFactoryMethod, this, [prop.factoryMethod, prop.injector || this])
             } else if (prop.lazyFn) {
                 this._defineProperty(object, prop.name, prop.lazyFn)
 

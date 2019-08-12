@@ -42,6 +42,7 @@ export interface IDefinition {
     aliasFactory?: string[]
     alias?: string[]
     initMethod?: string
+    initMethodAsync?: string
     injector?: Injector;
     //$isWired?: boolean
     //$isFactoryWired?: boolean

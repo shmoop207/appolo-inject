@@ -2,7 +2,7 @@
 import {Injector} from "../lib/inject";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
-import {define, singleton, initMethod} from "../lib/decorators";
+import {define, singleton, initMethod, initMethodAsync} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -50,7 +50,6 @@ describe('initialize', function () {
         let injector: Injector;
 
 
-
         it('should call initialize method', async function () {
 
             injector = ioc.createContainer();
@@ -81,7 +80,6 @@ describe('initialize', function () {
     describe('should call initialize method decorators', function () {
 
 
-
         it('should call initialize method', async function () {
 
             let injector: Injector;
@@ -99,6 +97,45 @@ describe('initialize', function () {
 
                 @initMethod()
                 initialize() {
+                    this.working = true
+                }
+            }
+
+            injector.register(Rectangle);
+
+            await injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            rectangle.working.should.be.true;
+
+        });
+    });
+
+
+    describe('should call initialize method decorators', function () {
+
+
+        it('should call initialize method async ', async function () {
+
+            let injector: Injector;
+
+            injector = ioc.createContainer();
+
+            @define()
+            @singleton()
+            class Rectangle {
+                working: boolean;
+
+                constructor() {
+
+                }
+
+                @initMethodAsync()
+                async initialize() {
+
+                    await new Promise(resolve => setTimeout(() => resolve(), 1));
+
                     this.working = true
                 }
             }

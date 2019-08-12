@@ -70,5 +70,30 @@ describe('initialize', function () {
             rectangle.working.should.be.true;
         });
     });
+    describe('should call initialize method decorators', function () {
+        it('should call initialize method async ', async function () {
+            let injector;
+            injector = ioc.createContainer();
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                async initialize() {
+                    await new Promise(resolve => setTimeout(() => resolve(), 1));
+                    this.working = true;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.initMethodAsync()
+            ], Rectangle.prototype, "initialize", null);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            injector.register(Rectangle);
+            await injector.initialize();
+            let rectangle = injector.getObject('rectangle');
+            rectangle.working.should.be.true;
+        });
+    });
 });
 //# sourceMappingURL=initialize.js.map
