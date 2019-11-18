@@ -4,7 +4,6 @@ const tslib_1 = require("tslib");
 const chai = require("chai");
 const ioc = require("../lib/inject");
 const sleep = require("sleep-promise");
-const _ = require("lodash");
 const decorators_1 = require("../lib/decorators");
 let should = chai.should();
 describe('Property Factory', function () {
@@ -827,7 +826,7 @@ describe('Property Factory', function () {
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
-                    return _.map(this.$injector.getAlias("aaa").concat(this.alias), item => item.working()).join(",");
+                    return this.$injector.getAlias("aaa").concat(this.alias).map(item => item.working()).join(",");
                 }
             };
             tslib_1.__decorate([

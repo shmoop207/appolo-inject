@@ -2,7 +2,6 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import sleep = require ('sleep-promise');
-import _ = require ('lodash');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
 import {
@@ -1112,7 +1111,7 @@ describe('Property Factory', function () {
                 $injector:Injector
 
                 async get() {
-                    return _.map(this.$injector.getAlias("aaa").concat(this.alias),item=>item.working()).join(",")
+                    return this.$injector.getAlias("aaa").concat(this.alias).map(item=>item.working()).join(",")
                 }
 
 

@@ -28,7 +28,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "6.0.38",
+  "version": "7.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -37,25 +37,24 @@
   "readme": "",
   "readmeFilename": "README.md",
   "dependencies": {
-    "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@types/benchmark": "^1.0.31",
-    "@types/chai": "^4.2.0",
-    "@types/lodash": "^4.14.136",
+    "@types/chai": "^4.2.5",
+    "@types/lodash": "^4.14.148",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.1",
-    "@types/sinon": "^7.0.13",
+    "@types/node": "^12.12.8",
+    "@types/sinon": "^7.5.0",
     "@types/sinon-chai": "^3.2.3",
     "benchmark": "^2.1.4",
     "chai": "4.2.0",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
-    "sinon": "^7.4.1",
+    "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
     "sleep-promise": "^8.0.1",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.2"
   }
 }

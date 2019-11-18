@@ -110,11 +110,11 @@ describe('Alias Factory', function () {
                 }
             };
             CalcManager = class {
-                static get NAME() {
-                    return "test";
-                }
                 constructor(num) {
                     this.num = num || 25;
+                }
+                static get NAME() {
+                    return "test";
                 }
                 calc() {
                     return this.num;

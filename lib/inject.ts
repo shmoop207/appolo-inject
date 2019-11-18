@@ -1,5 +1,4 @@
 "use strict";
-import _ = require('lodash');
 import {IOptions} from "./IOptions";
 import {IFactory} from "./IFactory";
 import {Class, IDefinition, IParamInject} from "./IDefinition";
@@ -66,7 +65,9 @@ export class Injector {
         }
         this._options = options || {};
 
-        _.forEach(this._options.definitions, (def, id) => this.addDefinition(id, def));
+        let definitions = {};
+
+        Object.keys(definitions || {}).forEach(id => this.addDefinition(id, definitions[id]));
 
         //we have parent so we wait until parent.initialize
         if (this.parent && !this._options.immediate) {
@@ -96,7 +97,7 @@ export class Injector {
             return;
         }
 
-        _.forEach(this.children, injector => injector.initDefinitions());
+        this.children.forEach(injector => injector.initDefinitions());
 
 
         let keys = Object.keys(this._definitions);
@@ -123,7 +124,7 @@ export class Injector {
             return;
         }
 
-        _.forEach(this.children, injector => injector.initInstances());
+        this.children.forEach(injector => injector.initInstances());
 
         let keys = Object.keys(this._definitions);
 
@@ -137,7 +138,7 @@ export class Injector {
         if (this._isInitialized) {
             return;
         }
-        _.forEach(this.children, injector => injector.initProperties());
+        this.children.forEach(injector => injector.initProperties());
 
         let keys = Object.keys(this._instances);
 
@@ -170,7 +171,7 @@ export class Injector {
 
         let keys = Object.keys(this._instances);
 
-        _.forEach(this.children, injector => injector.initAlias());
+        this.children.forEach(injector => injector.initAlias());
 
 
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -195,7 +196,7 @@ export class Injector {
 
         let keys = Object.keys(this._instances);
 
-        await Promise.all(_.map(this.children, injector => injector.initInitMethods()));
+        await Promise.all(this.children.map(injector => injector.initInitMethods()));
 
         let asyncInitPromises = [];
 
@@ -209,7 +210,7 @@ export class Injector {
             }
         }
 
-        if(asyncInitPromises.length){
+        if (asyncInitPromises.length) {
             await Promise.all(asyncInitPromises);
         }
 
@@ -226,13 +227,14 @@ export class Injector {
         }
         let params = Reflect.getMetadata(InjectParamSymbol, def.type);
 
-        if (!params || !_.isFunction(def.type)) {
+        if (!params || !Util.isFunction(def.type)) {
             return
         }
 
-        let paramGroups = _.groupBy(params, "method");
+        let paramGroups = Util.groupByArray(params, "method");
 
-        _.forEach(paramGroups, (items: any[], method: string) => {
+        Object.keys(paramGroups).forEach(method => {
+            let items: any[] = paramGroups[method];
             let oldFn = def.type.prototype[method];
             oldFn = oldFn.originFn || oldFn;
 
@@ -411,7 +413,9 @@ export class Injector {
             throw new Error(`Injector:definition id ${objectId} already exists use override decorator`);
         }
 
-        definition = _.defaults(definition, {id: objectId, args: [], inject: [], alias: [], aliasFactory: []});
+        let cloned = Object.assign({}, {id: objectId, args: [], inject: [], alias: [], aliasFactory: []}, definition);
+
+        Object.assign(definition, cloned);
 
         this._definitions[objectId] = definition;
 
@@ -485,11 +489,11 @@ export class Injector {
     }
 
     public getDefinitionsValue(): IDefinition[] {
-        return _.values(this._definitions);
+        return Object.values(this._definitions);
     }
 
     public getAliasDefinitions(alias: string): IDefinition[] {
-        return _.filter(this._definitions, (item) => _.includes(item.alias, alias))
+        return Object.values(this._definitions).filter(item => (item.alias || []).includes(alias))
     }
 
     public getTypes(): Function[] {
@@ -513,11 +517,11 @@ export class Injector {
     }
 
     public addAlias(aliasName: string, value: any) {
-        this.getAlias(name).push(value)
+        this.getAlias(aliasName).push(value)
     }
 
     public removeAlias(aliasName: string, value: any) {
-        _.pull(this.getAlias(name), value)
+        Util.removeFromArray(this.getAlias(aliasName), value)
     }
 
     public getAlias(aliasName: string): any[] {
@@ -525,11 +529,11 @@ export class Injector {
     }
 
     public addAliasFactory(aliasName: string, value: any) {
-        this.getAliasFactory(name).push(value);
+        this.getAliasFactory(aliasName).push(value);
     }
 
     public removeAliasFactory(aliasName: string, value: any) {
-        _.pull(this.getAliasFactory(name), value);
+        Util.removeFromArray(this.getAliasFactory(aliasName), value);
     }
 
     public getAliasFactory(aliasName: string): any[] {
@@ -551,7 +555,7 @@ export class Injector {
 
     public register(id: string | Class, type?: Class, filePath?: string): Define {
 
-        if (_.isFunction(id)) {
+        if (Util.isFunction(id)) {
             type = id as Class;
             id = Util.getClassName(type);
         }
@@ -674,11 +678,11 @@ export class Injector {
 
             let dto = injectable;
 
-            if (_.isString(injectable)) {
+            if (Util.isString(injectable)) {
 
                 dto = {
-                    name: injectable,
-                    ref: injectable
+                    name: injectable as string,
+                    ref: injectable as string
                 }
             }
 
@@ -762,11 +766,11 @@ export class Injector {
             let prop = properties[i];
             if (prop.array) {
 
-                object[prop.name] = _.map<IParamInject, any>(prop.array, (propObj: IParamInject) => propObj.value || this._getByParamObj(propObj, propObj.ref));
+                object[prop.name] = (prop.array || []).map<IParamInject>((propObj: IParamInject) => propObj.value || this._getByParamObj(propObj, propObj.ref));
             } else if (prop.dictionary) {
                 let injectObject = {};
 
-                _.forEach(prop.dictionary, (propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj, propObj.ref));
+                (prop.dictionary || []).forEach((propObj: IParamInject) => injectObject[propObj.key] = propObj.value || this._getByParamObj(propObj, propObj.ref));
 
                 object[prop.name] = injectObject;
 
@@ -919,7 +923,7 @@ export class Injector {
             let injector = prop.injector ? prop.injector : this;
 
             (prop.alias) && (instance[prop.name] = prop.indexBy
-                ? _.keyBy(injector.getAlias(prop.alias), prop.indexBy)
+                ? Util.keyBy(injector.getAlias(prop.alias), prop.indexBy)
                 : injector.getAlias(prop.alias));
         }
     }
@@ -936,7 +940,7 @@ export class Injector {
 
             if (prop.aliasFactory) {
                 instance[prop.name] = prop.indexBy
-                    ? _.keyBy(injector.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy])
+                    ? Util.keyBy(injector.getAliasFactory(prop.aliasFactory), (item) => item.type[prop.indexBy])
                     : injector.getAliasFactory(prop.aliasFactory)
             }
         }

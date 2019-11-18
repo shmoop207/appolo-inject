@@ -1,4 +1,3 @@
-import _ = require('lodash');
 import "reflect-metadata";
 import {Define} from "./define";
 import {Util} from "./util";
@@ -40,7 +39,7 @@ export function define(id?: string): (fn: Function) => void {
 
         let define = new Define(id || Util.getClassName(fn), fn as Class);
 
-        _.forEach(Reflect.getMetadata(InjectDefinitionsSymbol, fn), (item: { name: string, args: any[] }) => define[item.name].apply(define, item.args));
+        (Reflect.getMetadata(InjectDefinitionsSymbol, fn) || []).forEach((item: { name: string, args: any[] }) => define[item.name].apply(define, item.args));
 
         Reflect.defineMetadata(InjectDefineSymbol, define, fn);
 
@@ -137,14 +136,16 @@ export function injectAliasFactory(alias: string, indexBy?: string): (target: an
 
 export function injectArray(arr: (string | Class)[]): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionProperty("injectArray", [_.map(arr, item => ({ref: Util.getClassNameOrId(item)}))], true);
+    return addDefinitionProperty("injectArray", [(arr || []).map(item => ({ref: Util.getClassNameOrId(item)}))], true);
 }
 
 export function injectDictionary(dic: { [index: string]: (string | Class) }): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    let args = _.map(dic, (item, key) => ({
+
+
+    let args = Object.keys(dic).map(key => ({
         key: key,
-        ref: Util.getClassNameOrId(item)
+        ref: Util.getClassNameOrId(dic[key])
     }));
     return addDefinitionProperty("injectDictionary", [args], true);
 }
@@ -180,7 +181,7 @@ export function injectParam(name?: string | Class) {
 
         args = Util.getFunctionArgs(target.constructor.prototype[propertyKey]);
 
-        let injectDef = Reflect.getOwnMetadata(InjectParamSymbol, target) || _.cloneDeep(Reflect.getMetadata(InjectParamSymbol, target));
+        let injectDef = Reflect.getOwnMetadata(InjectParamSymbol, target) || Util.cloneDeep(Reflect.getMetadata(InjectParamSymbol, target));
 
         if (!injectDef) {
             injectDef = [];

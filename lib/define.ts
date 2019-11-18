@@ -1,6 +1,6 @@
 "use strict";
-import _ = require('lodash');
 import {Class, IDefinition, IParamInject} from "./IDefinition";
+import {Util} from "./util";
 
 export class Define {
 
@@ -42,13 +42,13 @@ export class Define {
 
     public singleton(singleton: boolean = true): this {
 
-        this._definition.singleton = _.isUndefined(singleton) ? true : singleton;
+        this._definition.singleton = Util.isUndefined(singleton) ? true : singleton;
         return this
     }
 
     public factory(factory: boolean = true): this {
 
-        this._definition.factory = _.isUndefined(factory) ? true : factory;
+        this._definition.factory = Util.isUndefined(factory) ? true : factory;
 
         //factory must be singleton
         if (this._definition.factory) {
@@ -60,7 +60,7 @@ export class Define {
 
     public dynamicFactory(factory: boolean = true): this {
 
-        this._definition.dynamicFactory = _.isUndefined(factory) ? true : factory;
+        this._definition.dynamicFactory = Util.isUndefined(factory) ? true : factory;
 
         return this
     }
@@ -76,25 +76,25 @@ export class Define {
 
     public lazy(lazy: boolean = true): this {
 
-        this._definition.lazy = _.isUndefined(lazy) ? true : lazy;
+        this._definition.lazy = Util.isUndefined(lazy) ? true : lazy;
         return this
     }
 
     public override(override: boolean = true): this {
 
-        this._definition.override = _.isUndefined(override) ? true : override;
+        this._definition.override = Util.isUndefined(override) ? true : override;
         return this
     }
 
     public inject(name: string | string[] | IParamInject | IParamInject[], inject?: string, parent?: Class): this {
 
-        if (_.isString(name) && _.includes(name, " ")) {
-            name = name.split(" ");
+        if (Util.isString(name) && (name as string).includes(" ")) {
+            name = (name as string).split(" ");
         }
 
-        if (_.isArray(name)) {
+        if (Array.isArray(name)) {
             this._definition.inject.push.apply(this._definition.inject, name)
-        } else if (_.isObject(name)) {
+        } else if (Util.isObject(name)) {
             this._definition.inject.push(name as IParamInject)
         } else {
             this._definition.inject.push({name: name as string, ref: inject || (name as string), parent: parent})
@@ -185,7 +185,7 @@ export class Define {
     }
 
     public alias(alias: string[] | string): this {
-        if (_.isArray(alias)) {
+        if (Array.isArray(alias)) {
             this._definition.alias.push.apply(this._definition.alias, alias)
         } else {
             this._definition.alias.push(alias)
@@ -211,7 +211,7 @@ export class Define {
 
 
     public aliasFactory(aliasFactory: string | string[]): this {
-        if (_.isArray(aliasFactory)) {
+        if (Array.isArray(aliasFactory)) {
             this._definition.aliasFactory.push.apply(this._definition.aliasFactory, aliasFactory)
         } else {
             this._definition.aliasFactory.push(aliasFactory)
@@ -221,7 +221,7 @@ export class Define {
     }
 
     public args(args: IParamInject[] | IParamInject): this {
-        if (_.isArray(args)) {
+        if (Array.isArray(args)) {
             this._definition.args.push.apply(this._definition.args, args)
         } else {
             this._definition.args.push(args)
