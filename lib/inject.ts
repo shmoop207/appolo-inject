@@ -579,7 +579,7 @@ export class Injector {
         }
 
         if (def.lazyFn) {
-            return def.lazyFn()
+            return def.lazyFn(this)
         }
 
         instance = this._instances[objectID];
