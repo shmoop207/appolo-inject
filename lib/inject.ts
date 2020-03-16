@@ -8,7 +8,7 @@ import {Util} from "./util";
 
 type keyObject = { [index: string]: Object }
 
-const IsWiredSymbol = Symbol("isWired");
+const IsWiredSymbol = "@__isWired__";
 
 export class Injector {
 
