@@ -504,15 +504,28 @@ export class Injector {
         return !!this.getDefinition(id);
     }
 
+
     public getDefinition(id: string): IDefinition {
-        let def = this._definitions[id];
+        let def = this.getOwnDefinition(id);
 
         if (def) {
-            return def.injector ? def.injector.getDefinition(def.refName || id) : def;
+            return def
         }
 
         if (this.parent) {
             return this.parent.getDefinition(id);
+        }
+    }
+
+    public hasOwnDefinition(id: string): boolean {
+        return !!this.getOwnDefinition(id);
+    }
+
+    public getOwnDefinition(id: string): IDefinition {
+        let def = this._definitions[id];
+
+        if (def) {
+            return def.injector ? def.injector.getDefinition(def.refName || id) : def;
         }
     }
 
