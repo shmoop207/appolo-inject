@@ -832,7 +832,7 @@ export class Injector {
             Object.defineProperty(object, name, {
                 get() {
                     return fn($self);
-                }
+                }, configurable: true
             });
 
             return;
@@ -857,7 +857,7 @@ export class Injector {
                 func.__cached__[name] = value;
 
                 return value;
-            }
+            }, configurable: true
         });
     }
 
