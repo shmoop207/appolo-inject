@@ -33,7 +33,7 @@ export class Define {
 
     public customParam(key: string, value: any) {
 
-        if (this._definition.customParams[key]) {
+        if (!this._definition.customParams[key]) {
             this._definition.customParams[key] = [];
         }
 
