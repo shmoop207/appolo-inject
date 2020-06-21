@@ -5,6 +5,7 @@ import {Class, IDefinition, IParamInject} from "./IDefinition";
 import {Define} from "./define";
 import {InjectDefineSymbol, InjectParamSymbol} from "./decorators";
 import {Util} from "./util";
+import {Event, IEvent} from "appolo-event-dispatcher";
 
 type keyObject = { [index: string]: Object }
 
@@ -28,6 +29,8 @@ export class Injector {
 
     private _isInitialized: boolean = false;
 
+    private _instanceCreatedEvent = new Event<{instance: any, definition: IDefinition}>()
+
     constructor() {
         this._instances = {};
         this._definitions = {};
@@ -38,6 +41,10 @@ export class Injector {
         this._factoriesValues = {};
         this._factories = [];
         this._children = []
+    }
+
+    public get instanceCreatedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
+        return this._instanceCreatedEvent
     }
 
     public get parent(): Injector {
@@ -679,6 +686,8 @@ export class Injector {
         }
 
         instance[IsWiredSymbol] = true;
+
+        this._instanceCreatedEvent.fireEvent({instance, definition});
     }
 
     private _prepareProperties(definition: IDefinition): void {

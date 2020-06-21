@@ -69,6 +69,33 @@ describe('initialize', function () {
             let rectangle = injector.getObject('rectangle');
             rectangle.working.should.be.true;
         });
+        it.only('should call fire create event', async function () {
+            let injector;
+            injector = ioc.createContainer();
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                initialize() {
+                    this.working = true;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.initMethod()
+            ], Rectangle.prototype, "initialize", null);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            injector.register(Rectangle);
+            let req;
+            injector.instanceCreatedEvent.on(action => {
+                req = action.instance;
+            });
+            await injector.initialize();
+            let rectangle = injector.getObject('rectangle');
+            rectangle.working.should.be.true;
+            req.should.be.equal(rectangle);
+        });
     });
     describe('should call initialize method decorators', function () {
         it('should call initialize method async ', async function () {

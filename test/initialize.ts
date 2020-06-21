@@ -110,6 +110,48 @@ describe('initialize', function () {
             rectangle.working.should.be.true;
 
         });
+
+
+        it.only('should call fire create event', async function () {
+
+            let injector: Injector;
+
+            injector = ioc.createContainer();
+
+            @define()
+            @singleton()
+            class Rectangle {
+                working: boolean;
+
+                constructor() {
+
+                }
+
+                @initMethod()
+                initialize() {
+                    this.working = true
+                }
+            }
+
+            injector.register(Rectangle);
+
+            let req;
+
+            injector.instanceCreatedEvent.on(action => {
+                req = action.instance;
+            })
+
+            await injector.initialize();
+
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            rectangle.working.should.be.true;
+
+            req.should.be.equal(rectangle)
+
+        });
+
     });
 
 
