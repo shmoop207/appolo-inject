@@ -69,7 +69,7 @@ describe('initialize', function () {
             let rectangle = injector.getObject('rectangle');
             rectangle.working.should.be.true;
         });
-        it.only('should call fire create event', async function () {
+        it('should call fire create event', async function () {
             let injector;
             injector = ioc.createContainer();
             let Rectangle = class Rectangle {

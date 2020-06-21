@@ -112,7 +112,7 @@ describe('initialize', function () {
         });
 
 
-        it.only('should call fire create event', async function () {
+        it('should call fire create event', async function () {
 
             let injector: Injector;
 
