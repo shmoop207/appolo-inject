@@ -32,4 +32,5 @@ exports.injectLazy = decorators_1.injectLazy;
 exports.dynamicFactory = decorators_1.dynamicFactory;
 exports.customInjectFn = decorators_1.customInjectFn;
 exports.initMethodAsync = decorators_1.initMethodAsync;
+exports.customParam = decorators_1.customParam;
 //# sourceMappingURL=index.js.map

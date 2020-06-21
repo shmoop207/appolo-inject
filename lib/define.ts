@@ -25,9 +25,21 @@ export class Define {
             aliasFactory: [],
             args: [],
             path: "",
+            customParams: {},
             override: false
         };
 
+    }
+
+    public customParam(key: string, value: any) {
+
+        if (this._definition.customParams[key]) {
+            this._definition.customParams[key] = [];
+        }
+
+        this._definition.customParams[key].push(value);
+
+        return this
     }
 
     public get definition(): IDefinition {

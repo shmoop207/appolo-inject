@@ -50,5 +50,6 @@ export interface IDefinition {
     props?: IParamInject[]
     inject?: IParamInject[]
     injectorAware?: boolean
+    customParams: { [index: string]: any[] }
 }
 

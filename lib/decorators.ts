@@ -83,6 +83,10 @@ export function override(): (fn: Function) => void {
     return addDefinitionClass("override", [])
 }
 
+export function customParam(key: string, value): (fn: Function) => void {
+
+    return addDefinitionClass("customParam", [key, value])
+}
 
 export function alias(alias: string): (fn: Function) => void {
     return addDefinitionClass("alias", [alias]);
@@ -140,7 +144,6 @@ export function injectArray(arr: (string | Class)[]): (target: any, propertyKey:
 }
 
 export function injectDictionary(dic: { [index: string]: (string | Class) }): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
-
 
 
     let args = Object.keys(dic).map(key => ({
