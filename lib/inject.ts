@@ -29,7 +29,7 @@ export class Injector {
 
     private _isInitialized: boolean = false;
 
-    private _instanceCreatedEvent = new Event<{instance: any, definition: IDefinition}>()
+    private _instanceCreatedEvent = new Event<{ instance: any, definition: IDefinition }>()
 
     constructor() {
         this._instances = {};
@@ -212,7 +212,7 @@ export class Injector {
 
             let def = this._definitions[objectId];
             if (def) {
-                def.initMethod && (this._invokeInitMethod(instance, this._definitions[objectId]));
+                (this._invokeInitMethod(instance, this._definitions[objectId]));
                 def.initMethodAsync && asyncInitPromises.push(instance[def.initMethodAsync]())
             }
         }
