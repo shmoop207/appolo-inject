@@ -2,6 +2,7 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
+import {define, inject, injectParam, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -384,7 +385,7 @@ describe('Constructor Args', function () {
                 size: number
                 name: string
 
-                constructor( size: number,name: string,) {
+                constructor(size: number, name: string,) {
                     this.size = size;
                     this.name = name;
                 }
@@ -444,7 +445,7 @@ describe('Constructor Args', function () {
                 fooManager: FooManager;
                 name: string;
 
-                constructor(fooManager,name) {
+                constructor(fooManager, name) {
                     this.fooManager = fooManager;
                     this.name = name + this.fooManager.name;
                 }
@@ -511,6 +512,42 @@ describe('Constructor Args', function () {
             rectangle.name.should.equal('rectanglefoobar');
         });
     });
+
+    describe('inject arg with inject params', function () {
+        it("should injectParams by order", async function () {
+
+            @define()
+            @singleton()
+            class AManager {
+            }
+
+            @define()
+            @singleton()
+            class BManager {
+            }
+
+            @define()
+            @singleton()
+            class CManager {
+                constructor(@injectParam() public aManager: AManager, @inject() public bManager: BManager) {
+                }
+            }
+
+            let injector = ioc.createContainer();
+
+
+            injector.registerMulti([AManager, BManager, CManager])
+
+            await injector.initialize();
+
+            let manager = injector.get<CManager>(CManager)
+
+            manager.aManager.should.be.instanceOf(AManager)
+            manager.bManager.should.be.instanceOf(BManager)
+
+
+        })
+    })
 
 })
 ;

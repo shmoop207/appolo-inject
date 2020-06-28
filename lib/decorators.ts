@@ -88,14 +88,29 @@ export function customParam(key: string, value): (fn: Function) => void {
     return addDefinitionClass("customParam", [key, value])
 }
 
-export function alias(alias: string): (fn: Function) => void {
-    return addDefinitionClass("alias", [alias]);
+export function alias(alias: string): (fn: Function, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
+
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if (propertyKey) {
+            injectAlias(alias).apply(this, arguments)
+        } else {
+            addDefinitionClass("alias", [alias]).apply(this,arguments);
+        }
+    }
+
 }
 
 
-export function aliasFactory(aliasFactory: string): (fn: Function) => void {
+export function aliasFactory(aliasFactory: string): (fn: Function, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
 
-    return addDefinitionClass("aliasFactory", [aliasFactory]);
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if (propertyKey) {
+            injectAliasFactory(aliasFactory).apply(this, arguments)
+        } else {
+            addDefinitionClass("aliasFactory", [aliasFactory]).apply(this,arguments)
+        }
+    }
+
 }
 
 
@@ -109,8 +124,16 @@ export function initMethodAsync(): (target: any, propertyKey: string, descriptor
     return addDefinitionProperty("initMethodAsync", []);
 }
 
-export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
-    return addDefinitionProperty("inject", [Util.getClassNameOrId(inject)], true);
+export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor | number) => any {
+
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if (!propertyKey) {
+            injectParam(inject).apply(this, arguments)
+        } else {
+            addDefinitionProperty("inject", [Util.getClassNameOrId(inject)], true).apply(this, arguments)
+        }
+    }
+
 }
 
 export function injectLazy(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
@@ -168,7 +191,6 @@ export function injectValue(value: any): (target: any, propertyKey: string, desc
     return addDefinitionProperty("injectValue", [value]);
 }
 
-
 export function injectParam(name?: string | Class) {
     return function (target: any, propertyKey: string, index: number) {
         let args = [];
@@ -177,7 +199,7 @@ export function injectParam(name?: string | Class) {
         if (!propertyKey) {
             args = Util.getFunctionArgs(target);
 
-            addDefinition("args", [{ref: Util.getClassNameOrId(name) || args[index]}], target);
+            addDefinition("args", [{ref: Util.getClassNameOrId(name) || args[index]}, index], target);
 
             return;
         }

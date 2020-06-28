@@ -232,10 +232,13 @@ export class Define {
         return this;
     }
 
-    public args(args: IParamInject[] | IParamInject): this {
+    public args(args: IParamInject[] | IParamInject, index?: number): this {
         if (Array.isArray(args)) {
             this._definition.args.push.apply(this._definition.args, args)
+        } else if (index !== undefined) {
+            this._definition.args[index] = args
         } else {
+
             this._definition.args.push(args)
         }
         return this;

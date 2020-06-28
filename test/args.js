@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 const chai = require("chai");
 const ioc = require("../lib/inject");
+const decorators_1 = require("../lib/decorators");
 let should = chai.should();
 describe('Constructor Args', function () {
     describe('inject value  to constructor', function () {
@@ -321,6 +323,39 @@ describe('Constructor Args', function () {
             should.exist(rectangle.fooManager);
             should.exist(rectangle.fooManager.barManager);
             rectangle.name.should.equal('rectanglefoobar');
+        });
+    });
+    describe('inject arg with inject params', function () {
+        it("should injectParams by order", async function () {
+            let AManager = class AManager {
+            };
+            AManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], AManager);
+            let BManager = class BManager {
+            };
+            BManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], BManager);
+            let CManager = class CManager {
+                constructor(aManager, bManager) {
+                    this.aManager = aManager;
+                    this.bManager = bManager;
+                }
+            };
+            CManager = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton(),
+                tslib_1.__param(0, decorators_1.injectParam()), tslib_1.__param(1, decorators_1.inject())
+            ], CManager);
+            let injector = ioc.createContainer();
+            injector.registerMulti([AManager, BManager, CManager]);
+            await injector.initialize();
+            let manager = injector.get(CManager);
+            manager.aManager.should.be.instanceOf(AManager);
+            manager.bManager.should.be.instanceOf(BManager);
         });
     });
 });
