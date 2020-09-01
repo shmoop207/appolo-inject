@@ -15,6 +15,7 @@ export interface IParamInject {
     dictionary?: IParamInject[],
     factory?: { id: string, injector?: Injector },
     factoryMethod?: string,
+    factoryMethodAsync?: string,
     parent?: Class
     lazy?: true
     lazyFn?: Function
@@ -42,6 +43,8 @@ export interface IDefinition {
     aliasFactory?: string[]
     alias?: string[]
     initMethod?: string
+    bootstrapMethod?: string
+    bootstrapMethodAsync?: string
     initMethodAsync?: string
     injector?: Injector;
     //$isWired?: boolean

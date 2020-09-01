@@ -69,6 +69,35 @@ describe('initialize', function () {
             let rectangle = injector.getObject('rectangle');
             rectangle.working.should.be.true;
         });
+        it('should call bootstrap method', async function () {
+            let injector;
+            injector = ioc.createContainer();
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                initialize() {
+                    this.working = true;
+                }
+                bootstrap() {
+                    this.working2 = true;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.initMethod()
+            ], Rectangle.prototype, "initialize", null);
+            tslib_1.__decorate([
+                decorators_1.bootstrapMethod()
+            ], Rectangle.prototype, "bootstrap", null);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define(),
+                decorators_1.singleton()
+            ], Rectangle);
+            injector.register(Rectangle);
+            await injector.initialize();
+            let rectangle = injector.getObject('rectangle');
+            rectangle.working.should.be.true;
+            rectangle.working2.should.be.true;
+        });
         it('should call fire create event', async function () {
             let injector;
             injector = ioc.createContainer();
@@ -106,12 +135,19 @@ describe('initialize', function () {
                 }
                 async initialize() {
                     await new Promise(resolve => setTimeout(() => resolve(), 1));
-                    this.working = true;
+                    this.working = "aa";
+                }
+                async bootstrap() {
+                    await new Promise(resolve => setTimeout(() => resolve(), 1));
+                    this.working2 = this.working + "bb";
                 }
             };
             tslib_1.__decorate([
                 decorators_1.initMethodAsync()
             ], Rectangle.prototype, "initialize", null);
+            tslib_1.__decorate([
+                decorators_1.bootstrapMethodAsync()
+            ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton()
@@ -119,7 +155,8 @@ describe('initialize', function () {
             injector.register(Rectangle);
             await injector.initialize();
             let rectangle = injector.getObject('rectangle');
-            rectangle.working.should.be.true;
+            rectangle.working.should.be.eq("aa");
+            rectangle.working2.should.be.eq("aabb");
         });
     });
 });

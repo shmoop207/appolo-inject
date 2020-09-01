@@ -3,7 +3,19 @@ import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
 import {IFactory} from "../lib/IFactory";
-import {define, singleton, inject, injectAlias, alias, injectFactory, factory,initMethod,injectFactoryMethod,dynamicFactory} from "../lib/decorators";
+import {
+    define,
+    singleton,
+    inject,
+    injectAlias,
+    alias,
+    injectFactory,
+    factory,
+    initMethod,
+    injectFactoryMethod,
+    dynamicFactory,
+    injectFactoryMethodAsync
+} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -278,6 +290,67 @@ describe('Property Factory Method', function () {
 
     describe('inject factory method with initialize init method with decorators', function () {
         let injector:Injector, FooManager;
+
+        it('should inject factory method that creates objects and call object with initialize async', async function () {
+            injector = ioc.createContainer();
+
+            @define()
+            class FooManager{
+                name:number
+                constructor() {
+
+                }
+
+                @initMethod()
+                initialize() {
+                    this.name = Math.random();
+                }
+
+                getName() {
+                    return this.name;
+                }
+            }
+
+            @define()
+            class Rectangle{
+                @injectFactoryMethodAsync(FooManager) createFooManager:()=>FooManager;
+                constructor() {
+
+                }
+
+                async getName() {
+
+                   let result =  await this.createFooManager()
+
+                    return result.getName()
+                }
+
+            }
+
+            injector.registerMulti([FooManager,Rectangle])
+
+            injector.initialize();
+
+            let rectangle = injector.getObject<Rectangle>('rectangle');
+
+            should.exist(rectangle.createFooManager);
+
+            rectangle.createFooManager.should.be.a('Function')
+
+            //rectangle.createFooManager().should.be.instanceof(FooManager);
+
+            //should.exist(rectangle.createFooManager().name);
+
+            let name1 = await rectangle.getName();
+
+            let name2 = await rectangle.getName();
+
+            should.exist(name1);
+
+            should.exist(name2);
+
+            name1.should.not.be.equal(name2)
+        });
 
 
         it('should inject factory method that creates objects and call object with initialize', function () {

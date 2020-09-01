@@ -14,7 +14,6 @@ import {
 } from "../lib/decorators";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
-import ITest = Mocha.ITest;
 
 let should = chai.should();
 

@@ -140,6 +140,14 @@ export class Define {
         })
     }
 
+    public injectFactoryMethodAsync(name: string, factoryMethod: string, parent?: Class): this {
+        return this.inject({
+            name: name,
+            factoryMethodAsync: factoryMethod,
+            parent: parent
+        })
+    }
+
     public injectAlias(name: string, alias: string, indexBy?: string, parent?: Class): this {
         return this.inject({
             name: name,
@@ -208,6 +216,16 @@ export class Define {
 
     public initMethod(initMethod?: string): this {
         this._definition.initMethod = initMethod || "initialize";
+        return this;
+    }
+
+    public bootstrapMethod(bootstrapMethod?: string): this {
+        this._definition.bootstrapMethod = bootstrapMethod || "bootstrap";
+        return this;
+    }
+
+    public bootstrapMethodAsync(bootstrapMethod?: string): this {
+        this._definition.bootstrapMethodAsync = bootstrapMethod || "bootstrap";
         return this;
     }
 

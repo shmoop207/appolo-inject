@@ -94,7 +94,7 @@ export function alias(alias: string): (fn: Function, propertyKey?: string, descr
         if (propertyKey) {
             injectAlias(alias).apply(this, arguments)
         } else {
-            addDefinitionClass("alias", [alias]).apply(this,arguments);
+            addDefinitionClass("alias", [alias]).apply(this, arguments);
         }
     }
 
@@ -107,7 +107,7 @@ export function aliasFactory(aliasFactory: string): (fn: Function, propertyKey?:
         if (propertyKey) {
             injectAliasFactory(aliasFactory).apply(this, arguments)
         } else {
-            addDefinitionClass("aliasFactory", [aliasFactory]).apply(this,arguments)
+            addDefinitionClass("aliasFactory", [aliasFactory]).apply(this, arguments)
         }
     }
 
@@ -122,6 +122,16 @@ export function initMethod(): (target: any, propertyKey: string, descriptor?: Pr
 export function initMethodAsync(): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
     return addDefinitionProperty("initMethodAsync", []);
+}
+
+export function bootstrapMethod(): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("bootstrapMethod", []);
+}
+
+export function bootstrapMethodAsync(): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("bootstrapMethodAsync", []);
 }
 
 export function inject(inject?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor | number) => any {
@@ -149,6 +159,11 @@ export function customInjectFn(fn: Function) {
 export function injectFactoryMethod(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
     return addDefinitionProperty("injectFactoryMethod", [Util.getClassNameOrId(factoryMethod)], true);
+}
+
+export function injectFactoryMethodAsync(factoryMethod: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("injectFactoryMethodAsync", [Util.getClassNameOrId(factoryMethod)], true);
 }
 
 export function injectAlias(alias: string, indexBy?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {

@@ -5,7 +5,7 @@ import {Class, IDefinition, IParamInject} from "./IDefinition";
 import {Define} from "./define";
 import {InjectDefineSymbol, InjectParamSymbol} from "./decorators";
 import {Util} from "./util";
-import {Event, IEvent} from "appolo-event-dispatcher";
+import {Event, IEvent} from "@appolo/events";
 
 type keyObject = { [index: string]: Object }
 
@@ -221,6 +221,23 @@ export class Injector {
             await Promise.all(asyncInitPromises);
         }
 
+        let asyncBootstrapPromises = [];
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let objectId = keys[i], instance = this._instances[objectId];
+
+            let def = this._definitions[objectId];
+            if (def) {
+                (this._invokeBootStrapMethod(instance, this._definitions[objectId]));
+                def.bootstrapMethodAsync && asyncBootstrapPromises.push(instance[def.bootstrapMethodAsync]())
+            }
+        }
+
+        if (asyncBootstrapPromises.length) {
+            await Promise.all(asyncBootstrapPromises);
+        }
+
+
         this._isInitialized = true;
     }
 
@@ -270,6 +287,26 @@ export class Injector {
         } catch (e) {
             return null;
         }
+    }
+
+    public async getAsync<T>(objectID: string | Function, runtimeArgs?: any[]): Promise<T> {
+
+        let id = Util.getClassId(objectID);
+
+        let def = this.getDefinition(id);
+
+        let obj = this.get<T>(objectID, runtimeArgs);
+
+        if (def.initMethodAsync) {
+            await obj[def.initMethodAsync]();
+        }
+
+        if (def.bootstrapMethodAsync) {
+            await obj[def.bootstrapMethodAsync]();
+        }
+
+        return obj;
+
     }
 
     public get<T>(objectID: string | Function, runtimeArgs?: any[]): T {
@@ -662,7 +699,7 @@ export class Injector {
 
             let aliasName = definition.aliasFactory[i];
 
-            let delegateFn = Util.createDelegate(this._createFactoryMethod, this, [objectId, this]);
+            let delegateFn = Util.createDelegate(((definition.bootstrapMethodAsync || definition.initMethodAsync) ? this._createFactoryMethodAsync : this._createFactoryMethod), this, [objectId, this]);
             (delegateFn as any).type = definition.type;
             Util.mapPush(this._aliasFactory, aliasName, delegateFn)
         }
@@ -675,6 +712,13 @@ export class Injector {
         return def.dynamicFactory ? (instance as IFactory<any>).get() : instance
     }
 
+    private async _createFactoryMethodAsync(objectId: string, injector: Injector, runtimeArgs?: any[]) {
+
+        let instance = await injector.getAsync(objectId, runtimeArgs);
+        let def = injector.getDefinition(objectId);
+        return def.dynamicFactory ? (instance as IFactory<any>).get() : instance
+    }
+
     private _invokeInitMethod<T>(instance: T, definition: IDefinition) {
 
         if (instance[IsWiredSymbol]) {
@@ -683,6 +727,18 @@ export class Injector {
 
         if (definition.initMethod) {
             instance[definition.initMethod]();
+        }
+
+    }
+
+    private _invokeBootStrapMethod<T>(instance: T, definition: IDefinition) {
+
+        if (instance[IsWiredSymbol]) {
+            return
+        }
+
+        if (definition.bootstrapMethod) {
+            instance[definition.bootstrapMethod]();
         }
 
         instance[IsWiredSymbol] = true;
@@ -771,6 +827,8 @@ export class Injector {
 
         this._invokeInitMethod<T>(instance, definition);
 
+        this._invokeBootStrapMethod(instance, definition);
+
         instance[IsWiredSymbol] = true;
     }
 
@@ -825,6 +883,9 @@ export class Injector {
             } else if (prop.factoryMethod) {
 
                 object[prop.name] = Util.createDelegate(this._createFactoryMethod, this, [prop.factoryMethod, prop.injector || this])
+            } else if (prop.factoryMethodAsync) {
+
+                object[prop.name] = Util.createDelegate(this._createFactoryMethodAsync, this, [prop.factoryMethodAsync, prop.injector || this])
             } else if (prop.lazyFn) {
                 this._defineProperty(object, prop.name, prop.lazyFn)
 

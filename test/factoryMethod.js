@@ -174,6 +174,51 @@ describe('Property Factory Method', function () {
     });
     describe('inject factory method with initialize init method with decorators', function () {
         let injector, FooManager;
+        it('should inject factory method that creates objects and call object with initialize async', async function () {
+            injector = ioc.createContainer();
+            let FooManager = class FooManager {
+                constructor() {
+                }
+                initialize() {
+                    this.name = Math.random();
+                }
+                getName() {
+                    return this.name;
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.initMethod()
+            ], FooManager.prototype, "initialize", null);
+            FooManager = tslib_1.__decorate([
+                decorators_1.define()
+            ], FooManager);
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+                async getName() {
+                    let result = await this.createFooManager();
+                    return result.getName();
+                }
+            };
+            tslib_1.__decorate([
+                decorators_1.injectFactoryMethodAsync(FooManager)
+            ], Rectangle.prototype, "createFooManager", void 0);
+            Rectangle = tslib_1.__decorate([
+                decorators_1.define()
+            ], Rectangle);
+            injector.registerMulti([FooManager, Rectangle]);
+            injector.initialize();
+            let rectangle = injector.getObject('rectangle');
+            should.exist(rectangle.createFooManager);
+            rectangle.createFooManager.should.be.a('Function');
+            //rectangle.createFooManager().should.be.instanceof(FooManager);
+            //should.exist(rectangle.createFooManager().name);
+            let name1 = await rectangle.getName();
+            let name2 = await rectangle.getName();
+            should.exist(name1);
+            should.exist(name2);
+            name1.should.not.be.equal(name2);
+        });
         it('should inject factory method that creates objects and call object with initialize', function () {
             injector = ioc.createContainer();
             let FooManager = class FooManager {
