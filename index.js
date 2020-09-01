@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.customParam = exports.initMethodAsync = exports.customInjectFn = exports.dynamicFactory = exports.injectLazy = exports.override = exports.factory = exports.lazy = exports.alias = exports.aliasFactory = exports.injectValue = exports.injectObjectProperty = exports.injectFactory = exports.injectDictionary = exports.injectArray = exports.initMethod = exports.injectFactoryMethod = exports.injectAlias = exports.injectAliasFactory = exports.inject = exports.singleton = exports.injectParam = exports.define = exports.InjectDefineSymbol = exports.Util = exports.Define = exports.createContainer = exports.Injector = void 0;
+exports.injectorAware = exports.bootstrapMethod = exports.bootstrapMethodAsync = exports.injectFactoryMethodAsync = exports.customParam = exports.initMethodAsync = exports.customInjectFn = exports.dynamicFactory = exports.injectLazy = exports.override = exports.factory = exports.lazy = exports.alias = exports.aliasFactory = exports.injectValue = exports.injectObjectProperty = exports.injectFactory = exports.injectDictionary = exports.injectArray = exports.initMethod = exports.injectFactoryMethod = exports.injectAlias = exports.injectAliasFactory = exports.inject = exports.singleton = exports.injectParam = exports.define = exports.InjectDefineSymbol = exports.Util = exports.Define = exports.createContainer = exports.Injector = void 0;
 exports.default = require('./lib/inject');
 var inject_1 = require("./lib/inject");
 Object.defineProperty(exports, "Injector", { enumerable: true, get: function () { return inject_1.Injector; } });
@@ -34,4 +34,8 @@ Object.defineProperty(exports, "dynamicFactory", { enumerable: true, get: functi
 Object.defineProperty(exports, "customInjectFn", { enumerable: true, get: function () { return decorators_1.customInjectFn; } });
 Object.defineProperty(exports, "initMethodAsync", { enumerable: true, get: function () { return decorators_1.initMethodAsync; } });
 Object.defineProperty(exports, "customParam", { enumerable: true, get: function () { return decorators_1.customParam; } });
+Object.defineProperty(exports, "injectFactoryMethodAsync", { enumerable: true, get: function () { return decorators_1.injectFactoryMethodAsync; } });
+Object.defineProperty(exports, "bootstrapMethodAsync", { enumerable: true, get: function () { return decorators_1.bootstrapMethodAsync; } });
+Object.defineProperty(exports, "bootstrapMethod", { enumerable: true, get: function () { return decorators_1.bootstrapMethod; } });
+Object.defineProperty(exports, "injectorAware", { enumerable: true, get: function () { return decorators_1.injectorAware; } });
 //# sourceMappingURL=index.js.map

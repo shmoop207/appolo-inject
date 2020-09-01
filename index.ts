@@ -24,5 +24,14 @@ export {
     alias,
     lazy,
     factory,
-    override, injectLazy, dynamicFactory, customInjectFn, initMethodAsync, customParam
+    override,
+    injectLazy,
+    dynamicFactory,
+    customInjectFn,
+    initMethodAsync,
+    customParam,
+    injectFactoryMethodAsync,
+    bootstrapMethodAsync,
+    bootstrapMethod,
+    injectorAware
 } from './lib/decorators'
