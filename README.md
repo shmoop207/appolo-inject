@@ -22,7 +22,7 @@ npm install appolo-inject --save
 ## Usage
  ### Creating injection container 
  ```javascript  
- var inject = require('appolo-inject');  
+ var inject = require('@appolo/inject');  
 var injector = inject.createContainer();  
 
 injector.addDefinitions({...});  
@@ -32,7 +32,7 @@ injector.initialize();
 ### Add Definitions 
 the definition object key is used for object class id.  
 ```javascript  
-var inject = require('appolo-inject');  
+var inject = require('@appolo/inject');  
 class FooController{ }  
 
 var injector = inject.createContainer();  
