@@ -1105,7 +1105,7 @@ describe('Property Factory', function () {
             @injectorAware()
             class BooFactory implements IFactory<string> {
 
-                @inject() fooManager: FooManager;
+                //@inject() fooManager: FooManager;
                 @injectAlias("aaa") alias:any[]
 
                 $injector:Injector

@@ -147,7 +147,7 @@ describe('Ioc', function () {
     });
     describe('get object by type', function () {
         let injector;
-        it('should get by type', function () {
+        it('should get by type', async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -169,7 +169,7 @@ describe('Ioc', function () {
                     singleton: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
             let objects = injector.getObjectsByType(Rectangle);
             objects.should.be.instanceof(Array).and.have.lengthOf(1);
             objects[0].should.be.instanceof(Rectangle);

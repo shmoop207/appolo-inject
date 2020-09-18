@@ -830,9 +830,6 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.inject()
-            ], BooFactory.prototype, "fooManager", void 0);
-            tslib_1.__decorate([
                 decorators_1.injectAlias("aaa")
             ], BooFactory.prototype, "alias", void 0);
             BooFactory = tslib_1.__decorate([

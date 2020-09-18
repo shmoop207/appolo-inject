@@ -8,7 +8,7 @@ let should = chai.should();
 describe('Singleton', function () {
     describe('create singleton object', function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -24,7 +24,7 @@ describe('Singleton', function () {
                     singleton: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should save object in instances', function () {
             should.exist(injector.getInstances()['rectangle']);
@@ -43,7 +43,7 @@ describe('Singleton', function () {
     });
     describe('create singleton object with decorators', function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             let Rectangle = class Rectangle {
                 constructor() {
@@ -58,7 +58,7 @@ describe('Singleton', function () {
                 decorators_1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
-            injector.initialize();
+            await injector.initialize();
         });
         it('should save object in instances', function () {
             should.exist(injector.getInstances()['rectangle']);

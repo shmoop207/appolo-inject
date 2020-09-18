@@ -82,11 +82,11 @@ export class Injector {
         }
 
         this.initDefinitions();
-
+        await this.initFactories();
         this.initInstances();
 
 
-        await this.initFactories();
+
 
         this.initProperties();
 

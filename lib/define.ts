@@ -46,6 +46,10 @@ export class Define {
         return this._definition;
     }
 
+    public id(): string {
+        return this._definition && this._definition.id;
+    }
+
     public type(type: Function): this {
         this._definition.type = type;
 

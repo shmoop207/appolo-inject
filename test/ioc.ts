@@ -236,7 +236,7 @@ describe('Ioc', function () {
         let injector: Injector;
 
 
-        it('should get by type', function () {
+        it('should get by type', async function () {
 
             injector = ioc.createContainer();
 
@@ -268,7 +268,7 @@ describe('Ioc', function () {
                 }
             });
 
-            injector.initialize();
+           await injector.initialize();
 
             let objects = injector.getObjectsByType(Rectangle);
 
