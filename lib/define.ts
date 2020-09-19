@@ -46,7 +46,7 @@ export class Define {
         return this._definition;
     }
 
-    public id(): string {
+    public get id(): string {
         return this._definition && this._definition.id;
     }
 
