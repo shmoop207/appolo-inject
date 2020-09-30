@@ -563,7 +563,10 @@ export class Injector {
     }
 
 
-    public getDefinition(id: string): IDefinition {
+    public getDefinition(id: string | Function): IDefinition {
+
+        id = Util.getClassNameOrId(id);
+
         let def = this.getOwnDefinition(id);
 
         if (def) {
@@ -579,7 +582,10 @@ export class Injector {
         return !!this.getOwnDefinition(id);
     }
 
-    public getOwnDefinition(id: string): IDefinition {
+    public getOwnDefinition(id: string | Function): IDefinition {
+
+        id = Util.getClassNameOrId(id);
+
         let def = this._definitions[id];
 
         if (def) {
@@ -635,6 +641,7 @@ export class Injector {
             ? (Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type))
             : new Define(id as string);
 
+        define = define.clone();
         define.path(filePath);
         define.injector(this);
 

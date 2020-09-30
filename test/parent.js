@@ -262,6 +262,23 @@ describe('Parent', function () {
                 let test1 = injector3.getObject(ClassA);
                 test1.name.should.be.ok;
             });
+            it('should have diffrent injects', async function () {
+                let injector = ioc.createContainer();
+                let injector2 = ioc.createContainer();
+                let ClassA = class ClassA {
+                    constructor() {
+                        this.name = "working";
+                    }
+                };
+                ClassA = tslib_1.__decorate([
+                    decorators_1.define(),
+                    decorators_1.singleton()
+                ], ClassA);
+                injector.register(ClassA);
+                injector2.register(ClassA);
+                injector.getDefinition(ClassA).injector.should.be.equal(injector);
+                injector2.getDefinition(ClassA).injector.should.be.equal(injector2);
+            });
         });
         describe('fire parent events', function () {
             it('should fire created events', async function () {
@@ -299,8 +316,8 @@ describe('Parent', function () {
                 await injector2.initialize();
                 spy1.should.have.been.callCount(2);
                 spy2.should.have.been.callCount(1);
-                spy1.getCall(0).args[0].definition.type === ClassA;
-                spy1.getCall(0).args[0].instance.constructor === ClassA;
+                spy1.getCall(0).args[0].definition.type.should.be.equal(ClassA);
+                spy1.getCall(0).args[0].instance.constructor.should.be.equal(ClassA);
             });
         });
     });

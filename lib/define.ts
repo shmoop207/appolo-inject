@@ -273,5 +273,12 @@ export class Define {
         return this;
     }
 
+    public clone():Define{
+        let define = new Define(this._id);
+
+        define._definition = Util.cloneDeep(this._definition);
+
+        return define;
+    }
 
 }

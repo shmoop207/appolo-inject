@@ -16,6 +16,7 @@ import chai = require('chai');
 import sinon = require('sinon');
 import sinonChai = require('sinon-chai');
 import    ioc = require('../lib/inject');
+
 chai.use(sinonChai);
 let should = chai.should();
 
@@ -327,6 +328,27 @@ describe('Parent', function () {
                 test1.name.should.be.ok;
             });
 
+            it('should have diffrent injects', async function () {
+
+                let injector = ioc.createContainer();
+                let injector2 = ioc.createContainer();
+
+                @define()
+                @singleton()
+                class ClassA {
+
+                    public name: string = "working";
+                }
+
+
+                injector.register(ClassA);
+                injector2.register(ClassA);
+
+                injector.getDefinition(ClassA).injector.should.be.equal(injector);
+                injector2.getDefinition(ClassA).injector.should.be.equal(injector2);
+
+            });
+
 
         });
 
@@ -368,14 +390,14 @@ describe('Parent', function () {
 
                 injector2.instanceInitializedEvent.on(spy3);
                 injector2.instanceOwnInitializedEvent.on(spy4);
-                
+
                 await injector2.initialize();
 
                 spy1.should.have.been.callCount(2)
                 spy2.should.have.been.callCount(1)
 
-                spy1.getCall(0).args[0].definition.type === ClassA;
-                spy1.getCall(0).args[0].instance.constructor === ClassA;
+                spy1.getCall(0).args[0].definition.type.should.be.equal(ClassA);
+                spy1.getCall(0).args[0].instance.constructor.should.be.equal(ClassA);
             });
 
 
