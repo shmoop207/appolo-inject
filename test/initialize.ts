@@ -176,7 +176,7 @@ describe('initialize', function () {
 
             let req;
 
-            injector.instanceCreatedEvent.on(action => {
+            injector.instanceInitializedEvent.on(action => {
                 req = action.instance;
             })
 

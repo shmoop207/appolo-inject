@@ -29,7 +29,11 @@ export class Injector {
 
     private _isInitialized: boolean = false;
 
-    private _instanceCreatedEvent = new Event<{ instance: any, definition: IDefinition }>()
+    private _instanceOwnInitializedEvent = new Event<{ instance: any, definition: IDefinition }>();
+    private _instanceInitializedEvent = new Event<{ instance: any, definition: IDefinition }>();
+
+    private _instanceOwnCreatedEvent = new Event<{ instance: any, definition: IDefinition }>();
+    private _instanceCreatedEvent = new Event<{ instance: any, definition: IDefinition }>();
 
     constructor() {
         this._instances = {};
@@ -43,8 +47,20 @@ export class Injector {
         this._children = []
     }
 
+    public get instanceInitializedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
+        return this._instanceInitializedEvent
+    }
+
+    public get instanceOwnInitializedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
+        return this._instanceOwnInitializedEvent
+    }
+
     public get instanceCreatedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
         return this._instanceCreatedEvent
+    }
+
+    public get instanceOwnCreatedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
+        return this._instanceOwnCreatedEvent
     }
 
     public get parent(): Injector {
@@ -84,8 +100,6 @@ export class Injector {
         this.initDefinitions();
         await this.initFactories();
         this.initInstances();
-
-
 
 
         this.initProperties();
@@ -329,7 +343,7 @@ export class Injector {
             return this.parent ? this.parent.getFactoryValue<T>(objectID) : null;
         }
 
-        if (def.injector) {
+        if (def.injector && def.injector !== this) {
             return def.injector.getFactoryValue<T>(def.refName || def.id);
         }
 
@@ -350,7 +364,7 @@ export class Injector {
             return this.parent ? this.parent.getFactory<T>(objectID, refs) : null;
         }
 
-        if (def.injector) {
+        if (def.injector && def.injector !== this) {
             return def.injector.getFactory<T>(def.refName || def.id, refs);
         }
 
@@ -414,7 +428,7 @@ export class Injector {
         let def = this._definitions[objectID];
 
         if (def) {
-            return def.injector
+            return def.injector && def.injector !== this
                 ? def.injector.getObject(def.refName || objectID, runtimeArgs)
                 : this._createObjectInstance<T>(objectID, this._definitions[objectID], runtimeArgs);
         }
@@ -569,7 +583,7 @@ export class Injector {
         let def = this._definitions[id];
 
         if (def) {
-            return def.injector ? def.injector.getDefinition(def.refName || id) : def;
+            return def.injector && def.injector !== this ? def.injector.getDefinition(def.refName || id) : def;
         }
     }
 
@@ -617,13 +631,14 @@ export class Injector {
             id = Util.getClassName(type);
         }
 
-        let define = type
+        let define: Define = type
             ? (Reflect.getMetadata(InjectDefineSymbol, type) || new Define(id as string, type))
             : new Define(id as string);
 
         define.path(filePath);
+        define.injector(this);
 
-        this.addDefinition(define.definition.id || id, define.definition);
+        this.addDefinition(define.definition.id || id as string, define.definition);
 
         return define;
     }
@@ -659,6 +674,13 @@ export class Injector {
             instance = args.length ? new (def.type as any)(...args) : new (def.type as any)();
         } catch (e) {
             throw new Error("Injector failed to create object objectID:" + objectID + "' \n" + e);
+        }
+
+        this._instanceCreatedEvent.fireEvent({instance, definition: def});
+        this._instanceOwnCreatedEvent.fireEvent({instance, definition: def});
+
+        if (this._parent) {
+            (this._parent.instanceCreatedEvent as Event<any>).fireEvent({instance, definition: def})
         }
 
         if (def.singleton && def.lazy) {
@@ -743,7 +765,12 @@ export class Injector {
 
         instance[IsWiredSymbol] = true;
 
-        this._instanceCreatedEvent.fireEvent({instance, definition});
+        this._instanceInitializedEvent.fireEvent({instance, definition});
+        this._instanceOwnInitializedEvent.fireEvent({instance, definition});
+
+        if (this._parent) {
+            (this._parent.instanceInitializedEvent as Event<any>).fireEvent({instance, definition});
+        }
     }
 
     private _prepareProperties(definition: IDefinition): void {
@@ -765,7 +792,10 @@ export class Injector {
             }
 
             if (dto.parent && dto.parent !== definition.type) {
-                dto.injector = this._children.find(injector => !!injector.getDefinitionsValue().find(def => def.type === dto.parent))
+
+                let define = Util.getClassDefinition(dto.parent);
+
+                dto.injector = define && define.definition.injector ? define.definition.injector : this._children.find(injector => !!injector.getDefinitionsValue().find(def => def.type === dto.parent))
             }
 
             let injector = dto.injector || this;
@@ -833,7 +863,7 @@ export class Injector {
     }
 
     private _getByParamObj(propObj: IParamInject, ref: string, args?: any[]) {
-        return propObj.injector ? propObj.injector._get(ref, args) : this._get(ref, args)
+        return propObj.injector && propObj.injector !== this ? propObj.injector._get(ref, args) : this._get(ref, args)
     }
 
     private _injectPropertiesAndLookUpMethods<T>(object: T, objectDefinition: IDefinition, objectId: string) {
@@ -962,7 +992,7 @@ export class Injector {
         for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i], factory = factoryData[propName];
 
-            instance[propName] = factory.injector ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
+            instance[propName] = factory.injector && factory.injector !== this ? factory.injector.getFactoryValue(factory.id) : this.getFactoryValue(factory.id);
         }
     }
 

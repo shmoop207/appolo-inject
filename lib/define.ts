@@ -1,6 +1,7 @@
 "use strict";
 import {Class, IDefinition, IParamInject} from "./IDefinition";
 import {Util} from "./util";
+import {Injector} from "./inject";
 
 export class Define {
 
@@ -52,6 +53,12 @@ export class Define {
 
     public type(type: Function): this {
         this._definition.type = type;
+
+        return this;
+    }
+
+    public injector(injector: Injector): this {
+        this._definition.injector = injector;
 
         return this;
     }

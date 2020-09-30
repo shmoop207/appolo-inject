@@ -13,8 +13,10 @@ import {
     singleton
 } from "../lib/decorators";
 import chai = require('chai');
+import sinon = require('sinon');
+import sinonChai = require('sinon-chai');
 import    ioc = require('../lib/inject');
-
+chai.use(sinonChai);
 let should = chai.should();
 
 describe('Parent', function () {
@@ -323,6 +325,57 @@ describe('Parent', function () {
                 let test1 = injector3.getObject<ClassA>(ClassA);
 
                 test1.name.should.be.ok;
+            });
+
+
+        });
+
+        describe('fire parent events', function () {
+
+
+            it('should fire created events', async function () {
+
+                let injector = ioc.createContainer();
+                let injector2 = ioc.createContainer();
+
+                @define()
+                @singleton()
+                class ClassA {
+
+                    public name: string = "working";
+                }
+
+                @define()
+                @singleton()
+                class ClassB {
+
+                    public name: string = "working";
+                }
+
+
+                injector.register(ClassA);
+                injector.parent = injector2;
+
+                injector2.register(ClassB);
+
+                let spy1 = sinon.spy();
+                let spy2 = sinon.spy();
+                let spy3 = sinon.spy();
+                let spy4 = sinon.spy();
+
+                injector2.instanceCreatedEvent.on(spy1);
+                injector2.instanceOwnCreatedEvent.on(spy2);
+
+                injector2.instanceInitializedEvent.on(spy3);
+                injector2.instanceOwnInitializedEvent.on(spy4);
+                
+                await injector2.initialize();
+
+                spy1.should.have.been.callCount(2)
+                spy2.should.have.been.callCount(1)
+
+                spy1.getCall(0).args[0].definition.type === ClassA;
+                spy1.getCall(0).args[0].instance.constructor === ClassA;
             });
 
 

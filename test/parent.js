@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const decorators_1 = require("../lib/decorators");
 const chai = require("chai");
+const sinon = require("sinon");
+const sinonChai = require("sinon-chai");
 const ioc = require("../lib/inject");
+chai.use(sinonChai);
 let should = chai.should();
 describe('Parent', function () {
     describe('get object from parent', function () {
@@ -258,6 +261,46 @@ describe('Parent', function () {
                 await injector3.initialize();
                 let test1 = injector3.getObject(ClassA);
                 test1.name.should.be.ok;
+            });
+        });
+        describe('fire parent events', function () {
+            it('should fire created events', async function () {
+                let injector = ioc.createContainer();
+                let injector2 = ioc.createContainer();
+                let ClassA = class ClassA {
+                    constructor() {
+                        this.name = "working";
+                    }
+                };
+                ClassA = tslib_1.__decorate([
+                    decorators_1.define(),
+                    decorators_1.singleton()
+                ], ClassA);
+                let ClassB = class ClassB {
+                    constructor() {
+                        this.name = "working";
+                    }
+                };
+                ClassB = tslib_1.__decorate([
+                    decorators_1.define(),
+                    decorators_1.singleton()
+                ], ClassB);
+                injector.register(ClassA);
+                injector.parent = injector2;
+                injector2.register(ClassB);
+                let spy1 = sinon.spy();
+                let spy2 = sinon.spy();
+                let spy3 = sinon.spy();
+                let spy4 = sinon.spy();
+                injector2.instanceCreatedEvent.on(spy1);
+                injector2.instanceOwnCreatedEvent.on(spy2);
+                injector2.instanceInitializedEvent.on(spy3);
+                injector2.instanceOwnInitializedEvent.on(spy4);
+                await injector2.initialize();
+                spy1.should.have.been.callCount(2);
+                spy2.should.have.been.callCount(1);
+                spy1.getCall(0).args[0].definition.type === ClassA;
+                spy1.getCall(0).args[0].instance.constructor === ClassA;
             });
         });
     });
