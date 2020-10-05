@@ -309,10 +309,10 @@ describe('Parent', function () {
                 let spy2 = sinon.spy();
                 let spy3 = sinon.spy();
                 let spy4 = sinon.spy();
-                injector2.instanceCreatedEvent.on(spy1);
-                injector2.instanceOwnCreatedEvent.on(spy2);
-                injector2.instanceInitializedEvent.on(spy3);
-                injector2.instanceOwnInitializedEvent.on(spy4);
+                injector2.events.instanceCreated.on(spy1);
+                injector2.events.instanceOwnCreated.on(spy2);
+                injector2.events.instanceInitialized.on(spy3);
+                injector2.events.instanceOwnInitialized.on(spy4);
                 await injector2.initialize();
                 spy1.should.have.been.callCount(2);
                 spy2.should.have.been.callCount(1);

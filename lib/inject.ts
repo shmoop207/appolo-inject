@@ -6,6 +6,7 @@ import {Define} from "./define";
 import {InjectDefineSymbol, InjectParamSymbol} from "./decorators";
 import {Util} from "./util";
 import {Event, IEvent} from "@appolo/events";
+import {Events, InjectEvent} from "./events";
 
 type keyObject = { [index: string]: Object }
 
@@ -25,15 +26,12 @@ export class Injector {
     private _parent: Injector;
     private _children: Injector[];
 
+    private _events = new Events()
+
     private _options: IOptions;
 
     private _isInitialized: boolean = false;
 
-    private _instanceOwnInitializedEvent = new Event<{ instance: any, definition: IDefinition }>();
-    private _instanceInitializedEvent = new Event<{ instance: any, definition: IDefinition }>();
-
-    private _instanceOwnCreatedEvent = new Event<{ instance: any, definition: IDefinition }>();
-    private _instanceCreatedEvent = new Event<{ instance: any, definition: IDefinition }>();
 
     constructor() {
         this._instances = {};
@@ -47,21 +45,6 @@ export class Injector {
         this._children = []
     }
 
-    public get instanceInitializedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
-        return this._instanceInitializedEvent
-    }
-
-    public get instanceOwnInitializedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
-        return this._instanceOwnInitializedEvent
-    }
-
-    public get instanceCreatedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
-        return this._instanceCreatedEvent
-    }
-
-    public get instanceOwnCreatedEvent(): IEvent<{ instance: any, definition: IDefinition }> {
-        return this._instanceOwnCreatedEvent
-    }
 
     public get parent(): Injector {
         return this._parent
@@ -650,6 +633,10 @@ export class Injector {
         return define;
     }
 
+    public get events(): Events {
+        return this._events;
+    }
+
     private _createObjectInstance<T>(objectID: string, def: IDefinition, runtimeArgs?: any[]): T {
         let args = runtimeArgs || [], instance;
 
@@ -683,11 +670,11 @@ export class Injector {
             throw new Error("Injector failed to create object objectID:" + objectID + "' \n" + e);
         }
 
-        this._instanceCreatedEvent.fireEvent({instance, definition: def});
-        this._instanceOwnCreatedEvent.fireEvent({instance, definition: def});
+        (this._events.instanceCreated as Event<InjectEvent>).fireEvent({instance, definition: def});
+        (this._events.instanceOwnCreated as Event<InjectEvent>).fireEvent({instance, definition: def});
 
         if (this._parent) {
-            (this._parent.instanceCreatedEvent as Event<any>).fireEvent({instance, definition: def})
+            (this._parent.events.instanceCreated as Event<InjectEvent>).fireEvent({instance, definition: def})
         }
 
         if (def.singleton && def.lazy) {
@@ -772,11 +759,11 @@ export class Injector {
 
         instance[IsWiredSymbol] = true;
 
-        this._instanceInitializedEvent.fireEvent({instance, definition});
-        this._instanceOwnInitializedEvent.fireEvent({instance, definition});
+        (this._events.instanceInitialized as Event<InjectEvent>).fireEvent({instance, definition});
+        (this._events.instanceOwnInitialized as Event<InjectEvent>).fireEvent({instance, definition});
 
         if (this._parent) {
-            (this._parent.instanceInitializedEvent as Event<any>).fireEvent({instance, definition});
+            (this._parent._events.instanceInitialized as Event<InjectEvent>).fireEvent({instance, definition});
         }
     }
 

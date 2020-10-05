@@ -117,7 +117,7 @@ describe('initialize', function () {
             ], Rectangle);
             injector.register(Rectangle);
             let req;
-            injector.instanceInitializedEvent.on(action => {
+            injector.events.instanceInitialized.on(action => {
                 req = action.instance;
             });
             await injector.initialize();
