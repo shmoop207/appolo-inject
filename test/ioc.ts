@@ -20,7 +20,9 @@ describe('Ioc', function () {
 
             injector.addDefinitions({
                 test: {
-                    type: 'test'
+                    type: function () {
+
+                    }
                 }
             });
 
@@ -151,7 +153,7 @@ describe('Ioc', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    inject: ["test"]
+                    inject: [{name:"test",ref:"test"}]
                 }
             });
 

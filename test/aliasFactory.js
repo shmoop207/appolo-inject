@@ -26,7 +26,7 @@ describe('Alias Factory', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    props: [
+                    inject: [
                         {
                             name: 'calcable',
                             aliasFactory: 'calcable'

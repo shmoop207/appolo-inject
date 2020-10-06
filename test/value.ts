@@ -31,7 +31,7 @@ describe('Property Value',function(){
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    properties:[{
+                    inject:[{
                         name:'size',
                         value:25
                     }]

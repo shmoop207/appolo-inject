@@ -13,7 +13,8 @@ describe('Ioc', function () {
             let injector = ioc.createContainer();
             injector.addDefinitions({
                 test: {
-                    type: 'test'
+                    type: function () {
+                    }
                 }
             });
             should.exist(injector.getDefinition('test'));
@@ -96,7 +97,7 @@ describe('Ioc', function () {
             injector.addDefinitions({
                 rectangle: {
                     type: Rectangle,
-                    inject: ["test"]
+                    inject: [{ name: "test", ref: "test" }]
                 }
             });
             injector.initialize();

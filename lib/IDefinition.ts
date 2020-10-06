@@ -10,7 +10,7 @@ export interface IParamInject {
     key?: string,
     indexBy?: string,
     aliasFactory?: string,
-    alias?: string,
+    alias?: string | Class,
     array?: IParamInject[],
     dictionary?: IParamInject[],
     factory?: { id: string, injector?: Injector },
@@ -41,7 +41,7 @@ export interface IDefinition {
     dynamicFactory?: boolean
     override?: boolean
     aliasFactory?: string[]
-    alias?: string[]
+    alias?: (string | Class)[]
     initMethod?: string
     bootstrapMethod?: string
     bootstrapMethodAsync?: string
@@ -49,8 +49,8 @@ export interface IDefinition {
     injector?: Injector;
     //$isWired?: boolean
     //$isFactoryWired?: boolean
-    properties?: IParamInject[]
-    props?: IParamInject[]
+    //properties?: IParamInject[]
+    //props?: IParamInject[]
     inject?: IParamInject[]
     injectorAware?: boolean
     customParams?: { [index: string]: any[] }

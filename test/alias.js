@@ -23,7 +23,7 @@ describe('Alias', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    props: [
+                    inject: [
                         {
                             name: 'calcable',
                             alias: 'calcable'
@@ -72,7 +72,7 @@ describe('Alias', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    props: [
+                    inject: [
                         {
                             name: 'testables',
                             alias: 'testable',
@@ -127,7 +127,7 @@ describe('Alias', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    props: [
+                    inject: [
                         {
                             name: 'calcable',
                             alias: 'calcable'
@@ -198,7 +198,7 @@ describe('Alias', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    props: [
+                    inject: [
                         {
                             name: 'calcable',
                             alias: 'calcable'

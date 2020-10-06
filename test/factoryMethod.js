@@ -26,7 +26,7 @@ describe('Property Factory Method', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'createFooManager',
                             factoryMethod: 'fooManager'
@@ -68,7 +68,7 @@ describe('Property Factory Method', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'createFooManager',
                             factoryMethod: 'fooManager'
@@ -146,7 +146,7 @@ describe('Property Factory Method', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'createFooManager',
                             factoryMethod: 'fooManager'

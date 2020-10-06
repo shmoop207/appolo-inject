@@ -81,6 +81,9 @@ export class Injector {
         }
 
         this.initDefinitions();
+
+        await (this._events.beforeInitialize as Event<void>).fireEventAsync();
+
         await this.initFactories();
         this.initInstances();
 
@@ -93,6 +96,8 @@ export class Injector {
         await this.initInitMethods();
 
         this._isInitialized = true;
+
+        await (this._events.afterInitialize as Event<void>).fireEventAsync();
     }
 
 
@@ -392,7 +397,7 @@ export class Injector {
                 await this.getFactory(id, JSON.parse(JSON.stringify(refs)))
             }
             if (inject.alias) {
-                let ids = this.getAliasDefinitions(inject.alias).map((def => def.id));
+                let ids = this.getAliasDefinitions(inject.alias as string).map((def => def.id));
                 for (let id of ids) {
                     await this.getFactory(id, JSON.parse(JSON.stringify(refs)))
                 }
@@ -470,7 +475,7 @@ export class Injector {
         return this;
     }
 
-    public addDefinitions(definitions: { [index: string]: any } | Map<string, any>): Injector {
+    public addDefinitions(definitions: { [index: string]: IDefinition } | Map<string, IDefinition>): Injector {
 
         if (definitions instanceof Map) {
             definitions.forEach((value, key) => this.addDefinition(key, value))
@@ -769,7 +774,7 @@ export class Injector {
 
     private _prepareProperties(definition: IDefinition): void {
 
-        let properties = definition.props || definition.properties || [];
+        let properties = definition.inject || [];
 
 
         for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
@@ -832,7 +837,7 @@ export class Injector {
             properties.push(dto)
         }
 
-        definition.properties = properties;
+        definition.inject = properties;
     }
 
     private _wireObjectInstance<T>(instance: T, definition: IDefinition, objectId: string) {
@@ -864,7 +869,7 @@ export class Injector {
         if (object[IsWiredSymbol]) {
             return;
         }
-        let obj, properties = objectDefinition.properties;
+        let obj, properties = objectDefinition.inject;
 
         for (let i = 0, length = (properties ? properties.length : 0); i < length; i++) {
             let prop = properties[i];
@@ -1025,13 +1030,13 @@ export class Injector {
             return;
         }
 
-        for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
-            let prop = definition.properties[i];
+        for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
+            let prop = definition.inject[i];
             let injector = prop.injector ? prop.injector : this;
 
             (prop.alias) && (instance[prop.name] = prop.indexBy
-                ? Util.keyBy(injector.getAlias(prop.alias), prop.indexBy)
-                : injector.getAlias(prop.alias));
+                ? Util.keyBy(injector.getAlias(prop.alias as string), prop.indexBy)
+                : injector.getAlias(prop.alias as string));
         }
     }
 
@@ -1040,8 +1045,8 @@ export class Injector {
             return;
         }
 
-        for (let i = 0, length = (definition.properties ? definition.properties.length : 0); i < length; i++) {
-            let prop = definition.properties[i];
+        for (let i = 0, length = (definition.inject ? definition.inject.length : 0); i < length; i++) {
+            let prop = definition.inject[i];
 
             let injector = prop.injector ? prop.injector : this;
 

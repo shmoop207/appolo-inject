@@ -33,7 +33,7 @@ describe('Property Array', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'objects',
                             array: [

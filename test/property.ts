@@ -41,7 +41,7 @@ describe('Property Ref', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    props: [
+                    inject: [
                         {
                             name: 'calcManager',
                             ref: 'calcManager'
@@ -98,7 +98,7 @@ describe('Property Ref', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    props: [
+                    inject: [
                         {
                             name: 'calc',
                             ref: 'calcManager'
@@ -159,7 +159,7 @@ describe('Property Ref', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'calc',
                             ref: 'calcManager'
@@ -234,7 +234,7 @@ describe('Property Ref', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    inject: ['fooManager', 'barManager']
+                    inject: [{name:'fooManager',ref:'fooManager'}, {name:'barManager',ref:'barManager'}]
                 },
                 fooManager: {
                     type: FooManager,
@@ -303,12 +303,12 @@ describe('Property Ref', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    inject: ['fooManager']
+                    inject: [{name:'fooManager',ref:"fooManager"}]
                 },
                 fooManager: {
                     type: FooManager,
                     singleton: true,
-                    inject: ['barManager']
+                    inject: [{name:'barManager',ref:'barManager'}]
                 },
                 barManager: {
                     type: BarManager,

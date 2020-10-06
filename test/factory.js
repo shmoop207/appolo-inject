@@ -34,7 +34,7 @@ describe('Property Factory', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: true,
-                    properties: [
+                    inject: [
                         {
                             name: 'manager',
                             factory: { id: 'fooManagerFactory' }
@@ -49,7 +49,7 @@ describe('Property Factory', function () {
                     type: FooManagerFactory,
                     factory: true,
                     singleton: true,
-                    inject: ['fooManager2']
+                    inject: [{ name: 'fooManager2', ref: "fooManager2" }]
                 }
             });
             await injector.initialize();
@@ -1432,7 +1432,7 @@ describe('Property Factory', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'manager',
                             factory: { id: 'fooManagerFactory' }
@@ -1447,7 +1447,7 @@ describe('Property Factory', function () {
                     factory: true,
                     type: FooManagerFactory,
                     singleton: true,
-                    inject: ['fooManager2']
+                    inject: [{ name: 'fooManager2', ref: 'fooManager2' }]
                 }
             });
             await injector.initialize();
@@ -1479,7 +1479,7 @@ describe('Property Factory', function () {
                 fooManagerFactory: {
                     type: FooManagerFactory,
                     singleton: true, factory: true,
-                    inject: ['localFooManager']
+                    inject: [{ name: 'localFooManager', ref: "localFooManager" }]
                 }
             });
             await injector.initialize();
@@ -1539,13 +1539,13 @@ describe('Property Factory', function () {
                     type: FooManagerFactory,
                     singleton: true,
                     factory: true,
-                    inject: ['localFooManager']
+                    inject: [{ name: 'localFooManager', ref: "localFooManager" }]
                 },
                 barManagerFactory: {
                     type: BarManagerFactory,
                     singleton: true,
                     factory: true,
-                    inject: ['remoteBarManager']
+                    inject: [{ name: 'remoteBarManager', ref: "remoteBarManager" }]
                 },
                 rectangle: {
                     type: Rectangle,
@@ -1607,7 +1607,7 @@ describe('Property Factory', function () {
                     type: FooManagerFactory,
                     singleton: true,
                     factory: true,
-                    inject: ['fooManager']
+                    inject: [{ name: 'fooManager', ref: "fooManager" }]
                 }
             });
             await injector.initialize();

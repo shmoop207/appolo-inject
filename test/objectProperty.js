@@ -24,7 +24,7 @@ describe('Property Object Property.js', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'otherObjectProperty',
                             objectProperty: {

@@ -48,7 +48,7 @@ describe('Property Dictionary', function () {
                 rectangle: {
                     type: Rectangle,
                     singleton: false,
-                    properties: [
+                    inject: [
                         {
                             name: 'objects',
                             dictionary: [
