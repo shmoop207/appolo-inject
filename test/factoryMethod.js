@@ -187,7 +187,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], FooManager.prototype, "initialize", null);
             FooManager = tslib_1.__decorate([
                 decorators_1.define()
@@ -201,7 +201,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethodAsync(FooManager)
+                decorators_1.factoryMethodAsync(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define()
@@ -232,7 +232,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], FooManager.prototype, "initialize", null);
             FooManager = tslib_1.__decorate([
                 decorators_1.define()
@@ -245,7 +245,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethod(FooManager)
+                decorators_1.factoryMethod(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define()
@@ -286,7 +286,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethod(BooManager)
+                decorators_1.factoryMethod(BooManager)
             ], FooManager.prototype, "createFooManager", void 0);
             FooManager = tslib_1.__decorate([
                 decorators_1.define(),
@@ -300,7 +300,7 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethod(FooManager)
+                decorators_1.factoryMethod(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define()

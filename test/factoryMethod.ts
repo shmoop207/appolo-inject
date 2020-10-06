@@ -7,14 +7,12 @@ import {
     define,
     singleton,
     inject,
-    injectAlias,
     alias,
-    injectFactory,
     factory,
-    initMethod,
-    injectFactoryMethod,
+    init,
+    factoryMethod,
     dynamicFactory,
-    injectFactoryMethodAsync
+    factoryMethodAsync
 } from "../lib/decorators";
 
 let should = chai.should();
@@ -301,7 +299,7 @@ describe('Property Factory Method', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = Math.random();
                 }
@@ -313,7 +311,7 @@ describe('Property Factory Method', function () {
 
             @define()
             class Rectangle{
-                @injectFactoryMethodAsync(FooManager) createFooManager:()=>FooManager;
+                @factoryMethodAsync(FooManager) createFooManager:()=>FooManager;
                 constructor() {
 
                 }
@@ -363,7 +361,7 @@ describe('Property Factory Method', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = Math.random();
                 }
@@ -375,7 +373,7 @@ describe('Property Factory Method', function () {
 
             @define()
             class Rectangle{
-                @injectFactoryMethod(FooManager) createFooManager:Function;
+                @factoryMethod(FooManager) createFooManager:Function;
                 constructor() {
 
                 }
@@ -437,7 +435,7 @@ describe('Property Factory Method', function () {
             @dynamicFactory()
             class FooManager{
 
-                @injectFactoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
+                @factoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
                 constructor(public name:string) {
 
                 }
@@ -452,7 +450,7 @@ describe('Property Factory Method', function () {
 
             @define()
             class Rectangle {
-                @injectFactoryMethod(FooManager) createFooManager: (name:string)=>BooManager;
+                @factoryMethod(FooManager) createFooManager: (name:string)=>BooManager;
 
                 constructor() {
 

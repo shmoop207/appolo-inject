@@ -8,10 +8,8 @@ import {
     alias,
     define,
     factory,
-    initMethod,
+    init,
     inject,
-    injectAlias,
-    injectFactory,
     injectorAware,
     singleton
 } from "../lib/decorators";
@@ -161,7 +159,7 @@ describe('Property Factory', function () {
             @singleton()
             class Rectangle {
 
-                @injectFactory() fooManager: any;
+                @factory() fooManager: any;
 
                 constructor() {
 
@@ -876,7 +874,7 @@ describe('Property Factory', function () {
             @singleton()
             @factory()
             class FooProvider implements IFactory<FooManager[]> {
-                @injectAlias("test") fooManagers: FooManager[];
+                @alias("test") fooManagers: FooManager[];
 
                 constructor() {
                 }
@@ -942,7 +940,7 @@ describe('Property Factory', function () {
             @singleton()
             @factory()
             class FooProvider implements IFactory<string> {
-                @injectAlias("test") fooManagers: FooManager[];
+                @alias("test") fooManagers: FooManager[];
 
                 constructor() {
                 }
@@ -961,7 +959,7 @@ describe('Property Factory', function () {
                 @inject() barManager:BarManager
 
 
-                @initMethod()
+                @init()
                 getName() {
                    return this.barManager.name
                 }
@@ -1106,7 +1104,7 @@ describe('Property Factory', function () {
             class BooFactory implements IFactory<string> {
 
                 //@inject() fooManager: FooManager;
-                @injectAlias("aaa") alias:any[]
+                @alias("aaa") alias:any[]
 
                 $injector:Injector
 
@@ -1170,7 +1168,7 @@ describe('Property Factory', function () {
             @singleton()
             class Rectangle {
 
-                @injectAlias("aaa") names:string[];
+                @alias("aaa") names:string[];
 
 
                 get name() {
@@ -1564,7 +1562,7 @@ describe('Property Factory', function () {
 
                 private name: string
 
-                @initMethod()
+                @init()
                 init() {
                     this.name = "lalala"
                 }

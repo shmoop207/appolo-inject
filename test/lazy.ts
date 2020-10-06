@@ -1,6 +1,6 @@
 "use strict";
 import {Injector} from "../lib/inject";
-import {customInjectFn, define, inject} from "../lib/decorators";
+import {customFn, define, inject} from "../lib/decorators";
 import    ioc = require('../lib/inject');
 import chai = require('chai');
 
@@ -75,7 +75,7 @@ describe('Lazy', function () {
             injector = ioc.createContainer();
 
             let customDecorator = function (id: string) {
-                return customInjectFn((inject: Injector) => {
+                return customFn((inject: Injector) => {
                     return inject.get<Test2>(id).name
                 })
             };
@@ -114,7 +114,7 @@ describe('Lazy', function () {
             let injector2 = ioc.createContainer();
 
             let customDecorator = function (id: string) {
-                return customInjectFn((inject: Injector) => {
+                return customFn((inject: Injector) => {
                     return injector2.get<Test2>(id).name
                 })
             };

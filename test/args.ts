@@ -2,7 +2,7 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
-import {define, inject, injectParam, singleton} from "../lib/decorators";
+import {define, inject, singleton} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -529,7 +529,7 @@ describe('Constructor Args', function () {
             @define()
             @singleton()
             class CManager {
-                constructor(@injectParam() public aManager: AManager, @inject() public bManager: BManager) {
+                constructor(@inject() public aManager: AManager, @inject() public bManager: BManager) {
                 }
             }
 

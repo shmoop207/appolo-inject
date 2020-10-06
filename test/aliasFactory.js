@@ -154,7 +154,7 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethod(BooManager)
+                decorators_1.factoryMethod(BooManager)
             ], FooManager.prototype, "createFooManager", void 0);
             FooManager = tslib_1.__decorate([
                 decorators_1.define(),
@@ -169,7 +169,7 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAliasFactory("test")
+                decorators_1.aliasFactory("test")
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define()

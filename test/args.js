@@ -348,7 +348,7 @@ describe('Constructor Args', function () {
             CManager = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton(),
-                tslib_1.__param(0, decorators_1.injectParam()), tslib_1.__param(1, decorators_1.inject())
+                tslib_1.__param(0, decorators_1.inject()), tslib_1.__param(1, decorators_1.inject())
             ], CManager);
             let injector = ioc.createContainer();
             injector.registerMulti([AManager, BManager, CManager]);

@@ -6,9 +6,8 @@ import {
     aliasFactory,
     define,
     dynamicFactory,
-    injectAlias,
-    injectAliasFactory,
-    injectFactoryMethod
+    alias,
+    factoryMethod
 } from "../lib/decorators";
 
 let should = chai.should();
@@ -249,7 +248,7 @@ describe('Alias Factory', function () {
             @aliasFactory("test")
             class FooManager{
 
-                @injectFactoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
+                @factoryMethod(BooManager) createFooManager: (name:string)=>FooManager;
                 constructor(public name:string) {
 
                 }
@@ -264,7 +263,7 @@ describe('Alias Factory', function () {
 
             @define()
             class Rectangle {
-                @injectAliasFactory("test") createFooManager: ((name:string)=>BooManager)[];
+                @aliasFactory("test") createFooManager: ((name:string)=>BooManager)[];
 
                 constructor() {
 

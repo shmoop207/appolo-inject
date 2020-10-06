@@ -2,7 +2,7 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
-import {define, singleton, injectAlias, alias,injectParam,injectLazy,inject} from "../lib/decorators";
+import {define, singleton, alias, lazy, inject} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -13,26 +13,29 @@ describe('Decorators', function () {
 
         let injector: Injector;
 
-        @define()
-        class Test {
-            name() {
-                return "test"
-            }
-        }
-
-        @define()
-        class Test2 {
-
-            constructor(@injectParam("test") public  test1:Test){}
-
-
-        }
 
         beforeEach(function () {
             injector = ioc.createContainer();
         })
 
         it("should have inject params in constructor",()=>{
+
+            @define()
+            class Test {
+                name() {
+                    return "test"
+                }
+            }
+
+            @define()
+            class Test2 {
+
+                constructor(@inject("test") public  test1:Test){}
+
+
+            }
+
+
             injector.register(Test)
             injector.register(Test2)
             injector.initialize();
@@ -49,26 +52,29 @@ describe('Decorators', function () {
 
         let injector: Injector;
 
-        @define()
-        class Test {
-            name() {
-                return "test"
-            }
-        }
 
-        @define()
-        class Test2 {
-
-            constructor(@injectParam() public  test:Test){}
-
-
-        }
 
         beforeEach(function () {
             injector = ioc.createContainer();
         })
 
         it("should have inject params in constructor",()=>{
+
+            @define()
+            class Test {
+                name() {
+                    return "test"
+                }
+            }
+
+            @define()
+            class Test2 {
+
+                constructor(@inject() public  test:Test){}
+
+
+            }
+
             injector.register(Test)
             injector.register(Test2)
             injector.initialize();
@@ -97,7 +103,7 @@ describe('Decorators', function () {
 
             constructor(){}
 
-            test(@injectParam() test?:Test){
+            test(@inject() test?:Test){
                 return test.name()
             }
 
@@ -132,8 +138,8 @@ describe('Decorators', function () {
             @define()
             @singleton()
             class Rectangle {
-                @injectAlias('calcable') calcable: any[]
-                @injectAlias('cleanable') cleanable: any[]
+                @alias('calcable') calcable: any[]
+                @alias('cleanable') cleanable: any[]
 
                 constructor() {
 
@@ -238,9 +244,9 @@ describe('Decorators', function () {
             @define()
             @singleton()
             class Rectangle {
-                @injectLazy() fooManager: FooManager;
+                @lazy() fooManager: FooManager;
 
-                @injectLazy("someName") fooManager2: FooManager;
+                @lazy("someName") fooManager2: FooManager;
 
                 constructor() {
 
@@ -289,7 +295,7 @@ describe('Decorators', function () {
             @define()
             @singleton()
             class Rectangle {
-                @injectLazy() fooManager: FooManager;
+                @lazy() fooManager: FooManager;
 
                 constructor() {
 

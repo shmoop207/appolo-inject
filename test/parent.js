@@ -21,7 +21,7 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -38,7 +38,7 @@ describe('Parent', function () {
                 decorators_1.inject()
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -67,7 +67,7 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -84,7 +84,7 @@ describe('Parent', function () {
                 decorators_1.inject()
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -113,7 +113,7 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -128,10 +128,10 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAlias("ITest")
+                decorators_1.alias("ITest")
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
                 decorators_1.define(),
@@ -191,16 +191,16 @@ describe('Parent', function () {
                 decorators_1.inject()
             ], Test1.prototype, "factory", void 0);
             tslib_1.__decorate([
-                decorators_1.injectAlias("Alias")
+                decorators_1.alias("Alias")
             ], Test1.prototype, "test", void 0);
             tslib_1.__decorate([
-                decorators_1.injectAliasFactory("Alias2")
+                decorators_1.aliasFactory("Alias2")
             ], Test1.prototype, "createAlias2", void 0);
             tslib_1.__decorate([
-                decorators_1.injectFactoryMethod(Alias)
+                decorators_1.factoryMethod(Alias)
             ], Test1.prototype, "createAlias", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
                 decorators_1.define(),

@@ -5,11 +5,9 @@ import {
     aliasFactory,
     define,
     factory,
-    initMethod,
+    init,
     inject,
-    injectAlias,
-    injectAliasFactory,
-    injectFactoryMethod,
+    factoryMethod,
     singleton
 } from "../lib/decorators";
 import chai = require('chai');
@@ -40,7 +38,7 @@ describe('Parent', function () {
                     this.name = "aa"
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
 
                 }
@@ -56,7 +54,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = this.test1.name + "bbb"
                 }
@@ -98,7 +96,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = "aa"
                 }
@@ -114,7 +112,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = this.test1.name + "bbb"
                 }
@@ -158,7 +156,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = "aa"
                 }
@@ -167,7 +165,7 @@ describe('Parent', function () {
             @define()
             @singleton()
             class Test2 {
-                @injectAlias("ITest") test1: Test1[];
+                @alias("ITest") test1: Test1[];
 
                 len: number;
 
@@ -175,7 +173,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.len = this.test1.length
                 }
@@ -238,9 +236,9 @@ describe('Parent', function () {
                 @inject() logger: any;
                 @inject() factory: Factory;
 
-                @injectAlias("Alias") test: Alias[];
-                @injectAliasFactory("Alias2") createAlias2: (() => Alias2)[];
-                @injectFactoryMethod(Alias) createAlias: () => Alias
+                @alias("Alias") test: Alias[];
+                @aliasFactory("Alias2") createAlias2: (() => Alias2)[];
+                @factoryMethod(Alias) createAlias: () => Alias
 
                 name: string;
 
@@ -248,7 +246,7 @@ describe('Parent', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.name = "aa" + this.env.name
                 }

@@ -2,7 +2,7 @@
 import {Injector} from "../lib/inject";
 import chai = require('chai');
 import    ioc = require('../lib/inject');
-import {define, singleton, initMethod, initMethodAsync, bootstrapMethod, bootstrapMethodAsync} from "../lib/decorators";
+import {define, singleton, init, initAsync, bootstrap, bootstrapAsync} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -95,7 +95,7 @@ describe('initialize', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.working = true
                 }
@@ -128,12 +128,12 @@ describe('initialize', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.working = true
                 }
 
-                @bootstrapMethod()
+                @bootstrap()
                 bootstrap() {
                     this.working2 = true
                 }
@@ -166,7 +166,7 @@ describe('initialize', function () {
 
                 }
 
-                @initMethod()
+                @init()
                 initialize() {
                     this.working = true
                 }
@@ -213,7 +213,7 @@ describe('initialize', function () {
 
                 }
 
-                @initMethodAsync()
+                @initAsync()
                 async initialize() {
 
                     await new Promise(resolve => setTimeout(() => resolve(), 1));
@@ -221,7 +221,7 @@ describe('initialize', function () {
                     this.working = "aa"
                 }
 
-                @bootstrapMethodAsync()
+                @bootstrapAsync()
                 async bootstrap() {
 
                     await new Promise(resolve => setTimeout(() => resolve(), 1));

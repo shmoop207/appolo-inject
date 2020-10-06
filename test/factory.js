@@ -101,7 +101,7 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectFactory()
+                decorators_1.factory()
             ], Rectangle.prototype, "fooManager", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
@@ -657,7 +657,7 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAlias("test")
+                decorators_1.alias("test")
             ], FooProvider.prototype, "fooManagers", void 0);
             FooProvider = tslib_1.__decorate([
                 decorators_1.define(),
@@ -706,7 +706,7 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAlias("test")
+                decorators_1.alias("test")
             ], FooProvider.prototype, "fooManagers", void 0);
             FooProvider = tslib_1.__decorate([
                 decorators_1.define(),
@@ -722,7 +722,7 @@ describe('Property Factory', function () {
                 decorators_1.inject()
             ], FooManager.prototype, "barManager", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], FooManager.prototype, "getName", null);
             FooManager = tslib_1.__decorate([
                 decorators_1.define(),
@@ -830,7 +830,7 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAlias("aaa")
+                decorators_1.alias("aaa")
             ], BooFactory.prototype, "alias", void 0);
             BooFactory = tslib_1.__decorate([
                 decorators_1.define(),
@@ -874,7 +874,7 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.injectAlias("aaa")
+                decorators_1.alias("aaa")
             ], Rectangle.prototype, "names", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
@@ -1183,7 +1183,7 @@ describe('Property Factory', function () {
                 decorators_1.inject()
             ], FooManager.prototype, "fooManager2", void 0);
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], FooManager.prototype, "init", null);
             FooManager = tslib_1.__decorate([
                 decorators_1.define(),

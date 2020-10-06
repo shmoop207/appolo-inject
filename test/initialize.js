@@ -58,7 +58,7 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
@@ -83,10 +83,10 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                decorators_1.bootstrapMethod()
+                decorators_1.bootstrap()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
@@ -109,7 +109,7 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethod()
+                decorators_1.init()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
@@ -143,10 +143,10 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initMethodAsync()
+                decorators_1.initAsync()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                decorators_1.bootstrapMethodAsync()
+                decorators_1.bootstrapAsync()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),

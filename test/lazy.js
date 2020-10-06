@@ -47,7 +47,7 @@ describe('Lazy', function () {
         it('should custom inject lazy fn to class', function () {
             injector = ioc.createContainer();
             let customDecorator = function (id) {
-                return decorators_1.customInjectFn((inject) => {
+                return decorators_1.customFn((inject) => {
                     return inject.get(id).name;
                 });
             };
@@ -76,7 +76,7 @@ describe('Lazy', function () {
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
             let customDecorator = function (id) {
-                return decorators_1.customInjectFn((inject) => {
+                return decorators_1.customFn((inject) => {
                     return injector2.get(id).name;
                 });
             };
