@@ -97,7 +97,6 @@ export class Injector {
 
         this._isInitialized = true;
 
-        await (this._events.afterInitialize as Event<void>).fireEventAsync();
     }
 
 
@@ -241,6 +240,7 @@ export class Injector {
 
 
         this._isInitialized = true;
+        await (this._events.afterInitialize as Event<void>).fireEventAsync();
     }
 
 
