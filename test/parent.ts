@@ -389,14 +389,17 @@ describe('Parent', function () {
 
                 injector2.events.instanceInitialized.on(spy3);
                 injector2.events.instanceOwnInitialized.on(spy4);
+
                 injector2.events.beforeInitialize.on(spy5);
+                injector2.events.beforeInitMethods.on(spy5);
+                injector2.events.beforeBootstrapMethods.on(spy5);
                 injector2.events.afterInitialize.on(spy5);
 
                 await injector2.initialize();
 
                 spy1.should.have.been.callCount(2);
                 spy2.should.have.been.callCount(1);
-                spy5.should.have.been.callCount(2);
+                spy5.should.have.been.callCount(4);
 
                 spy1.getCall(0).args[0].definition.type.should.be.equal(ClassA);
                 spy1.getCall(0).args[0].instance.constructor.should.be.equal(ClassA);

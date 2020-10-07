@@ -11,6 +11,8 @@ export class Events {
     public readonly instanceCreated: IEvent<InjectEvent> = new Event();
 
     public readonly beforeInitialize: IEvent<void> = new Event();
+    public readonly beforeInitMethods: IEvent<void> = new Event();
+    public readonly beforeBootstrapMethods: IEvent<void> = new Event();
     public readonly afterInitialize: IEvent<void> = new Event();
 
 }

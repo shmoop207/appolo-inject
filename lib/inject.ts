@@ -202,6 +202,8 @@ export class Injector {
             return;
         }
 
+        await (this._events.beforeInitMethods as Event<void>).fireEventAsync()
+
         let keys = Object.keys(this._instances);
 
         await Promise.all(this.children.map(injector => injector.initInitMethods()));
@@ -221,6 +223,9 @@ export class Injector {
         if (asyncInitPromises.length) {
             await Promise.all(asyncInitPromises);
         }
+
+        await (this._events.beforeBootstrapMethods as Event<void>).fireEventAsync();
+
 
         let asyncBootstrapPromises = [];
 
