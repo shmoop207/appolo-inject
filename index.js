@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.injectorAware = exports.bootstrap = exports.bootstrapAsync = exports.factoryMethodAsync = exports.customParam = exports.initAsync = exports.customFn = exports.dynamicFactory = exports.override = exports.lazy = exports.alias = exports.aliasFactory = exports.value = exports.objectProperty = exports.factory = exports.dictionary = exports.array = exports.init = exports.factoryMethod = exports.inject = exports.singleton = exports.define = exports.InjectDefineSymbol = exports.Util = exports.Define = exports.createContainer = exports.Injector = void 0;
+exports.aliasMap = exports.aliasFactoryMap = exports.injectorAware = exports.bootstrap = exports.bootstrapAsync = exports.factoryMethodAsync = exports.customParam = exports.initAsync = exports.customFn = exports.dynamicFactory = exports.override = exports.lazy = exports.alias = exports.aliasFactory = exports.value = exports.objectProperty = exports.factory = exports.dictionary = exports.array = exports.init = exports.factoryMethod = exports.inject = exports.singleton = exports.define = exports.InjectDefineSymbol = exports.Util = exports.Define = exports.createContainer = exports.Injector = void 0;
 exports.default = require('./lib/inject');
 var inject_1 = require("./lib/inject");
 Object.defineProperty(exports, "Injector", { enumerable: true, get: function () { return inject_1.Injector; } });
@@ -33,4 +33,6 @@ Object.defineProperty(exports, "factoryMethodAsync", { enumerable: true, get: fu
 Object.defineProperty(exports, "bootstrapAsync", { enumerable: true, get: function () { return decorators_1.bootstrapAsync; } });
 Object.defineProperty(exports, "bootstrap", { enumerable: true, get: function () { return decorators_1.bootstrap; } });
 Object.defineProperty(exports, "injectorAware", { enumerable: true, get: function () { return decorators_1.injectorAware; } });
+Object.defineProperty(exports, "aliasFactoryMap", { enumerable: true, get: function () { return decorators_1.aliasFactoryMap; } });
+Object.defineProperty(exports, "aliasMap", { enumerable: true, get: function () { return decorators_1.aliasMap; } });
 //# sourceMappingURL=index.js.map

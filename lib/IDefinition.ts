@@ -8,7 +8,7 @@ export interface IParamInject {
     ref?: string,
     name?: string,
     key?: string,
-    indexBy?: string,
+    indexBy?: string| { type: "map"|"object", index: string },
     aliasFactory?: string,
     alias?: string | Class,
     array?: IParamInject[],

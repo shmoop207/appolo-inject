@@ -149,7 +149,7 @@ describe('Alias Factory', function () {
                 constructor(name) {
                     this.name = name;
                 }
-                get() {
+                async get() {
                     return this.createFooManager(this.name);
                 }
             };
@@ -164,13 +164,17 @@ describe('Alias Factory', function () {
             let Rectangle = class Rectangle {
                 constructor() {
                 }
-                getName(name) {
-                    return this.createFooManager[0](name).name2;
+                async getName(name) {
+                    let a = await this.createFooManager[0](name);
+                    return a.name2;
                 }
             };
             tslib_1.__decorate([
                 decorators_1.aliasFactory("test")
             ], Rectangle.prototype, "createFooManager", void 0);
+            tslib_1.__decorate([
+                decorators_1.aliasFactoryMap("test", (item) => item.name)
+            ], Rectangle.prototype, "createFooManagerMap", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define()
             ], Rectangle);
@@ -180,8 +184,12 @@ describe('Alias Factory', function () {
             should.exist(rectangle.createFooManager);
             rectangle.createFooManager.should.be.a('Array');
             rectangle.createFooManager.length.should.eq(1);
-            rectangle.createFooManager[0]("boo").should.be.instanceof(BooManager);
-            rectangle.getName("boo").should.be.eq("boo");
+            //rectangle.createFooManager[0]("boo").should.be.instanceof(BooManager);
+            let a = await rectangle.getName("boo");
+            a.should.be.eq("boo");
+            rectangle.createFooManagerMap.should.be.instanceOf(Map);
+            let result = await rectangle.createFooManagerMap.get("FooManager")("boo");
+            result.name2.should.be.eq("boo");
         });
     });
 });

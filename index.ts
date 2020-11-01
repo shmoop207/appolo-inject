@@ -28,5 +28,5 @@ export {
     factoryMethodAsync,
     bootstrapAsync,
     bootstrap,
-    injectorAware
+    injectorAware, aliasFactoryMap, aliasMap
 } from './lib/decorators'

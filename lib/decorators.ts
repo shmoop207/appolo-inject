@@ -58,7 +58,7 @@ export function injectorAware(): (fn: Function) => void {
     return addDefinitionClass("injectorAware", [])
 }
 
-export function factory(factory?: string | Class):  (fn: any, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
+export function factory(factory?: string | Class): (fn: any, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
 
     return function (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) {
         if (propertyKey) {
@@ -71,7 +71,7 @@ export function factory(factory?: string | Class):  (fn: any, propertyKey?: stri
     }
 }
 
- function injectFactory(factory?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
+function injectFactory(factory?: string | Class): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
     return addDefinitionProperty("injectFactory", [Util.getClassNameOrId(factory)], true);
 }
@@ -115,6 +115,18 @@ export function alias(alias: string, indexBy?: string): (fn: any, propertyKey?: 
             addDefinitionClass("alias", [alias]).apply(this, arguments);
         }
     }
+
+}
+
+export function aliasMap<T>(alias: string, indexBy: string | ((item: T) => any)): (fn: any, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("injectAlias", [alias, {type: "map", index: indexBy}], true);
+
+}
+
+export function aliasFactoryMap<T extends {new(...params:any[]):any}>(alias: string, indexBy: string | ((item:  T) => any)): (fn: any, propertyKey?: string, descriptor?: PropertyDescriptor) => void {
+
+    return addDefinitionProperty("injectAliasFactory", [alias, {type: "map", index: indexBy}], true);
 
 }
 

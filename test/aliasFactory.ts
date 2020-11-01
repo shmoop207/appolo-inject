@@ -7,7 +7,7 @@ import {
     define,
     dynamicFactory,
     alias,
-    factoryMethod
+    factoryMethod, aliasFactoryMap
 } from "../lib/decorators";
 
 let should = chai.should();
@@ -253,7 +253,7 @@ describe('Alias Factory', function () {
 
                 }
 
-                get(){
+                async get(){
                     return this.createFooManager(this.name);
                 }
 
@@ -264,13 +264,16 @@ describe('Alias Factory', function () {
             @define()
             class Rectangle {
                 @aliasFactory("test") createFooManager: ((name:string)=>BooManager)[];
+                @aliasFactoryMap("test",(item)=>item.name) createFooManagerMap: Map<string,(name:string)=>BooManager>;
+
 
                 constructor() {
 
                 }
-                getName(name) {
+                async getName(name) {
 
-                    return this.createFooManager[0](name).name2;
+                    let a =   await this.createFooManager[0](name)
+                    return a.name2;
                 }
             }
 
@@ -286,9 +289,18 @@ describe('Alias Factory', function () {
             rectangle.createFooManager.should.be.a('Array');
             rectangle.createFooManager.length.should.eq(1);
 
-            rectangle.createFooManager[0]("boo").should.be.instanceof(BooManager);
+            //rectangle.createFooManager[0]("boo").should.be.instanceof(BooManager);
 
-            rectangle.getName("boo").should.be.eq("boo")
+            let a = await rectangle.getName("boo")
+
+            a.should.be.eq("boo")
+
+             rectangle.createFooManagerMap.should.be.instanceOf(Map)
+
+            let result = await rectangle.createFooManagerMap.get("FooManager")("boo")
+            result.name2.should.be.eq("boo")
+
+
         });
     });
 

@@ -159,7 +159,7 @@ export class Define {
         })
     }
 
-    public injectAlias(name: string, alias: string, indexBy?: string, parent?: Class): this {
+    public injectAlias(name: string, alias: string, indexBy?: string | { type: "map", index: string }, parent?: Class): this {
         return this.inject({
             name: name,
             alias: alias,
@@ -167,7 +167,7 @@ export class Define {
         })
     }
 
-    public injectAliasFactory(name: string, alias: string, indexBy?: string, parent?: Class): this {
+    public injectAliasFactory(name: string, alias: string, indexBy?: string| { type: "map", index: string }, parent?: Class): this {
         return this.inject({
             name: name,
             aliasFactory: alias,
@@ -273,7 +273,7 @@ export class Define {
         return this;
     }
 
-    public clone():Define{
+    public clone(): Define {
         let define = new Define(this._id);
 
         define._definition = Util.cloneDeep(this._definition);

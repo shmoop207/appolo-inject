@@ -2,7 +2,7 @@
 import chai = require('chai');
 import    ioc = require('../lib/inject');
 import {Injector} from "../lib/inject";
-import {define, singleton, alias, lazy, inject} from "../lib/decorators";
+import {define, singleton, alias, lazy, inject, aliasMap} from "../lib/decorators";
 
 let should = chai.should();
 
@@ -129,17 +129,21 @@ describe('Decorators', function () {
 
     describe('should inject with decorators', function () {
 
-        let injector: Injector, CalcManager, FooManager, Rectangle, Cleanable;
+        let injector: Injector;
 
         beforeEach(async function () {
             injector = ioc.createContainer();
 
+            interface ICalc{
+                calc()
+            }
 
             @define()
             @singleton()
             class Rectangle {
                 @alias('calcable') calcable: any[]
                 @alias('cleanable') cleanable: any[]
+                @aliasMap<ICalc>('calcable',(item)=>item.constructor.name) cleanableMap: Map<string,ICalc>
 
                 constructor() {
 
@@ -149,7 +153,7 @@ describe('Decorators', function () {
             @define()
             @singleton()
             @alias('calcable')
-            class CalcManager {
+            class CalcManager  implements ICalc{
 
                 constructor() {
 
@@ -164,7 +168,7 @@ describe('Decorators', function () {
             @singleton()
             @alias('calcable')
             @alias('cleanable')
-            class FooManager {
+            class FooManager implements ICalc{
 
                 constructor() {
 
@@ -182,7 +186,7 @@ describe('Decorators', function () {
             @define()
             @singleton()
             @alias('calcable')
-            class BarManager {
+            class BarManager implements ICalc{
 
                 constructor() {
 
@@ -205,7 +209,7 @@ describe('Decorators', function () {
             await injector.initialize();
         });
 
-        it('should inject property ', function () {
+        it('should inject alias property ', function () {
 
             let rectangle: any = injector.getObject('rectangle');
 
@@ -217,6 +221,11 @@ describe('Decorators', function () {
 
             rectangle.calcable.length.should.be.equal(3);
             rectangle.cleanable.length.should.be.equal(1);
+
+            rectangle.cleanableMap.size.should.be.equal(3);
+            rectangle.cleanableMap.should.be.instanceOf(Map)
+
+            rectangle.cleanableMap.get("FooManager").constructor.name.should.be.eq("FooManager")
 
         });
 

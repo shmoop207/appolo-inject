@@ -31,7 +31,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "8.0.10",
+  "version": "8.0.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
   "readme": "",
   "readmeFilename": "README.md",
   "dependencies": {
-    "@appolo/events": "^8.0.0",
+    "@appolo/events": "^8.0.2",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.0.0"
   },

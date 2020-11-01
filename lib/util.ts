@@ -57,6 +57,22 @@ export class Util {
         return output;
     }
 
+    public static keyByMap<T extends object,K extends any=string>(arr: T[], key: string | ((item: T, index: number) => string)):Map<K,T> {
+
+        let output = new Map<K,T>()
+
+        for (let i = 0, len = (arr || []).length; i < len; i++) {
+
+            let item: any = arr[i];
+
+            let outputKey = Util.isFunction(key) ? (key as Function)(item, i) : item[key as string];
+
+            output.set(outputKey,item)
+        }
+
+        return output;
+    }
+
     public static removeFromArray<T>(list: T[], item: T): void {
 
         if (!list || !list.length) {

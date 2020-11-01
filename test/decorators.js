@@ -100,7 +100,7 @@ describe('Decorators', function () {
         });
     });
     describe('should inject with decorators', function () {
-        let injector, CalcManager, FooManager, Rectangle, Cleanable;
+        let injector;
         beforeEach(async function () {
             injector = ioc.createContainer();
             let Rectangle = class Rectangle {
@@ -113,6 +113,9 @@ describe('Decorators', function () {
             tslib_1.__decorate([
                 decorators_1.alias('cleanable')
             ], Rectangle.prototype, "cleanable", void 0);
+            tslib_1.__decorate([
+                decorators_1.aliasMap('calcable', (item) => item.constructor.name)
+            ], Rectangle.prototype, "cleanableMap", void 0);
             Rectangle = tslib_1.__decorate([
                 decorators_1.define(),
                 decorators_1.singleton()
@@ -164,7 +167,7 @@ describe('Decorators', function () {
             injector.register(FooManager);
             await injector.initialize();
         });
-        it('should inject property ', function () {
+        it('should inject alias property ', function () {
             let rectangle = injector.getObject('rectangle');
             should.exist(rectangle.calcable);
             should.exist(rectangle.cleanable);
@@ -172,6 +175,9 @@ describe('Decorators', function () {
             rectangle.cleanable.should.be.an.instanceOf(Array);
             rectangle.calcable.length.should.be.equal(3);
             rectangle.cleanable.length.should.be.equal(1);
+            rectangle.cleanableMap.size.should.be.equal(3);
+            rectangle.cleanableMap.should.be.instanceOf(Map);
+            rectangle.cleanableMap.get("FooManager").constructor.name.should.be.eq("FooManager");
         });
     });
     describe('should inject with lazy', function () {
