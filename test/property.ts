@@ -1,8 +1,8 @@
 "use strict";
-import {Injector} from "../lib/inject";
-import ioc = require('../lib/inject');
+import {Injector} from "../lib/inject/inject";
+import ioc = require('..');
 import chai = require('chai');
-import {define, singleton, inject as inject} from "../lib/decorators";
+import {define, singleton, inject as inject} from "../";
 
 let should = chai.should();
 
@@ -331,10 +331,10 @@ describe('Property Ref', function () {
         });
     });
 
-    describe('inject property with inject array (object notation)', function () {
+    describe('inject property with inject array (object notation)', async function () {
         let injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
             class Rectangle{
@@ -387,7 +387,7 @@ describe('Property Ref', function () {
                 }
             });
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property with inject array', function () {
@@ -401,10 +401,10 @@ describe('Property Ref', function () {
         });
     });
 
-    describe('inject property with nested properties link', function () {
+    describe('inject property with nested properties link', async function () {
         let injector:Injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
             class Rectangle{
@@ -445,7 +445,7 @@ describe('Property Ref', function () {
             injector.register('barManager',BarManager);
 
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property with nested properties', function () {
@@ -520,10 +520,10 @@ describe('Property Ref', function () {
         });
     });
 
-    describe('inject property with inject space (object notation) link', function () {
+    describe('inject property with inject space (object notation) link', async function () {
         let injector:Injector;
 
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
 
             class Rectangle{
@@ -565,7 +565,7 @@ describe('Property Ref', function () {
             injector.register('fooManager',FooManager)
             injector.register('barManager',BarManager)
 
-            injector.initialize();
+            await injector.initialize();
         });
 
         it('should inject property with inject array', function () {

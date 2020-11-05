@@ -1,8 +1,8 @@
 "use strict";
 import chai = require('chai');
-import    ioc = require('../lib/inject');
-import {Injector} from "../lib/inject";
-import {IFactory} from "../lib/IFactory";
+import    ioc = require('..');
+import {Injector} from "../lib/inject/inject";
+import {IFactory} from "../lib/interfaces/IFactory";
 import {
     define,
     singleton,
@@ -13,7 +13,7 @@ import {
     factoryMethod,
     dynamicFactory,
     factoryMethodAsync
-} from "../lib/decorators";
+} from "../";
 
 let should = chai.should();
 

@@ -1,14 +1,14 @@
 "use strict";
 import chai = require('chai');
-import    ioc = require('../lib/inject');
-import {Injector} from "../lib/inject";
+import    ioc = require('../');
+import {Injector} from "../lib/inject/inject";
 import {
     aliasFactory,
     define,
     dynamicFactory,
     alias,
     factoryMethod, aliasFactoryMap
-} from "../lib/decorators";
+} from "../";
 
 let should = chai.should();
 

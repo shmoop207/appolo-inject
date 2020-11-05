@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const decorators_1 = require("../lib/decorators");
-const ioc = require("../lib/inject");
+const __1 = require("../");
+const ioc = require("..");
 const chai = require("chai");
 let should = chai.should();
 describe('Lazy', function () {
@@ -13,10 +13,10 @@ describe('Lazy', function () {
             let Test = class Test {
             };
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test.prototype, "testLazy", void 0);
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             injector.register('test', Test);
             injector.addDefinition("testLazy", {
@@ -35,7 +35,7 @@ describe('Lazy', function () {
             let Test = class Test {
             };
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             injector.register('test', Test).injectLazyFn("test", function (inject) {
                 return "working";
@@ -47,7 +47,7 @@ describe('Lazy', function () {
         it('should custom inject lazy fn to class', function () {
             injector = ioc.createContainer();
             let customDecorator = function (id) {
-                return decorators_1.customFn((inject) => {
+                return __1.customFn((inject) => {
                     return inject.get(id).name;
                 });
             };
@@ -57,7 +57,7 @@ describe('Lazy', function () {
                 }
             };
             Test2 = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test2);
             let Test = class Test {
             };
@@ -65,7 +65,7 @@ describe('Lazy', function () {
                 customDecorator("test2")
             ], Test.prototype, "test", void 0);
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             injector.registerMulti([Test, Test2]);
             injector.initialize();
@@ -76,7 +76,7 @@ describe('Lazy', function () {
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
             let customDecorator = function (id) {
-                return decorators_1.customFn((inject) => {
+                return __1.customFn((inject) => {
                     return injector2.get(id).name;
                 });
             };
@@ -86,7 +86,7 @@ describe('Lazy', function () {
                 }
             };
             Test2 = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test2);
             let Test = class Test {
             };
@@ -94,7 +94,7 @@ describe('Lazy', function () {
                 customDecorator("test2")
             ], Test.prototype, "test", void 0);
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             injector2.parent = injector;
             injector2.register(Test2);

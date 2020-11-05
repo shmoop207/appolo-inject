@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const chai = require("chai");
-const ioc = require("../lib/inject");
-const decorators_1 = require("../lib/decorators");
+const ioc = require("..");
+const __1 = require("../");
 let should = chai.should();
 describe('Decorators', function () {
     describe('should inject with inject params name', function () {
@@ -18,7 +18,7 @@ describe('Decorators', function () {
                 }
             };
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             let Test2 = class Test2 {
                 constructor(test1) {
@@ -26,8 +26,8 @@ describe('Decorators', function () {
                 }
             };
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                tslib_1.__param(0, decorators_1.inject("test"))
+                __1.define(),
+                tslib_1.__param(0, __1.inject("test"))
             ], Test2);
             injector.register(Test);
             injector.register(Test2);
@@ -48,7 +48,7 @@ describe('Decorators', function () {
                 }
             };
             Test = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Test);
             let Test2 = class Test2 {
                 constructor(test) {
@@ -56,8 +56,8 @@ describe('Decorators', function () {
                 }
             };
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                tslib_1.__param(0, decorators_1.inject())
+                __1.define(),
+                tslib_1.__param(0, __1.inject())
             ], Test2);
             injector.register(Test);
             injector.register(Test2);
@@ -74,7 +74,7 @@ describe('Decorators', function () {
             }
         };
         Test = tslib_1.__decorate([
-            decorators_1.define()
+            __1.define()
         ], Test);
         let Test2 = class Test2 {
             constructor() { }
@@ -83,18 +83,18 @@ describe('Decorators', function () {
             }
         };
         tslib_1.__decorate([
-            tslib_1.__param(0, decorators_1.inject())
+            tslib_1.__param(0, __1.inject())
         ], Test2.prototype, "test", null);
         Test2 = tslib_1.__decorate([
-            decorators_1.define()
+            __1.define()
         ], Test2);
         beforeEach(function () {
             injector = ioc.createContainer();
         });
-        it("should have inject params in method", () => {
+        it("should have inject params in method", async () => {
             injector.register(Test);
             injector.register(Test2);
-            injector.initialize();
+            await injector.initialize();
             let test2 = injector.getObject("test2");
             test2.test().should.be.eq("test");
         });
@@ -108,17 +108,17 @@ describe('Decorators', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.alias('calcable')
+                __1.alias('calcable')
             ], Rectangle.prototype, "calcable", void 0);
             tslib_1.__decorate([
-                decorators_1.alias('cleanable')
+                __1.alias('cleanable')
             ], Rectangle.prototype, "cleanable", void 0);
             tslib_1.__decorate([
-                decorators_1.aliasMap('calcable', (item) => item.constructor.name)
+                __1.aliasMap('calcable', (item) => item.constructor.name)
             ], Rectangle.prototype, "cleanableMap", void 0);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             let CalcManager = class CalcManager {
                 constructor() {
@@ -128,9 +128,9 @@ describe('Decorators', function () {
                 }
             };
             CalcManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.alias('calcable')
+                __1.define(),
+                __1.singleton(),
+                __1.alias('calcable')
             ], CalcManager);
             let FooManager = class FooManager {
                 constructor() {
@@ -142,10 +142,10 @@ describe('Decorators', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.alias('calcable'),
-                decorators_1.alias('cleanable')
+                __1.define(),
+                __1.singleton(),
+                __1.alias('calcable'),
+                __1.alias('cleanable')
             ], FooManager);
             let BarManager = class BarManager {
                 constructor() {
@@ -157,9 +157,9 @@ describe('Decorators', function () {
                 }
             };
             BarManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.alias('calcable')
+                __1.define(),
+                __1.singleton(),
+                __1.alias('calcable')
             ], BarManager);
             injector.register(Rectangle);
             injector.register(CalcManager);
@@ -190,22 +190,22 @@ describe('Decorators', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.lazy()
+                __1.lazy()
             ], Rectangle.prototype, "fooManager", void 0);
             tslib_1.__decorate([
-                decorators_1.lazy("someName")
+                __1.lazy("someName")
             ], Rectangle.prototype, "fooManager2", void 0);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
@@ -229,18 +229,18 @@ describe('Decorators', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.lazy()
+                __1.lazy()
             ], Rectangle.prototype, "fooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             injector.register(FooManager);

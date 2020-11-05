@@ -1,4 +1,4 @@
-import {Injector} from "./inject";
+import {Injector} from "../inject/inject";
 
 export type Class = { new(...args: any[]): any; };
 

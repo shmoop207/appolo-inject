@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const ioc = require("../lib/inject");
+const ioc = require("..");
 const chai = require("chai");
-const decorators_1 = require("../lib/decorators");
+const __1 = require("../");
 let should = chai.should();
 describe('Property Ref', function () {
     describe('inject object by ref', function () {
@@ -236,9 +236,9 @@ describe('Property Ref', function () {
             rectangle.name().should.equal('foobar');
         });
     });
-    describe('inject property with inject array (object notation)', function () {
+    describe('inject property with inject array (object notation)', async function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -276,7 +276,7 @@ describe('Property Ref', function () {
                     singleton: true
                 }
             });
-            injector.initialize();
+            await injector.initialize();
         });
         it('should inject property with inject array', function () {
             let rectangle = injector.getObject('rectangle');
@@ -286,9 +286,9 @@ describe('Property Ref', function () {
             rectangle.name().should.equal('foobar');
         });
     });
-    describe('inject property with nested properties link', function () {
+    describe('inject property with nested properties link', async function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -314,7 +314,7 @@ describe('Property Ref', function () {
             injector.register('rectangle', Rectangle).inject(['fooManager']);
             injector.register('fooManager', FooManager).inject('barManager');
             injector.register('barManager', BarManager);
-            injector.initialize();
+            await injector.initialize();
         });
         it('should inject property with nested properties', function () {
             let rectangle = injector.getObject('rectangle');
@@ -363,9 +363,9 @@ describe('Property Ref', function () {
             rectangle.name().should.equal('foobar');
         });
     });
-    describe('inject property with inject space (object notation) link', function () {
+    describe('inject property with inject space (object notation) link', async function () {
         let injector;
-        beforeEach(function () {
+        beforeEach(async function () {
             injector = ioc.createContainer();
             class Rectangle {
                 constructor() {
@@ -391,7 +391,7 @@ describe('Property Ref', function () {
             injector.register('rectangle', Rectangle).inject('fooManager barManager');
             injector.register('fooManager', FooManager);
             injector.register('barManager', BarManager);
-            injector.initialize();
+            await injector.initialize();
         });
         it('should inject property with inject array', function () {
             let rectangle = injector.getObject('rectangle');
@@ -413,13 +413,13 @@ describe('Property Ref', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Rectangle.prototype, "fooManager", void 0);
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Rectangle.prototype, "barManager", void 0);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -429,7 +429,7 @@ describe('Property Ref', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], FooManager);
             let BarManager = class BarManager {
                 constructor() {
@@ -439,7 +439,7 @@ describe('Property Ref', function () {
                 }
             };
             BarManager = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], BarManager);
             injector.register(Rectangle);
             injector.register(FooManager);

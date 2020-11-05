@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ioc = require("../lib/inject");
+const ioc = require("..");
 const chai = require("chai");
 let should = chai.should();
 describe('Ioc', function () {

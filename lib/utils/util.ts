@@ -1,104 +1,153 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Util = void 0;
-const decorators_1 = require("./decorators");
-class Util {
-    static getClassName(fn) {
-        return fn.name.charAt(0).toLowerCase() + fn.name.slice(1);
+import {InjectDefineSymbol} from "../decorators/decorators";
+import {Define} from "../define/define";
+
+export class Util {
+    public static getClassName(fn: Function): string {
+        return fn.name.charAt(0).toLowerCase() + fn.name.slice(1)
     }
-    static isUndefined(value) {
-        return typeof value === 'undefined';
+
+    public static isUndefined(value: any): boolean {
+        return typeof value === 'undefined'
     }
-    static isObject(val) {
+
+    public static isObject(val: any): boolean {
         if (val === null) {
             return false;
         }
         return ((typeof val === 'function') || (typeof val === 'object'));
     }
-    static isFunction(obj) {
+
+    public static isFunction(obj: any): boolean {
         return !!(obj && obj.constructor && obj.call && obj.apply);
-    }
-    ;
-    static getClassNameOrId(objectId) {
+    };
+
+    public static getClassNameOrId(objectId: string | Function): string {
         if (Util.isFunction(objectId)) {
-            objectId = Util.getClassName(objectId);
+            objectId = Util.getClassName(objectId as Function);
         }
-        return objectId;
+
+        return objectId as string;
     }
-    static isClass(v) {
+
+    public static isClass(v: any): boolean {
         return typeof v === 'function' && v.name && /^\s*class\s+/.test(v.toString());
     }
-    static getClassDefinition(fn) {
-        return Util.getReflectData(decorators_1.InjectDefineSymbol, fn);
+
+    public static getClassDefinition(fn: any): Define {
+        return Util.getReflectData<Define>(InjectDefineSymbol, fn)
     }
-    static isString(str) {
+
+    public static isString(str: any): boolean {
         return (typeof str === 'string' || str instanceof String);
     }
-    static keyBy(arr, key) {
-        let output = {};
+
+    public static keyBy<T extends object>(arr: T[], key: string | ((item: T, index: number) => string)) {
+
+        let output: { [index: string]: T } = {};
+
         for (let i = 0, len = (arr || []).length; i < len; i++) {
-            let item = arr[i];
-            let outputKey = Util.isFunction(key) ? key(item, i) : item[key];
+
+            let item: any = arr[i];
+
+            let outputKey = Util.isFunction(key) ? (key as Function)(item, i) : item[key as string];
+
             output[outputKey] = item;
         }
+
         return output;
     }
-    static keyByMap(arr, key) {
-        let output = new Map();
+
+    public static keyByMap<T extends object,K extends any=string>(arr: T[], key: string | ((item: T, index: number) => string)):Map<K,T> {
+
+        let output = new Map<K,T>()
+
         for (let i = 0, len = (arr || []).length; i < len; i++) {
-            let item = arr[i];
-            let outputKey = Util.isFunction(key) ? key(item, i) : item[key];
-            output.set(outputKey, item);
+
+            let item: any = arr[i];
+
+            let outputKey = Util.isFunction(key) ? (key as Function)(item, i) : item[key as string];
+
+            output.set(outputKey,item)
         }
+
         return output;
     }
-    static removeFromArray(list, item) {
+
+    public static removeFromArray<T>(list: T[], item: T): void {
+
         if (!list || !list.length) {
             return;
         }
+
         for (let i = list.length - 1; i >= 0; i--) {
             if (list[i] === item) {
                 list.splice(i, 1);
             }
         }
     }
-    static groupByArray(arr, key) {
-        let output = {};
+
+    public static groupByArray<T>(arr: T[], key: string | number | ((item: T) => string | number)): { [index: string]: T[] } {
+
+        let output: { [index: string]: T[] } = {};
+
         for (let i = 0, len = arr.length; i < len; i++) {
-            let item = arr[i], value = (typeof key === "function") ? key(item) : item[key], dto = output[value] || (output[value] = []);
+            let item = arr[i],
+                value = (typeof key === "function") ? key(item) : item[key],
+                dto = output[value] || (output[value] = []);
+
             dto.push(item);
         }
+
         return output;
     }
-    static getClassId(fn) {
+
+    public static getClassId(fn: any): string {
+
         if (!fn) {
             return null;
         }
+
         if (Util.isString(fn)) {
-            return fn;
+            return fn
         }
+
         let define = Util.getClassDefinition(fn);
+
         if (define) {
             return define.definition.id;
         }
+
         if (Util.isClass(fn)) {
             return Util.getClassName(fn);
         }
+
         return null;
+
     }
-    static getFunctionArgs(func) {
+
+    public static getFunctionArgs(func: (...args: any[]) => any) {
+
         const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
         const ARGUMENT_NAMES = /([^\s,]+)/g;
+
         let fnStr = func.toString().replace(STRIP_COMMENTS, '');
         let args = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+
         if (args === null) {
             args = [];
         }
+
         args = Util.compactArray(args);
+
         return args;
     }
-    static compactArray(array) {
-        let index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+
+    public static compactArray<T>(array: T[]): T[] {
+        let index = -1,
+            length = array == null ? 0 : array.length,
+            resIndex = 0,
+            result = [];
+
         while (++index < length) {
             let value = array[index];
             if (value) {
@@ -107,61 +156,84 @@ class Util {
         }
         return result;
     }
-    static getReflectData(symbol, klass, defaultValue) {
+
+    public static getReflectData<T>(symbol: Symbol | string, klass, defaultValue?: T): T {
         let value = Reflect.getOwnMetadata(symbol, klass);
+
         if (!value && Reflect.hasMetadata(symbol, klass)) {
             value = Util.cloneDeep(Reflect.getMetadata(symbol, klass));
             Reflect.defineMetadata(symbol, value, klass);
         }
+
         if (!value && defaultValue != undefined) {
             value = defaultValue;
             Reflect.defineMetadata(symbol, value, klass);
         }
-        return value;
+
+        return value
     }
-    static cloneDeep(obj) {
+
+    public static cloneDeep<T>(obj: T): T {
+
         if (!obj) {
             return;
         }
+
         let output = Array.isArray(obj) ? [] : {};
+
         let keys = Object.keys(obj);
+
         for (let i = 0, len = keys.length; i < len; i++) {
+
             let key = keys[i], value = obj[key];
-            output[key] = (value == null || typeof value != "object") ? value : Util.cloneDeep(value);
+            output[key] = (value == null || typeof value != "object") ? value : Util.cloneDeep(value)
         }
-        return output;
+
+        return output as any;
     }
-    static mapPush(map, key, obj) {
+
+    public static mapPush(map: { [index: string]: Object[] }, key: string, obj: Object): void {
         (!map[key]) && (map[key] = []);
+
         map[key].push(obj);
     }
-    static createDelegate(fn, obj, args) {
+
+    public static createDelegate(fn: Function, obj: any, args: any[]): Function {
         return function () {
+
             let callArgs = (args || []).concat(arguments);
+
             return fn.apply(obj, callArgs);
         };
     }
-    static regroupByParallel(arr, fn) {
-        let output = [];
+
+    public static regroupByParallel<T>(arr: T[], fn: (item: T) => boolean): T[][] {
+        let output: T[][] = [];
+
         for (let i = 0, len = arr ? arr.length : 0; i < len; i++) {
             let item = arr[i], lastItemArr = output[output.length - 1];
+
             if (fn(item) && lastItemArr && lastItemArr.length && fn(lastItemArr[0])) {
-                lastItemArr.push(item);
-            }
-            else {
-                output.push([item]);
+
+                lastItemArr.push(item)
+
+            } else {
+                output.push([item])
             }
         }
+
         return output;
     }
-    static async runRegroupByParallel(arr, fn, runFn) {
+
+    public static async runRegroupByParallel<T>(arr: T[], fn: (item: T) => boolean, runFn: (item: T) => Promise<any>): Promise<void> {
         let itemsArr = Util.regroupByParallel(arr, fn);
+
         for (let i = 0, len = (itemsArr || []).length; i < len; i++) {
             let items = itemsArr[i];
+
             let promises = (items || []).map(item => runFn(item));
-            await Promise.all(promises);
+
+            await Promise.all(promises)
         }
     }
 }
-exports.Util = Util;
-//# sourceMappingURL=util.js.map

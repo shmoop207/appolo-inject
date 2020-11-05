@@ -1,8 +1,8 @@
 "use strict";
 import chai = require('chai');
-import    ioc = require('../lib/inject');
-import {Injector} from "../lib/inject";
-import {define, singleton, alias, lazy, inject, aliasMap} from "../lib/decorators";
+import    ioc = require('..');
+import {Injector} from "../lib/inject/inject";
+import {define, singleton, alias, lazy, inject, aliasMap} from "../";
 
 let should = chai.should();
 
@@ -114,10 +114,10 @@ describe('Decorators', function () {
             injector = ioc.createContainer();
         })
 
-        it("should have inject params in method",()=>{
+        it("should have inject params in method",async ()=>{
             injector.register(Test)
             injector.register(Test2)
-            injector.initialize();
+            await injector.initialize();
 
             let test2 = injector.getObject<Test2>("test2");
 

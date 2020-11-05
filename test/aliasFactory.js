@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const chai = require("chai");
-const ioc = require("../lib/inject");
-const decorators_1 = require("../lib/decorators");
+const ioc = require("../");
+const __1 = require("../");
 let should = chai.should();
 describe('Alias Factory', function () {
     describe('should inject alias factory', function () {
@@ -143,7 +143,7 @@ describe('Alias Factory', function () {
                 }
             };
             BooManager = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], BooManager);
             let FooManager = class FooManager {
                 constructor(name) {
@@ -154,12 +154,12 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.factoryMethod(BooManager)
+                __1.factoryMethod(BooManager)
             ], FooManager.prototype, "createFooManager", void 0);
             FooManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.dynamicFactory(),
-                decorators_1.aliasFactory("test")
+                __1.define(),
+                __1.dynamicFactory(),
+                __1.aliasFactory("test")
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
@@ -170,13 +170,13 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.aliasFactory("test")
+                __1.aliasFactory("test")
             ], Rectangle.prototype, "createFooManager", void 0);
             tslib_1.__decorate([
-                decorators_1.aliasFactoryMap("test", (item) => item.name)
+                __1.aliasFactoryMap("test", (item) => item.name)
             ], Rectangle.prototype, "createFooManagerMap", void 0);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define()
+                __1.define()
             ], Rectangle);
             injector.registerMulti([FooManager, Rectangle, BooManager]);
             await injector.initialize();

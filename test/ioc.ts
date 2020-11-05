@@ -1,6 +1,6 @@
 "use strict";
-import {Injector} from "../lib/inject";
-import    ioc = require('../lib/inject');
+import {Injector} from "../lib/inject/inject";
+import    ioc = require('..');
 import chai = require('chai');
 
 let should = chai.should();

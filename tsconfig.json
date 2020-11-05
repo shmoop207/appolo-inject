@@ -1,14 +1,15 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "alwaysStrict":true,
-        "importHelpers":true,
-        "target": "es2017",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "experimentalDecorators": true,
-        "moduleResolution": "node",
-        "allowJs": true,
-        "preserveConstEnums":true
-    }
+  "compilerOptions": {
+    "module": "commonjs",
+    "alwaysStrict": true,
+    "importHelpers": true,
+    "target": "es2017",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "preserveConstEnums": true,
+    "strictBindCallApply": true
+  }
 }

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const chai = require("chai");
-const ioc = require("../lib/inject");
-const decorators_1 = require("../lib/decorators");
+const ioc = require("../");
+const __1 = require("../");
 let should = chai.should();
 describe('Constructor Args', function () {
     describe('inject value  to constructor', function () {
@@ -330,14 +330,14 @@ describe('Constructor Args', function () {
             let AManager = class AManager {
             };
             AManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], AManager);
             let BManager = class BManager {
             };
             BManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], BManager);
             let CManager = class CManager {
                 constructor(aManager, bManager) {
@@ -346,9 +346,9 @@ describe('Constructor Args', function () {
                 }
             };
             CManager = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                tslib_1.__param(0, decorators_1.inject()), tslib_1.__param(1, decorators_1.inject())
+                __1.define(),
+                __1.singleton(),
+                tslib_1.__param(0, __1.inject()), tslib_1.__param(1, __1.inject())
             ], CManager);
             let injector = ioc.createContainer();
             injector.registerMulti([AManager, BManager, CManager]);

@@ -1,9 +1,9 @@
 "use strict";
 import chai = require('chai');
-import    ioc = require('../lib/inject');
+import    ioc = require('..');
 import sleep = require ('sleep-promise');
-import {Injector} from "../lib/inject";
-import {IFactory} from "../lib/IFactory";
+import {Injector} from "..";
+import {IFactory} from "../lib/interfaces/IFactory";
 import {
     alias,
     define,
@@ -12,7 +12,7 @@ import {
     inject,
     injectorAware,
     singleton
-} from "../lib/decorators";
+} from "../";
 
 let should = chai.should();
 

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const decorators_1 = require("../lib/decorators");
+const __1 = require("../");
 const chai = require("chai");
 const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
-const ioc = require("../lib/inject");
+const ioc = require("..");
 chai.use(sinonChai);
 let should = chai.should();
 describe('Parent', function () {
@@ -21,11 +21,11 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test1);
             let Test2 = class Test2 {
                 constructor() {
@@ -35,14 +35,14 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test2);
             injector = ioc.createContainer();
             injector.register(Test1);
@@ -67,11 +67,11 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test1);
             let Test2 = class Test2 {
                 constructor() {
@@ -81,14 +81,14 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test2);
             injector = ioc.createContainer();
             injector.register(Test1);
@@ -113,12 +113,12 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.alias("ITest")
+                __1.define(),
+                __1.singleton(),
+                __1.alias("ITest")
             ], Test1);
             let Test2 = class Test2 {
                 constructor() {
@@ -128,14 +128,14 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.alias("ITest")
+                __1.alias("ITest")
             ], Test2.prototype, "test1", void 0);
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test2.prototype, "initialize", null);
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test2);
             injector = ioc.createContainer();
             injector.register(Test1);
@@ -154,15 +154,15 @@ describe('Parent', function () {
             let Alias = class Alias {
             };
             Alias = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.alias("Alias")
+                __1.define(),
+                __1.singleton(),
+                __1.alias("Alias")
             ], Alias);
             let Alias2 = class Alias2 {
             };
             Alias2 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.aliasFactory("Alias2")
+                __1.define(),
+                __1.aliasFactory("Alias2")
             ], Alias2);
             let Factory = class Factory {
                 async get() {
@@ -170,9 +170,9 @@ describe('Parent', function () {
                 }
             };
             Factory = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton(),
-                decorators_1.factory()
+                __1.define(),
+                __1.singleton(),
+                __1.factory()
             ], Factory);
             let Test1 = class Test1 {
                 constructor() {
@@ -182,35 +182,35 @@ describe('Parent', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test1.prototype, "env", void 0);
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test1.prototype, "logger", void 0);
             tslib_1.__decorate([
-                decorators_1.inject()
+                __1.inject()
             ], Test1.prototype, "factory", void 0);
             tslib_1.__decorate([
-                decorators_1.alias("Alias")
+                __1.alias("Alias")
             ], Test1.prototype, "test", void 0);
             tslib_1.__decorate([
-                decorators_1.aliasFactory("Alias2")
+                __1.aliasFactory("Alias2")
             ], Test1.prototype, "createAlias2", void 0);
             tslib_1.__decorate([
-                decorators_1.factoryMethod(Alias)
+                __1.factoryMethod(Alias)
             ], Test1.prototype, "createAlias", void 0);
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Test1.prototype, "initialize", null);
             Test1 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test1);
             let Test2 = class Test2 extends Test1 {
             };
             Test2 = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Test2);
             injector = ioc.createContainer();
             injector.register(Test1);
@@ -244,8 +244,8 @@ describe('Parent', function () {
                     }
                 };
                 ClassA = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton()
+                    __1.define(),
+                    __1.singleton()
                 ], ClassA);
                 injector.register(ClassA);
                 injector.parent = injector2;
@@ -271,8 +271,8 @@ describe('Parent', function () {
                     }
                 };
                 ClassA = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton()
+                    __1.define(),
+                    __1.singleton()
                 ], ClassA);
                 injector.register(ClassA);
                 injector2.register(ClassA);
@@ -290,8 +290,8 @@ describe('Parent', function () {
                     }
                 };
                 ClassA = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton()
+                    __1.define(),
+                    __1.singleton()
                 ], ClassA);
                 let ClassB = class ClassB {
                     constructor() {
@@ -299,8 +299,8 @@ describe('Parent', function () {
                     }
                 };
                 ClassB = tslib_1.__decorate([
-                    decorators_1.define(),
-                    decorators_1.singleton()
+                    __1.define(),
+                    __1.singleton()
                 ], ClassB);
                 injector.register(ClassA);
                 injector.parent = injector2;
@@ -318,10 +318,14 @@ describe('Parent', function () {
                 injector2.events.beforeInitMethods.on(spy5);
                 injector2.events.beforeBootstrapMethods.on(spy5);
                 injector2.events.afterInitialize.on(spy5);
+                injector2.events.beforeInitDefinitions.on(spy5);
+                injector2.events.beforeInitInstances.on(spy5);
+                injector2.events.beforeInitFactories.on(spy5);
+                injector2.events.beforeInitProperties.on(spy5);
                 await injector2.initialize();
                 spy1.should.have.been.callCount(2);
                 spy2.should.have.been.callCount(1);
-                spy5.should.have.been.callCount(4);
+                spy5.should.have.been.callCount(8);
                 spy1.getCall(0).args[0].definition.type.should.be.equal(ClassA);
                 spy1.getCall(0).args[0].instance.constructor.should.be.equal(ClassA);
             });

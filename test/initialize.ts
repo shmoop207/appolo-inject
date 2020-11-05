@@ -1,8 +1,8 @@
 "use strict";
-import {Injector} from "../lib/inject";
+import {Injector} from "../lib/inject/inject";
 import chai = require('chai');
-import    ioc = require('../lib/inject');
-import {define, singleton, init, initAsync, bootstrap, bootstrapAsync} from "../lib/decorators";
+import    ioc = require('..');
+import {define, singleton, init, initAsync, bootstrap, bootstrapAsync} from "../";
 
 let should = chai.should();
 

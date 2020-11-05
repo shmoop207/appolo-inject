@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const ioc = require("../lib/inject");
+const ioc = require("..");
 let should = chai.should();
 describe('Injector Aware', function () {
     describe('should inject injector to object', function () {

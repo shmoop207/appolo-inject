@@ -1,5 +1,5 @@
 "use strict";
-import {Injector} from "../lib/inject";
+import {Injector} from "../lib/inject/inject";
 import {
     alias,
     aliasFactory,
@@ -9,11 +9,11 @@ import {
     inject,
     factoryMethod,
     singleton
-} from "../lib/decorators";
+} from "../";
 import chai = require('chai');
 import sinon = require('sinon');
 import sinonChai = require('sinon-chai');
-import    ioc = require('../lib/inject');
+import    ioc = require('..');
 
 chai.use(sinonChai);
 let should = chai.should();
@@ -394,12 +394,16 @@ describe('Parent', function () {
                 injector2.events.beforeInitMethods.on(spy5);
                 injector2.events.beforeBootstrapMethods.on(spy5);
                 injector2.events.afterInitialize.on(spy5);
+                injector2.events.beforeInitDefinitions.on(spy5);
+                injector2.events.beforeInitInstances.on(spy5);
+                injector2.events.beforeInitFactories.on(spy5);
+                injector2.events.beforeInitProperties.on(spy5);
 
                 await injector2.initialize();
 
                 spy1.should.have.been.callCount(2);
                 spy2.should.have.been.callCount(1);
-                spy5.should.have.been.callCount(4);
+                spy5.should.have.been.callCount(8);
 
                 spy1.getCall(0).args[0].definition.type.should.be.equal(ClassA);
                 spy1.getCall(0).args[0].instance.constructor.should.be.equal(ClassA);

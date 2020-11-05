@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const ioc = require("../lib/inject");
+const ioc = require("..");
 const chai = require("chai");
-const decorators_1 = require("../lib/decorators");
+const __1 = require("../");
 let should = chai.should();
 describe('Singleton', function () {
     describe('create singleton object', function () {
@@ -54,8 +54,8 @@ describe('Singleton', function () {
                 }
             };
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();

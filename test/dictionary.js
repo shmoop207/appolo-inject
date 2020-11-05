@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require("chai");
-const ioc = require("../lib/inject");
+const ioc = require("..");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 let should = chai.should();

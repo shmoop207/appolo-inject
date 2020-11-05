@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const inject = require("../lib/inject");
+const inject = require("..");
 const chai = require("chai");
 let should = chai.should();
 describe('Property Object Property.js', function () {

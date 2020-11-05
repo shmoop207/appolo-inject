@@ -1,7 +1,7 @@
 "use strict";
-import {Class, IDefinition, IParamInject} from "./IDefinition";
-import {Util} from "./util";
-import {Injector} from "./inject";
+import {Class, IDefinition, IParamInject} from "../interfaces/IDefinition";
+import {Util} from "../utils/util";
+import {Injector} from "../inject/inject";
 
 export class Define {
 

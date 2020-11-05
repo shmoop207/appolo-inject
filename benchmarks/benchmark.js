@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Benchmark = require("benchmark");
-const inject = require("../lib/inject");
+const inject = require("../");
 let suite = new Benchmark.Suite();
 let injector = inject.createContainer();
 class Rectangle {

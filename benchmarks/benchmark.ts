@@ -1,6 +1,6 @@
 import Benchmark = require("benchmark");
-import {Injector} from "../lib/inject";
-import  inject = require('../lib/inject');
+import {Injector} from "../lib/inject/inject";
+import  inject = require('../');
 
 
 let suite = new Benchmark.Suite();

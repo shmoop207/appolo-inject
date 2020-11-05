@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const chai = require("chai");
-const ioc = require("../lib/inject");
-const decorators_1 = require("../lib/decorators");
+const ioc = require("..");
+const __1 = require("../");
 let should = chai.should();
 describe('initialize', function () {
     describe('should call initialize method', function () {
@@ -58,11 +58,11 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
@@ -83,14 +83,14 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                decorators_1.bootstrap()
+                __1.bootstrap()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
@@ -109,11 +109,11 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.init()
+                __1.init()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             let req;
@@ -143,14 +143,14 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                decorators_1.initAsync()
+                __1.initAsync()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                decorators_1.bootstrapAsync()
+                __1.bootstrapAsync()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
-                decorators_1.define(),
-                decorators_1.singleton()
+                __1.define(),
+                __1.singleton()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
