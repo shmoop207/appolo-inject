@@ -13,7 +13,7 @@ export async function _initBootstrapMethods(this: Injector) {
 
     await (this._events.beforeBootstrapMethods as Event<void>).fireEventAsync();
 
-    await Promise.all(this.children.map(injector => injector.initInitMethods()));
+    await Promise.all(this.children.map(injector => injector.initBootstrapMethods()));
 
     let asyncBootstrapPromises = [];
 

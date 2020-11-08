@@ -31,7 +31,7 @@
     "npm": ">=2.14.x"
   },
   "main": "./index.js",
-  "version": "8.0.12",
+  "version": "8.0.13",
   "license": "MIT",
   "repository": {
     "type": "git",
