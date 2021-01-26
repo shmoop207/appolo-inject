@@ -1,6 +1,6 @@
 "use strict";
 import {Injector} from "../lib/inject/inject";
-import {customFn, define, inject} from "../";
+import {customFn, define, inject, singleton} from "../";
 import    ioc = require('..');
 import chai = require('chai');
 
@@ -39,8 +39,6 @@ describe('Lazy', function () {
             let test2: any = injector.getObject('testLazy');
 
             test2.should.be.eq("working");
-
-
 
 
         });
@@ -201,5 +199,49 @@ describe('Lazy', function () {
 
     });
 
-});
+    describe('inject lazy non singleton', function () {
+        let injector: Injector;
 
+
+        it('should crate lazy non singleton', async function () {
+            injector = ioc.createContainer();
+
+            @define()
+            class Test {
+                value: any
+
+                constructor(value: any) {
+                    this.value = value
+                }
+
+
+            }
+
+            @define()
+            @singleton()
+            class Rectangle {
+                @inject() test: Test
+
+
+                constructor() {
+                }
+
+
+            }
+
+            injector.registerMulti([Test, Rectangle]);
+
+
+            await injector.initialize();
+
+            let rectangle = injector.get<Rectangle>(Rectangle);
+            should.exist(rectangle);
+            rectangle.test.should.be.ok;
+            should.not.exist(rectangle.test.value)
+
+
+        });
+
+    });
+
+})

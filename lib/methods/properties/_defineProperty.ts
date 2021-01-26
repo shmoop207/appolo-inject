@@ -1,11 +1,11 @@
 import {Injector} from "../../inject/inject";
 
-export function _defineProperty(this: Injector, object: any, name: string, fn: Function, cache: boolean = false) {
+export function _defineProperty(this: Injector, object: any, name: string, fn: Function, cache: boolean = false,addSelf = false) {
     let $self = this;
     if (!cache) {
         Object.defineProperty(object, name, {
             get() {
-                return fn($self);
+                return addSelf ?fn($self):fn();
             }, configurable: true
         });
 
@@ -26,7 +26,7 @@ export function _defineProperty(this: Injector, object: any, name: string, fn: F
                 return cached;
             }
 
-            let value = fn($self);
+            let value = addSelf ?fn($self):fn();
 
             func.__cached__[name] = value;
 

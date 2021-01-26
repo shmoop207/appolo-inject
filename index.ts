@@ -2,7 +2,7 @@ import {Injector} from "./lib/inject/inject";
 
 export default require('./lib/inject/inject');
 export {IDefinition, IParamInject} from './lib/interfaces/IDefinition'
-export {IFactory} from './lib/interfaces/IFactory'
+export {IFactory,FactoryFn} from './lib/interfaces/IFactory'
 export {IOptions} from './lib/interfaces/IOptions'
 export {Injector} from './lib/inject/inject'
 export {Define} from './lib/define/define'

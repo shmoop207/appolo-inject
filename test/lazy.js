@@ -136,5 +136,36 @@ describe('Lazy', function () {
             r.should.be.eq(r2);
         });
     });
+    describe('inject lazy non singleton', function () {
+        let injector;
+        it('should crate lazy non singleton', async function () {
+            injector = ioc.createContainer();
+            let Test = class Test {
+                constructor(value) {
+                    this.value = value;
+                }
+            };
+            Test = tslib_1.__decorate([
+                __1.define()
+            ], Test);
+            let Rectangle = class Rectangle {
+                constructor() {
+                }
+            };
+            tslib_1.__decorate([
+                __1.inject()
+            ], Rectangle.prototype, "test", void 0);
+            Rectangle = tslib_1.__decorate([
+                __1.define(),
+                __1.singleton()
+            ], Rectangle);
+            injector.registerMulti([Test, Rectangle]);
+            await injector.initialize();
+            let rectangle = injector.get(Rectangle);
+            should.exist(rectangle);
+            rectangle.test.should.be.ok;
+            should.not.exist(rectangle.test.value);
+        });
+    });
 });
 //# sourceMappingURL=lazy.js.map

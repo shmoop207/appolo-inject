@@ -32,7 +32,7 @@ export function _injectPropertiesAndLookUpMethods<T>(this: Injector, object: T, 
 
 
             if (prop.lazy) {
-                _defineProperty.call(this,object, prop.name, Util.createDelegate(_getByParamObj, this, [ prop, prop.ref]), true)
+                _defineProperty.call(this,object, prop.name, Util.createDelegate(_getByParamObj, this, [ prop, prop.ref]), true,false)
             } else {
                 object[prop.name] = _getByParamObj.call(this, prop, prop.ref);
             }
@@ -57,7 +57,7 @@ export function _injectPropertiesAndLookUpMethods<T>(this: Injector, object: T, 
 
             object[prop.name] = Util.createDelegate(_createFactoryMethodAsync, this, [prop.factoryMethodAsync, prop.injector || this])
         } else if (prop.lazyFn) {
-            _defineProperty.call(this,object, prop.name, prop.lazyFn)
+            _defineProperty.call(this,object, prop.name, prop.lazyFn,false,true)
 
         }
 

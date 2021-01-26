@@ -7,7 +7,7 @@ import {
     define,
     dynamicFactory,
     alias,
-    factoryMethod, aliasFactoryMap
+    factoryMethod, aliasFactoryMap, FactoryFn
 } from "../";
 
 let should = chai.should();
@@ -263,7 +263,7 @@ describe('Alias Factory', function () {
 
             @define()
             class Rectangle {
-                @aliasFactory("test") createFooManager: ((name:string)=>BooManager)[];
+                @aliasFactory("test") createFooManager: FactoryFn<typeof BooManager>[];
                 @aliasFactoryMap("test",(item)=>item.name) createFooManagerMap: Map<string,(name:string)=>BooManager>;
 
 
