@@ -8,7 +8,7 @@ import {Util} from "../utils/util";
 import {Event, IEvent} from "@appolo/events";
 import {Events, InjectEvent} from "../events/events";
 
-import {_get} from "../methods/instances/_get";
+import {_get, _getFromDefinition} from "../methods/instances/_get";
 
 import {_register} from "../methods/definitions/_register";
 import {_loadFactory} from "../methods/factories/_loadFactory";
@@ -23,6 +23,7 @@ import {_initProperties} from "../methods/properties/_initProperties";
 import {_initInstances} from "../methods/instances/_initInstances";
 import {_initDefinitions} from "../methods/definitions/_initDefinitions";
 import {_initBootstrapMethods} from "../methods/methods/_initBootstrapMethods";
+import {_prepareProperties} from "../methods/properties/_prepareProperties";
 
 type keyObject = { [index: string]: Object }
 
@@ -178,6 +179,21 @@ export class Injector {
 
         return obj;
 
+    }
+
+    public wire<T extends new (...args: any) => any>(klass: T, runtimeArgs?: ConstructorParameters<T>): InstanceType<T> {
+        let def = Util.getClassDefinition(klass)
+
+        if (!def) {
+            return new klass(...runtimeArgs as any[])
+        }
+        def = def.clone();
+
+        _prepareProperties.call(this, def.definition);
+
+        let instance = _getFromDefinition.call(this, def.definition, def.definition.id, []) as InstanceType<T>
+
+        return instance;
     }
 
     public get<T>(objectID: string | Function, runtimeArgs?: any[]): T {

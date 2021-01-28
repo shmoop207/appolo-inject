@@ -1,5 +1,6 @@
 import {Injector} from "../../inject/inject";
 import {_createObjectInstance} from "./_createObjectInstance";
+import {IDefinition} from "../../interfaces/IDefinition";
 
 export function _get<T>(this: Injector, objectID: string, runtimeArgs?: any[]): T {
 
@@ -12,9 +13,7 @@ export function _get<T>(this: Injector, objectID: string, runtimeArgs?: any[]): 
     let def = this._definitions[objectID];
 
     if (def) {
-        return def.injector && def.injector !== this
-            ? def.injector.getObject(def.refName || objectID, runtimeArgs)
-            : _createObjectInstance.call(this,objectID, this._definitions[objectID], runtimeArgs) as T;
+        return _getFromDefinition.call(this, def, objectID, runtimeArgs) as T
     }
 
     if (this.parent) {
@@ -23,3 +22,10 @@ export function _get<T>(this: Injector, objectID: string, runtimeArgs?: any[]): 
 
     throw new Error(`Injector:can't find object definition for objectID:${objectID}`);
 }
+
+export function _getFromDefinition<T>(this: Injector, def: IDefinition, objectID: string, runtimeArgs?: any[]): T {
+    return def.injector && def.injector !== this
+        ? def.injector.getObject(def.refName || objectID, runtimeArgs)
+        : _createObjectInstance.call(this, objectID, def, runtimeArgs) as T;
+}
+
