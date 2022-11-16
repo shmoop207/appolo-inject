@@ -110,11 +110,11 @@ describe('Alias Factory', function () {
                 }
             };
             CalcManager = class {
-                constructor(num) {
-                    this.num = num || 25;
-                }
                 static get NAME() {
                     return "test";
+                }
+                constructor(num) {
+                    this.num = num || 25;
                 }
                 calc() {
                     return this.num;
@@ -143,7 +143,7 @@ describe('Alias Factory', function () {
                 }
             };
             BooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], BooManager);
             let FooManager = class FooManager {
                 constructor(name) {
@@ -154,12 +154,12 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factoryMethod(BooManager)
+                (0, __1.factoryMethod)(BooManager)
             ], FooManager.prototype, "createFooManager", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.dynamicFactory(),
-                __1.aliasFactory("test")
+                (0, __1.define)(),
+                (0, __1.dynamicFactory)(),
+                (0, __1.aliasFactory)("test")
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
@@ -170,13 +170,13 @@ describe('Alias Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.aliasFactory("test")
+                (0, __1.aliasFactory)("test")
             ], Rectangle.prototype, "createFooManager", void 0);
             tslib_1.__decorate([
-                __1.aliasFactoryMap("test", (item) => item.name)
+                (0, __1.aliasFactoryMap)("test", (item) => item.name)
             ], Rectangle.prototype, "createFooManagerMap", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], Rectangle);
             injector.registerMulti([FooManager, Rectangle, BooManager]);
             await injector.initialize();

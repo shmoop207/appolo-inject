@@ -54,8 +54,8 @@ describe('Singleton', function () {
                 }
             };
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();

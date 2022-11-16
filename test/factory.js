@@ -101,11 +101,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factory()
+                (0, __1.factory)()
             ], Rectangle.prototype, "fooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager2 = class FooManager2 {
                 constructor() {
@@ -113,8 +113,8 @@ describe('Property Factory', function () {
                 }
             };
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooManager = class FooManager {
                 constructor() {
@@ -125,12 +125,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooManager);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -151,11 +151,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -163,8 +163,8 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooManagerFactory = class FooManagerFactory {
                 constructor() {
@@ -175,12 +175,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManagerFactory.prototype, "fooManager", void 0);
             FooManagerFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooManagerFactory);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -201,11 +201,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "barSomeName", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -213,8 +213,8 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let BarSomeName = class BarSomeName {
                 constructor() {
@@ -225,12 +225,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BarSomeName.prototype, "fooManager", void 0);
             BarSomeName = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BarSomeName);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -251,11 +251,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory1", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let Factory1 = class Factory1 {
                 constructor() {
@@ -265,12 +265,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Factory1.prototype, "factory2", void 0);
             Factory1 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory1);
             let Factory2 = class Factory2 {
                 constructor() {
@@ -280,9 +280,9 @@ describe('Property Factory', function () {
                 }
             };
             Factory2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -311,11 +311,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory1", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let Factory1 = class Factory1 {
                 constructor() {
@@ -326,12 +326,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Factory1.prototype, "factory2", void 0);
             Factory1 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory1);
             let Factory2 = class Factory2 {
                 constructor() {
@@ -342,9 +342,9 @@ describe('Property Factory', function () {
                 }
             };
             Factory2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -363,11 +363,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory1", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let Factory1 = class Factory1 {
                 constructor() {
@@ -378,12 +378,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Factory1.prototype, "factory2", void 0);
             Factory1 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory1);
             let Factory2 = class Factory2 {
                 constructor() {
@@ -394,9 +394,9 @@ describe('Property Factory', function () {
                 }
             };
             Factory2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -419,14 +419,14 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory1", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory2", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let Factory1 = class Factory1 {
                 constructor() {
@@ -437,9 +437,9 @@ describe('Property Factory', function () {
                 }
             };
             Factory1 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory1);
             let Factory2 = class Factory2 {
                 constructor() {
@@ -450,12 +450,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Factory2.prototype, "factory1", void 0);
             Factory2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -479,14 +479,14 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "factory1", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -496,11 +496,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "factory1", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let Factory1 = class Factory1 {
                 constructor() {
@@ -511,9 +511,9 @@ describe('Property Factory', function () {
                 }
             };
             Factory1 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Factory1);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -539,11 +539,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooManagerProvider", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -551,8 +551,8 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooManagerProvider = class FooManagerProvider {
                 constructor() {
@@ -563,12 +563,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManagerProvider.prototype, "fooManager", void 0);
             FooManagerProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooManagerProvider);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -591,11 +591,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "barManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -603,8 +603,8 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -615,12 +615,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooProvider.prototype, "fooManager", void 0);
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -642,11 +642,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooProvider", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -657,12 +657,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.alias("test")
+                (0, __1.alias)("test")
             ], FooProvider.prototype, "fooManagers", void 0);
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             let FooManager = class FooManager {
                 constructor() {
@@ -670,9 +670,9 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.alias("test")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.alias)("test")
             ], FooManager);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -692,11 +692,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooProvider", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -706,12 +706,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.alias("test")
+                (0, __1.alias)("test")
             ], FooProvider.prototype, "fooManagers", void 0);
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             let FooManager = class FooManager {
                 getName() {
@@ -719,15 +719,15 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "barManager", void 0);
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], FooManager.prototype, "getName", null);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.alias("test")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.alias)("test")
             ], FooManager);
             let BarManager = class BarManager {
                 constructor() {
@@ -735,8 +735,8 @@ describe('Property Factory', function () {
                 }
             };
             BarManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], BarManager);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -754,11 +754,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -767,12 +767,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooManager", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let FooManager = class FooManager {
                 working() {
@@ -780,11 +780,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooProvider", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -795,9 +795,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
@@ -818,11 +818,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -830,13 +830,13 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.alias("aaa")
+                (0, __1.alias)("aaa")
             ], BooFactory.prototype, "alias", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory(),
-                __1.injectorAware()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)(),
+                (0, __1.injectorAware)()
             ], BooFactory);
             let FooManager = class FooManager {
                 working() {
@@ -844,9 +844,9 @@ describe('Property Factory', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.alias("aaa")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.alias)("aaa")
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 working() {
@@ -854,9 +854,9 @@ describe('Property Factory', function () {
                 }
             };
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.alias("aaa")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.alias)("aaa")
             ], FooManager2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -874,11 +874,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.alias("aaa")
+                (0, __1.alias)("aaa")
             ], Rectangle.prototype, "names", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -886,10 +886,10 @@ describe('Property Factory', function () {
                 }
             };
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory(),
-                __1.alias("aaa")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)(),
+                (0, __1.alias)("aaa")
             ], BooFactory);
             let BooFactory2 = class BooFactory2 {
                 get() {
@@ -897,10 +897,10 @@ describe('Property Factory', function () {
                 }
             };
             BooFactory2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory(),
-                __1.alias("aaa")
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)(),
+                (0, __1.alias)("aaa")
             ], BooFactory2);
             injector = ioc.createContainer();
             injector.register(Rectangle);
@@ -917,11 +917,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -930,12 +930,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooFooManager", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let FooManager = class FooManager {
                 working() {
@@ -943,11 +943,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 working() {
@@ -955,11 +955,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -970,9 +970,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
@@ -994,11 +994,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -1007,15 +1007,15 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooFooManager", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooFooManager2", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let FooManager = class FooManager {
                 working() {
@@ -1023,11 +1023,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 working() {
@@ -1035,11 +1035,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -1050,9 +1050,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
@@ -1075,11 +1075,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -1088,12 +1088,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooFooManager", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let FooManager = class FooManager {
                 working() {
@@ -1101,10 +1101,10 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 working() {
@@ -1112,11 +1112,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -1127,9 +1127,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
@@ -1151,11 +1151,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -1164,12 +1164,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooFooManager", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let FooManager = class FooManager {
                 init() {
@@ -1180,14 +1180,14 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], FooManager.prototype, "init", null);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 working() {
@@ -1195,11 +1195,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -1210,9 +1210,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             let injector2 = ioc.createContainer();
@@ -1234,11 +1234,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -1246,15 +1246,15 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooManager", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "logger", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let Logger = class Logger {
                 get() {
@@ -1262,9 +1262,9 @@ describe('Property Factory', function () {
                 }
             };
             Logger = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Logger);
             let FooManager = class FooManager {
                 get() {
@@ -1272,12 +1272,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 get name() {
@@ -1285,14 +1285,14 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "logger", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -1302,9 +1302,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             injector.registerMulti([Rectangle, BooFactory, FooProvider, FooManager, FooManager2, Logger]);
@@ -1319,11 +1319,11 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "booFactory", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             let BooFactory = class BooFactory {
                 async get() {
@@ -1331,15 +1331,15 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "fooManager", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], BooFactory.prototype, "logger", void 0);
             BooFactory = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], BooFactory);
             let Logger = class Logger {
                 get() {
@@ -1347,9 +1347,9 @@ describe('Property Factory', function () {
                 }
             };
             Logger = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], Logger);
             let FooManager = class FooManager {
                 get() {
@@ -1357,12 +1357,12 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager.prototype, "fooManager2", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooManager);
             let FooManager2 = class FooManager2 {
                 get name() {
@@ -1370,17 +1370,17 @@ describe('Property Factory', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "fooProvider", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "booFactory", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], FooManager2.prototype, "logger", void 0);
             FooManager2 = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], FooManager2);
             let FooProvider = class FooProvider {
                 constructor() {
@@ -1390,9 +1390,9 @@ describe('Property Factory', function () {
                 }
             };
             FooProvider = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                __1.factory()
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                (0, __1.factory)()
             ], FooProvider);
             injector = ioc.createContainer();
             injector.registerMulti([Rectangle, BooFactory, FooProvider, FooManager, FooManager2, Logger]);

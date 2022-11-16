@@ -58,11 +58,11 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
@@ -83,14 +83,14 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                __1.bootstrap()
+                (0, __1.bootstrap)()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();
@@ -109,11 +109,11 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], Rectangle.prototype, "initialize", null);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             injector.register(Rectangle);
             let req;
@@ -143,14 +143,14 @@ describe('initialize', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.initAsync()
+                (0, __1.initAsync)()
             ], Rectangle.prototype, "initialize", null);
             tslib_1.__decorate([
-                __1.bootstrapAsync()
+                (0, __1.bootstrapAsync)()
             ], Rectangle.prototype, "bootstrap", null);
             Rectangle = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], Rectangle);
             injector.register(Rectangle);
             await injector.initialize();

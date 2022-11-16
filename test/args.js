@@ -330,14 +330,14 @@ describe('Constructor Args', function () {
             let AManager = class AManager {
             };
             AManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], AManager);
             let BManager = class BManager {
             };
             BManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton()
+                (0, __1.define)(),
+                (0, __1.singleton)()
             ], BManager);
             let CManager = class CManager {
                 constructor(aManager, bManager) {
@@ -346,9 +346,10 @@ describe('Constructor Args', function () {
                 }
             };
             CManager = tslib_1.__decorate([
-                __1.define(),
-                __1.singleton(),
-                tslib_1.__param(0, __1.inject()), tslib_1.__param(1, __1.inject())
+                (0, __1.define)(),
+                (0, __1.singleton)(),
+                tslib_1.__param(0, (0, __1.inject)()),
+                tslib_1.__param(1, (0, __1.inject)())
             ], CManager);
             let injector = ioc.createContainer();
             injector.registerMulti([AManager, BManager, CManager]);

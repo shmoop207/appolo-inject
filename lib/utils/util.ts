@@ -131,7 +131,7 @@ export class Util {
         const ARGUMENT_NAMES = /([^\s,]+)/g;
 
         let fnStr = func.toString().replace(STRIP_COMMENTS, '');
-        let args = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+        let args:any[] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
 
         if (args === null) {
             args = [];

@@ -24,8 +24,8 @@ describe('Wire', function () {
                 }
             };
             B = tslib_1.__decorate([
-                define_1.define(),
-                singleton_1.singleton()
+                (0, define_1.define)(),
+                (0, singleton_1.singleton)()
             ], B);
             let C = class C {
                 get() {
@@ -33,22 +33,22 @@ describe('Wire', function () {
                 }
             };
             C = tslib_1.__decorate([
-                define_1.define(),
-                singleton_1.singleton(),
-                factory_1.factory()
+                (0, define_1.define)(),
+                (0, singleton_1.singleton)(),
+                (0, factory_1.factory)()
             ], C);
             let A = class A {
                 constructor(a) {
                 }
             };
             tslib_1.__decorate([
-                lazy_1.lazy()
+                (0, lazy_1.lazy)()
             ], A.prototype, "b", void 0);
             tslib_1.__decorate([
-                inject_1.inject()
+                (0, inject_1.inject)()
             ], A.prototype, "c", void 0);
             A = tslib_1.__decorate([
-                define_1.define()
+                (0, define_1.define)()
             ], A);
             injector1.register(B);
             injector2.register(C);

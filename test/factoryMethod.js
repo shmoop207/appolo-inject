@@ -187,10 +187,10 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], FooManager.prototype, "initialize", null);
             FooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
@@ -201,10 +201,10 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factoryMethodAsync(FooManager)
+                (0, __1.factoryMethodAsync)(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], Rectangle);
             injector.registerMulti([FooManager, Rectangle]);
             injector.initialize();
@@ -232,10 +232,10 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.init()
+                (0, __1.init)()
             ], FooManager.prototype, "initialize", null);
             FooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
@@ -245,10 +245,10 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factoryMethod(FooManager)
+                (0, __1.factoryMethod)(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], Rectangle);
             injector.register(FooManager);
             injector.register(Rectangle);
@@ -275,7 +275,7 @@ describe('Property Factory Method', function () {
                 }
             };
             BooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], BooManager);
             let FooManager = class FooManager {
                 constructor(name) {
@@ -286,11 +286,11 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factoryMethod(BooManager)
+                (0, __1.factoryMethod)(BooManager)
             ], FooManager.prototype, "createFooManager", void 0);
             FooManager = tslib_1.__decorate([
-                __1.define(),
-                __1.dynamicFactory()
+                (0, __1.define)(),
+                (0, __1.dynamicFactory)()
             ], FooManager);
             let Rectangle = class Rectangle {
                 constructor() {
@@ -300,10 +300,10 @@ describe('Property Factory Method', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.factoryMethod(FooManager)
+                (0, __1.factoryMethod)(FooManager)
             ], Rectangle.prototype, "createFooManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], Rectangle);
             injector.registerMulti([FooManager, Rectangle, BooManager]);
             await injector.initialize();

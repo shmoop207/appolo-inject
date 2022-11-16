@@ -59,7 +59,8 @@ var aliasMap_1 = require("./lib/decorators/aliasMap");
 Object.defineProperty(exports, "aliasMap", { enumerable: true, get: function () { return aliasMap_1.aliasMap; } });
 var decorators_1 = require("./lib/decorators/decorators");
 Object.defineProperty(exports, "InjectDefineSymbol", { enumerable: true, get: function () { return decorators_1.InjectDefineSymbol; } });
-exports.createContainer = function () {
+let createContainer = function () {
     return new inject_1.Injector();
 };
+exports.createContainer = createContainer;
 //# sourceMappingURL=index.js.map

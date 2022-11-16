@@ -216,7 +216,7 @@ describe('initialize', function () {
                 @initAsync()
                 async initialize() {
 
-                    await new Promise(resolve => setTimeout(() => resolve(), 1));
+                    await new Promise<void>(resolve => setTimeout(() => resolve(), 1));
 
                     this.working = "aa"
                 }
@@ -224,7 +224,7 @@ describe('initialize', function () {
                 @bootstrapAsync()
                 async bootstrap() {
 
-                    await new Promise(resolve => setTimeout(() => resolve(), 1));
+                    await new Promise<void>(resolve => setTimeout(() => resolve(), 1));
 
                     this.working2 = this.working+"bb"
                 }

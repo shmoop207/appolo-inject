@@ -413,13 +413,13 @@ describe('Property Ref', function () {
                 }
             };
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "fooManager", void 0);
             tslib_1.__decorate([
-                __1.inject()
+                (0, __1.inject)()
             ], Rectangle.prototype, "barManager", void 0);
             Rectangle = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], Rectangle);
             let FooManager = class FooManager {
                 constructor() {
@@ -429,7 +429,7 @@ describe('Property Ref', function () {
                 }
             };
             FooManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], FooManager);
             let BarManager = class BarManager {
                 constructor() {
@@ -439,7 +439,7 @@ describe('Property Ref', function () {
                 }
             };
             BarManager = tslib_1.__decorate([
-                __1.define()
+                (0, __1.define)()
             ], BarManager);
             injector.register(Rectangle);
             injector.register(FooManager);
