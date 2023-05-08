@@ -57,9 +57,9 @@ export class Util {
         return output;
     }
 
-    public static keyByMap<T extends object,K extends any=string>(arr: T[], key: string | ((item: T, index: number) => string)):Map<K,T> {
+    public static keyByMap<T extends object, K extends any = string>(arr: T[], key: string | ((item: T, index: number) => string)): Map<K, T> {
 
-        let output = new Map<K,T>()
+        let output = new Map<K, T>()
 
         for (let i = 0, len = (arr || []).length; i < len; i++) {
 
@@ -67,7 +67,7 @@ export class Util {
 
             let outputKey = Util.isFunction(key) ? (key as Function)(item, i) : item[key as string];
 
-            output.set(outputKey,item)
+            output.set(outputKey, item)
         }
 
         return output;
@@ -86,7 +86,9 @@ export class Util {
         }
     }
 
-    public static groupByArray<T>(arr: T[], key: string | number | ((item: T) => string | number)): { [index: string]: T[] } {
+    public static groupByArray<T>(arr: T[], key: string | number | ((item: T) => string | number)): {
+        [index: string]: T[]
+    } {
 
         let output: { [index: string]: T[] } = {};
 
@@ -125,13 +127,13 @@ export class Util {
 
     }
 
-    public static getFunctionArgs(func: (...args: any[]) => any) {
+    public static getFunctionArgs(func: (...args: any[]) => any): string[] {
 
         const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
         const ARGUMENT_NAMES = /([^\s,]+)/g;
 
         let fnStr = func.toString().replace(STRIP_COMMENTS, '');
-        let args:any[] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+        let args: string[] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
 
         if (args === null) {
             args = [];
